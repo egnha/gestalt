@@ -35,7 +35,7 @@ test_that("composition of functions shows composite functions", {
   f <- compose(abs, inc = partial(`+`, 1), log)
   out <- c(
     "<Function Composition>",
-    "From the inner to outer function:",
+    "In order of application:",
     "",
     " 1. function (x)  .Primitive(\"abs\")",
     "",
