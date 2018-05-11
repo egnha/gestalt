@@ -1,6 +1,6 @@
-# nofrills
+# gestalt
 
-## 0.3.0.9000
+## 0.0.0.9000
 
   * The function transformer `tidy()` is introduced. It enhances functions by
     enabling them to support unquoting and splicing of arguments, i.e.,
@@ -24,59 +24,9 @@
     arguments are supported, in addition to argument-wise lazy or eager (tidy)
     evaluation.
 
-  * `fn_()` is a variant of `fn()` that does _not_ comprehend quasiquotation
-    (#4). This provides a way, complementary to the use of `QUQ()` and `QUQS()`,
+  * `fn_()` is a variant of `fn()` that does _not_ comprehend quasiquotation.
+    This provides a way, complementary to the use of `QUQ()` and `QUQS()`,
     to combine `fn()` syntax with literal unquoting and splicing, e.g.,
     `fn_(x ~ fn(f ~ f(!!x)))`.
 
-  * `curry()` and `curry_fn()` are softly deprecated (#42). Currying can be
-    achieved by repeatedly applying `partial()`.
-
-  * `as_fn()` and `make_fn_aware()` are softly deprecated.
-
-  * rlang >= 0.2.0 is now required, as that version substantially accelerated
-    expression capture and tidy evaluation.
-
-## 0.3.0
-
-  * Currying operators `curry()` and `curry_fn()` are introduced (#10). Notably,
-    `curry_fn()` supports quasiquotation, which enables more easily inspectable
-    functions. For example:
-    ```
-    compare_to <- curry_fn(target, x ~ identical(x, QUQ(target)))
-    print(compare_to("this"))
-    #> function (x)
-    #> identical(x, "this")
-    ```
-
-  * `fn()` now accepts closures as part of the body. In particular, nested calls
-    of `fn()` can be unquoted, e.g., `fn(x ~ !!fn(y ~ !!fn(z ~ x + y + z)))`
-    yields `function(x) function(y) function(z) x + y + z`.
-
-  * Literal unquoting operators `QUQ()`, `QUQS()` now resolve to their
-    bang-operator forms (`!!`, `!!!`), rather than their functional aliases
-    (`UQ()`, `UQS()`), as these aliases are slated for potential deprecation in
-    rlang (#9). `rlang::UQE()` has already been axed, so `QUQE()` is gone too.
-
-## 0.2.1
-
-  * Tests are now compatible with testthat 2.0.0.
-
-  * Alias `..()` is removed.
-
-## 0.2.0
-
-  * `fn()` now comprehends literal unquoting operators via the use of `QUQ()`,
-    `QUQS()` and `QUQE()`. This allows you to make functions with `fn()` that
-    contain unquoting operators, which is handy when programming with dplyr or
-    other tidyverse packages.
-
-  * `make_fn_aware()` is a new functional operator that enhances a function by
-    enabling it to interpret abbreviated functional arguments (cf. `as_fn()`).
-
-  * In order to keep the package namespace slim, `..()` has been softly
-    deprecated.
-
-## 0.1.0
-
-  * Initial release
+  * Derived from nofrills 0.3.0.

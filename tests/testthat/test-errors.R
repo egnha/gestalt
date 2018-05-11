@@ -43,16 +43,3 @@ test_that("error signaled if '..env' is not an environment", {
   expect_error(fn(~ NULL, ..env = NULL), "'..env' must be an environment")
   expect_error(fn_(~ NULL, ..env = NULL), "'..env' must be an environment")
 })
-
-context("as_fn()")
-
-foo <- function(x) suppressWarnings(as_fn(x))
-
-test_that("error signaled if '.f' is neither function nor anonymous function", {
-  expect_error(foo(NULL), "mode 'function' was not found")
-})
-
-test_that("error signaled if as_fn() applied across calls", {
-  bar <- function(y) foo(y)
-  expect_error(bar(.(x ~ x + 1)), 'could not find function "."')
-})

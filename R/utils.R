@@ -90,7 +90,7 @@ assign_setter <- function(nm) {
 }
 
 mangle <- function(nm) {
-  paste0(".__NOFRILLS_", toupper(nm), "__.")
+  paste0(".__GESTALT_", toupper(nm), "__.")
 }
 
 check_head <- function(nm) {

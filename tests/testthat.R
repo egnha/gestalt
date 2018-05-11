@@ -1,4 +1,4 @@
 library(testthat)
-library(nofrills)
+library(gestalt)
 
-test_check("nofrills")
+test_check("gestalt")

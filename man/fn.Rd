@@ -160,18 +160,16 @@ frankenstein <- fn(!!!formals(f), ~ !!body(g))
 stopifnot(identical(frankenstein, function(x, y) x - y))
 
 ## mixing unquoting and literal unquoting is possible
-if (suppressWarnings(require(dplyr))) {
-  summariser <- quote(mean)
-
-  my_summarise <- fn(df, ... ~ {
-    group_by <- quos(...)
-    df \%>\%
-      group_by(QUQS(group_by)) \%>\%
-      summarise(a = `!!`(summariser)(a))
-  })
-
-  my_summarise
-}
+\dontrun{
+require(dplyr)
+summariser <- quote(mean)
+my_summarise <- fn(df, ... ~ {
+  group_by <- quos(...)
+  df \%>\%
+    group_by(QUQS(group_by)) \%>\%
+    summarise(a = `!!`(summariser)(a))
+})
+my_summarise}
 
 # Lightweight metaprogramming
 enforce <- fn_(cond ~ fn(. ~ {stopifnot(!!substitute(cond)); .}))

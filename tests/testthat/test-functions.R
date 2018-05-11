@@ -68,21 +68,3 @@ test_that("body can be a closure", {
   expect_equal(foo, fn(x ~ !!fn_(y ~ x + y)))
   expect_equal(foo, fn_(x ~ function(y) x + y))
 })
-
-context("as_fn()")
-
-foo <- function(x) suppressWarnings(as_fn(x))
-
-test_that("returns functions, unchanged", {
-  expect_equal(foo(identity), identity)
-  expect_equal(foo(function(x) NULL), function(x) NULL)
-})
-
-test_that("can interpret minimal anonymous-function expressions", {
-  expect_equal(foo(.(~ NULL)), function() NULL)
-  expect_equal(foo(.(x ~ NULL)), function(x) NULL)
-  expect_equal(foo(.(... ~ NULL)), function(...) NULL)
-  expect_equal(foo(.(x, ... ~ NULL)), function(x, ...) NULL)
-  expect_equal(foo(.(x, ... = , y ~ NULL)), function(x, ..., y) NULL)
-  expect_equal(foo(.(x, y = 1, ... ~ NULL)), function(x, y = 1, ...) NULL)
-})

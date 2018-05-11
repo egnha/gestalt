@@ -1,27 +1,24 @@
-Package: nofrills
+Package: gestalt
 Type: Package
-Title: Low-Cost Anonymous Functions
-Version: 0.3.0.9000
+Title: Package Title TBD
+Version: 0.0.0.9000
 Authors@R: person("Eugene", "Ha", , "eha@posteo.de", c("aut", "cre"))
-Description: Provides a compact variation of the usual syntax of function
-  declaration, in order to support tidyverse-style quasiquotation of a
-  function's arguments and body.
+Description: Package description TBD.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 Depends: R (>= 3.1.0)
 Imports: rlang (>= 0.2.0), utils
-Suggests: testthat (>= 2.0.0), dplyr (>= 0.7.0)
-URL: https://github.com/egnha/nofrills
-BugReports: https://github.com/egnha/nofrills/issues
+Suggests: testthat (>= 2.0.0)
+URL: https://github.com/egnha/gestalt
+BugReports: https://github.com/egnha/gestalt/issues
 Collate:
-    'nofrills.R'
+    'gestalt.R'
     'utils.R'
-    'fn.R'
-    'tidy.R'
     'compose.R'
     'partial.R'
-    'deprecated.R'
+    'tidy.R'
+    'fn.R'
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
