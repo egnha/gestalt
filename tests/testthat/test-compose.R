@@ -425,6 +425,32 @@ test_that("compositions can be filtered by predicate", {
   expect_equal(foo[c(T, T, T)](vals), log(sq(vals) + 1))
 })
 
+test_that("can take head or tail of a composition", {
+  f <- {. + 1} %>>>% log %>>>% sum
+
+  expect_equal(head(f, 4)(vals), sum(log(vals + 1)))
+  expect_equal(head(f, 3)(vals), sum(log(vals + 1)))
+  expect_equal(head(f, 2)(vals), log(vals + 1))
+  expect_equal(head(f, 1)(vals), vals + 1)
+  expect_equal(head(f)(vals), vals + 1)
+  expect_null(head(f, 0))
+  expect_equal(head(f, -1)(vals), log(vals + 1))
+  expect_equal(head(f, -2)(vals), vals + 1)
+  expect_null(head(f, -3))
+  expect_null(head(f, -4))
+
+  expect_equal(tail(f, 4)(vals), sum(log(vals + 1)))
+  expect_equal(tail(f, 3)(vals), sum(log(vals + 1)))
+  expect_equal(tail(f, 2)(vals), sum(log(vals)))
+  expect_equal(tail(f, 1)(vals), sum(vals))
+  expect_equal(tail(f)(vals), sum(vals))
+  expect_null(tail(f, 0))
+  expect_equal(tail(f, -1)(vals), sum(log(vals)))
+  expect_equal(tail(f, -2)(vals), sum(vals))
+  expect_null(tail(f, -3))
+  expect_null(tail(f, -4))
+})
+
 test_that("error signaled when predicate is of unequal length", {
   expect_error(
     foo[c(T, T, T, T)],

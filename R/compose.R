@@ -296,6 +296,18 @@ get_fns <- function(fnms, fns, env) {
   compose(.subset(fns, i))
 }
 
+#' @importFrom utils head
+#' @export
+head.CompositeFunction <- function(x, n = 1L, ...) {
+  compose(head(as.list.CompositeFunction(x), n, ...))
+}
+
+#' @importFrom utils tail
+#' @export
+tail.CompositeFunction <- function(x, n = 1L, ...) {
+  compose(tail(as.list.CompositeFunction(x), n, ...))
+}
+
 #' @export
 names.CompositeFunction <- function(x) {
   names(as.list.CompositeFunction(x))
