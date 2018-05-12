@@ -115,21 +115,21 @@ compose <- function(...) {
 }
 
 fuse <- function(pipeline) {
-  innermost <- pipeline[[1L]]
-  fmls <- fml_args(innermost)
-  call <- nest_calls(length(pipeline), fmls)
-  env <- envir(innermost) %encloses% (pipeline %named% call$fnms)
-  makeActiveBinding("__pipeline__", get_fns(call$fnms, pipeline, env), env)
-  new_fn(fmls, call$expr, env)
+  mouth <- pipeline[[1L]]
+  fmls <- fml_args(mouth)
+  pipe <- reduce_calls(length(pipeline), fmls)
+  env <- envir(mouth) %encloses% (pipeline %named% pipe$nms)
+  makeActiveBinding("__pipeline__", get_fns(pipe$nms, pipeline, env), env)
+  new_fn(fmls, pipe$expr, env)
 }
 
-nest_calls <- function(n, fmls) {
-  fnms <- fmt("__%s__", seq_len(n))
+reduce_calls <- function(n, fmls) {
+  nms <- fmt("__%s__", seq_len(n))
   args <- lapply(names(fmls), as.name)
-  expr <- as.call(c(as.name(fnms[[1L]]), args))
-  for (nm in fnms[-1L])
+  expr <- as.call(c(as.name(nms[[1L]]), args))
+  for (nm in nms[-1L])
     expr <- call(nm, expr)
-  list(expr = expr, fnms = fnms)
+  list(expr = expr, nms = nms)
 }
 
 flatten_pipeline <- function(...) {
