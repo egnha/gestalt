@@ -144,7 +144,7 @@ fn_interp <- function(x) {
 #' @export
 fn_interp.quosure <- function(x) {
   expr <- quo_get_expr(x)
-  if (!is.call(expr) || is_literal(expr))
+  if (is_literal(expr))
     return(fn_interp(eval_tidy(x)))
   if (is_named(expr))
     return(lambda_named(expr, quo_get_env(x)))
@@ -154,9 +154,10 @@ fn_interp.quosure <- function(x) {
 }
 
 is_literal <- function(expr) {
-  is_op_compose(expr)  ||
-    is_paren(expr)     ||
-    is_subsetter(expr) ||
+  !is.call(expr)        ||
+    is_op_compose(expr) ||
+    is_paren(expr)      ||
+    is_subsetter(expr)  ||
     is_op_namespace(expr)
 }
 is_op_compose <- check_head("%>>>%")
