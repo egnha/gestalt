@@ -107,9 +107,8 @@ test_that("nested compositions are flattened", {
     expect_equivalent(as.list(cmp), gs)
 
   # Test by value
-  cmps <- Reduce(compose, gs, accumulate = TRUE)
-  expect_equivalent(cmps[[1]], gs[[1]])
-  for (i in seq_along(gs)[-1])
+  cmps <- Reduce(compose, gs, init = NULL, accumulate = TRUE)[-1]
+  for (i in seq_along(gs))
     expect_equivalent(as.list(cmps[[i]]), gs[seq_len(i)])
 })
 
