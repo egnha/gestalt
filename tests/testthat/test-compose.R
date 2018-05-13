@@ -112,14 +112,49 @@ test_that("nested compositions are flattened", {
     expect_equivalent(as.list(cmps[[i]]), gs[seq_len(i)])
 })
 
-test_that("list of functions can be spliced", {
-  expect_equal(compose(fs), compose(fs[[1]], fs[[2]], fs[[3]]))
-  expect_identical(compose(fs)(), cmp())
+test_that("for compose(), list of functions can be spliced", {
+  cmp <- compose(fs[[1]], fs[[2]], fs[[3]])
+  out <- cmp()
+
+  expect_equal(compose(fs), cmp)
+  expect_identical(compose(fs)(), out)
+
+  expect_equal(compose(fs[[1]], fs[-1]), cmp)
+  expect_identical(compose(fs[[1]], fs[-1])(), out)
+
+  expect_equal(compose(fs[-3], fs[[3]]), cmp)
+  expect_identical(compose(fs[-3], fs[[3]])(), out)
 })
 
-test_that("list of functions can be spliced using `!!!`", {
-  expect_equal(compose(!!! fs), compose(fs[[1]], fs[[2]], fs[[3]]))
-  expect_identical(compose(!!! fs)(), cmp())
+test_that("for compose(), list of functions can be spliced using `!!!`", {
+  cmp <- compose(fs[[1]], fs[[2]], fs[[3]])
+  out <- cmp()
+
+  expect_equal(compose(!!!fs), cmp)
+  expect_identical(compose(!!!fs)(), out)
+
+  expect_equal(compose(fs[[1]], !!!fs[-1]), cmp)
+  expect_identical(compose(fs[[1]], !!!fs[-1])(), out)
+
+  expect_equal(compose(!!!fs[-3], fs[[3]]), cmp)
+  expect_identical(compose(!!!fs[-3], fs[[3]])(), out)
+})
+
+test_that("for `%>>>%`, list of functions can be unquoted using `!!`", {
+  cmp <- compose(fs[[1]], fs[[2]], fs[[3]])
+  out <- cmp()
+
+  expect_equal(NULL %>>>% !!fs, cmp)
+  expect_identical((NULL %>>>% !!fs)(), out)
+
+  expect_equal((!!fs) %>>>% NULL, cmp)
+  expect_identical((NULL %>>>% !!fs)(), out)
+
+  expect_equal(fs[[1]] %>>>% !!fs[-1], cmp)
+  expect_identical((fs[[1]] %>>>% !!fs[-1])(), out)
+
+  expect_equal((!!fs[-3]) %>>>% fs[[3]], cmp)
+  expect_identical(((!!fs[-3]) %>>>% fs[[3]])(), out)
 })
 
 test_that("composition has formals of innermost function (as a closure)", {
