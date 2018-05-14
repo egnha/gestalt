@@ -252,17 +252,17 @@ reduce_calls <- function(n, fmls) {
   list(expr = expr, nms = nms)
 }
 
-get_tree <- function(xs, env) {
+get_tree <- function(fs, env) {
   force(env)
-  tree <- enumerated_tree(xs)
+  nms <- fn_names(fs)
 
   function() {
-    mut_nodes(tree, get, envir = env, mode = "function", inherits = FALSE)
+    mut_nodes(nms, get, envir = env, mode = "function", inherits = FALSE)
   }
 }
-enumerated_tree <- function(xs) {
+fn_names <- function(fs) {
   i <- 0L
-  mut_nodes(xs, function(.) {
+  mut_nodes(fs, function(.) {
     i <<- i + 1L
     as_protected_name(i)
   })
