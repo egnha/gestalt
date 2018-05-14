@@ -369,15 +369,39 @@ print.CompositeFunction <- function(x, ...) {
   cat("<Function Composition>\n")
   cat("In order of application:\n")
   fns <- as.list.CompositeFunction(x)
-  nms <- names_chr(fns)
-  nms[!nzchar(nms)] <- list(NULL)
-  for (i in seq_along(fns)) {
-    out <- c(fmt("$%s", nms[[i]]), trim_capture(fns[[i]]))
-    pad <- c(fmt("%2d.\ ", i), rep("\ \ \ \ ", length(out) - 1L))
+  nms <- index_names(fns)
+  pipeline <- unlist(fns)
+  for (i in seq_along(pipeline)) {
+    out <- c(nms[[i]], trim_capture(pipeline[[i]]))
+    pad <- c("", rep("\ \ ", length(out) - 1L))
     cat("\n", paste0(pad, out, "\n"), sep = "")
   }
   cat("\nRecover the list of functions with 'as.list()'.")
   invisible(x)
+}
+
+index_names <- function(xs) {
+  paths <- lapply(index_paths(xs), as_string)
+  sprintf("[[%s]]", vapply(paths, paste, collapse = "]][[", FUN.VALUE = ""))
+}
+
+index_paths <- function(x) {
+  if (!is.list(x))
+    return(NULL)
+  nms <- as.list(names(x))
+  is_blank <- !nzchar(nms)
+  nms[is_blank] <- seq_along(nms)[is_blank]
+  indices <- lapply(seq_along(x), function(i) {
+    subindices <- index_paths(x[[i]]) %??% list(NULL)
+    lapply(subindices, function(idx) c(nms[[i]], as.list(idx)))
+  })
+  do.call(c, indices)
+}
+
+as_string <- function(path) {
+  lapply(path, function(p) {
+    if (is.character(p)) sprintf("\"%s\"", p) else as.character(p)
+  })
 }
 
 #' @importFrom utils capture.output

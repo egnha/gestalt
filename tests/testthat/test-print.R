@@ -32,20 +32,27 @@ test_that("tidy function shows underlying function", {
 })
 
 test_that("composition of functions shows composite functions", {
-  f <- compose(abs, inc = partial(`+`, 1), log)
+  f <- abs %>>>%
+    inc: !!partial(`+`, 1) %>>>%
+    res: (log %>>>% agg: sum)
   out <- c(
     "<Function Composition>",
     "In order of application:",
     "",
-    " 1. function (x)  .Primitive(\"abs\")",
+    "[[1]]",
+    "  function (x)  .Primitive(\"abs\")",
     "",
-    " 2. $inc",
-    "    <Partially Applied Function>",
-    "    function(.y) {",
-    "      (^1) + .y",
-    "    }",
+    "[[\"inc\"]]",
+    "  <Partially Applied Function>",
+    "  function(.y) {",
+    "    (^1) + .y",
+    "  }",
     "",
-    " 3. function (x, base = exp(1))  .Primitive(\"log\")",
+    "[[\"res\"]][[1]]",
+    "  function (x, base = exp(1))  .Primitive(\"log\")",
+    "",
+    "[[\"res\"]][[\"agg\"]]",
+    "  function (..., na.rm = FALSE)  .Primitive(\"sum\")",
     "",
     "Recover the list of functions with 'as.list()'."
   )

@@ -4,6 +4,10 @@ names_chr <- names2
 `%named%` <- function(x, nm) `names<-`(x, nm)
 fmt       <- function(text, ...) sprintf(text, ...)
 
+`%??%` <- function(lhs, rhs) {
+  if (length(lhs) == 0L) rhs else lhs
+}
+
 new_fn <- function(..args, ..body, ..env = NULL, ...) {
   if (!is.pairlist(..args))
     ..args <- as.pairlist(..args)
