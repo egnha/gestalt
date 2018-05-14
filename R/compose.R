@@ -285,7 +285,10 @@ as_protected_name <- function(i) fmt("__%d__", i)
 #' @export
 `$.CompositeFunction` <- function(x, i) {
   fns <- as.list.CompositeFunction(x)
-  .subset2(fns, i)
+  fns <- .subset2(fns, i)
+  if (is.function(fns))
+    return(fns)
+  compose(fns)
 }
 #' @export
 `$<-.CompositeFunction` <- function(x, name, value) {
