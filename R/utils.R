@@ -111,3 +111,27 @@ check_head <- function(nm) {
 envir <- function(f) {
   environment(f) %||% baseenv()
 }
+
+mut_nodes <- function(xs, f, ...) {
+  rapply(xs, f, how = "replace", ...)
+}
+
+pick <- function(x, i) {
+  if (is.atomic(i))
+    return(.subset2(x, i))
+  for (idx in i)
+    x <- x[[idx]]
+  x
+}
+
+`pick<-` <- function(x, i, value) {
+  if (is.atomic(i)) {
+    x[[i]] <- value
+    return(x)
+  }
+  lhs <- quote(x)
+  for (idx in i)
+    lhs <- call("[[", lhs, idx)
+  eval(call("<-", lhs, value))
+  x
+}

@@ -106,35 +106,26 @@
 #'
 #' @export
 compose <- function(...) {
-  pipeline <- flatten_pipeline(...)
-  if (is_empty(pipeline))
+  fs <- fn_tree(...)
+  if (is_empty(fs))
     return(NULL)
-  cmp <- fuse(pipeline)
+  cmp <- fuse(fs)
   class(cmp) <- c("CompositeFunction", "function")
   cmp
 }
 
-fuse <- function(pipeline) {
-  mouth <- pipeline[[1L]]
-  fmls <- fml_args(mouth)
-  pipe <- reduce_calls(length(pipeline), fmls)
-  env <- envir(mouth) %encloses% (pipeline %named% pipe$nms)
-  makeActiveBinding("__pipeline__", get_fns(pipe$nms, pipeline, env), env)
-  new_fn(fmls, pipe$expr, env)
+fn_tree <- function(...) {
+  fs <- lapply(list_tidy(...), fn_interp)
+  fs <- drop_null(fs)
+  unlist(fs, recursive = FALSE)
 }
 
-reduce_calls <- function(n, fmls) {
-  nms <- fmt("__%s__", seq_len(n))
-  args <- lapply(names(fmls), as.name)
-  expr <- as.call(c(as.name(nms[[1L]]), args))
-  for (nm in nms[-1L])
-    expr <- call(nm, expr)
-  list(expr = expr, nms = nms)
-}
-
-flatten_pipeline <- function(...) {
-  fns <- lapply(list_tidy(...), fn_interp)
-  unlist(do.call(c, fns))  # Collapse NULL's by invoking 'c'
+drop_null <- function(xs) {
+  xs[vapply(xs, is.null, TRUE)] <- NULL
+  names(xs) <- names_chr(xs)
+  is_list <- vapply(xs, is.list, TRUE)
+  xs[is_list] <- lapply(xs[is_list], drop_null)
+  xs
 }
 
 fn_interp <- function(x) {
@@ -222,7 +213,7 @@ fn_interp.list <- function(x) {
 }
 
 #' @export
-fn_interp.CompositeFunction <- getter("__pipeline__")
+fn_interp.CompositeFunction <- getter("__fn_tree__")
 
 #' @export
 fn_interp.function <- function(x) x
@@ -236,16 +227,42 @@ fn_interp.default <- function(x) {
   halt("Cannot interpret object of class %s as a function", cls)
 }
 
-get_fns <- function(fnms, fns, env) {
-  force(fnms)
+fuse <- function(fs) {
+  pipeline <- unlist(fs, use.names = FALSE)
+  mouth <- pipeline[[1L]]
+  fmls <- fml_args(mouth)
+  pipe <- reduce_calls(length(pipeline), fmls)
+  env <- envir(mouth) %encloses% (pipeline %named% pipe$nms)
+  makeActiveBinding("__fn_tree__", get_tree(fs, env), env)
+  new_fn(fmls, pipe$expr, env)
+}
+
+reduce_calls <- function(n, fmls) {
+  nms <- as_protected_name(seq_len(n))
+  args <- lapply(names(fmls), as.name)
+  expr <- as.call(c(as.name(nms[[1L]]), args))
+  for (nm in nms[-1L])
+    expr <- call(nm, expr)
+  list(expr = expr, nms = nms)
+}
+
+get_tree <- function(xs, env) {
   force(env)
-  nms <- names_chr(fns)
+  tree <- enumerated_tree(xs)
 
   function() {
-    fns <- mget(fnms, envir = env, mode = "function", inherits = FALSE)
-    fns %named% nms
+    mut_nodes(tree, get, envir = env, mode = "function", inherits = FALSE)
   }
 }
+enumerated_tree <- function(xs) {
+  i <- 0L
+  mut_nodes(xs, function(.) {
+    i <<- i + 1L
+    as_protected_name(i)
+  })
+}
+
+as_protected_name <- function(i) fmt("__%d__", i)
 
 #' @param inner,outer Functions. These may be optionally named using `:`, e.g.,
 #'   \code{f \%>>>\% nm: g} names the `g`-component.
@@ -274,12 +291,15 @@ get_fns <- function(fnms, fns, env) {
 #' @export
 `[[.CompositeFunction` <- function(x, i, ...) {
   fns <- as.list.CompositeFunction(x)
-  .subset2(fns, i)
+  fns <- pick(fns, i)
+  if (is.function(fns))
+    return(fns)
+  compose(fns)
 }
 #' @export
 `[[<-.CompositeFunction` <- function(x, i, value) {
   fns <- as.list.CompositeFunction(x)
-  fns[[i]] <- value
+  pick(fns, i) <- value
   compose(fns)
 }
 
