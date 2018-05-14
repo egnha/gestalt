@@ -23,8 +23,8 @@ cmps <- list(
   compose(compose(fs[[1]], fs[[2]]), fs[[3]]),
   compose(fs[[1]], compose(fs[[2]], fs[[3]])),
   fs[[1]] %>>>% fs[[2]] %>>>% fs[[3]],
-  (fs[[1]] %>>>% fs[[2]]) %>>>% fs[[3]],
-  fs[[1]] %>>>% (fs[[2]] %>>>% fs[[3]])
+  (!!(fs[[1]] %>>>% fs[[2]])) %>>>% fs[[3]],
+  fs[[1]] %>>>% !!(fs[[2]] %>>>% fs[[3]])
 )
 
 context("Composing functions")
@@ -89,7 +89,7 @@ test_that("composition is associative", {
     expect_identical(assoc(), value)
 })
 
-test_that("nested compositions are flattened", {
+test_that("grouped compositions are flattened", {
   gs <- make_funs(4)
 
   # Test by call
@@ -99,9 +99,9 @@ test_that("nested compositions are flattened", {
     compose(gs[[1]], compose(gs[[2]], gs[[3]], gs[[4]])),
     compose(compose(gs[[1]], gs[[2]]), compose(gs[[3]], gs[[4]])),
     gs[[1]] %>>>% gs[[2]] %>>>% gs[[3]] %>>>% gs[[4]],
-    (gs[[1]] %>>>% gs[[2]] %>>>% gs[[3]]) %>>>% gs[[4]],
-    gs[[1]] %>>>% (gs[[2]] %>>>% gs[[3]] %>>>% gs[[4]]),
-    (gs[[1]] %>>>% gs[[2]]) %>>>% (gs[[3]] %>>>% gs[[4]])
+    (!!(gs[[1]] %>>>% gs[[2]] %>>>% gs[[3]])) %>>>% gs[[4]],
+    gs[[1]] %>>>% !!(gs[[2]] %>>>% gs[[3]] %>>>% gs[[4]]),
+    (!!(gs[[1]] %>>>% gs[[2]])) %>>>% !!(gs[[3]] %>>>% gs[[4]])
   )
   for (cmp in cmps)
     expect_equivalent(as.list(cmp), gs)
@@ -110,6 +110,24 @@ test_that("nested compositions are flattened", {
   cmps <- Reduce(compose, gs, init = NULL, accumulate = TRUE)[-1]
   for (i in seq_along(gs))
     expect_equivalent(as.list(cmps[[i]]), gs[seq_len(i)])
+})
+
+test_that("compositions are called as flattened pipeline", {
+  foo <- inc: {. + 1} %>>>%
+    out: (log %>>>% agg: sum %>>>% dbl: {2 * .})
+  bar <- {. ^ 2} %>>>% foo
+  baz <- bar: bar %>>>% dec: {. - 1}
+
+  # Ensure that composition itself has expected return value
+  vals <- {set.seed(1); runif(10, 1, 2)}
+  expect_equal(baz(vals), 2 * sum(log(vals ^ 2 + 1)) - 1)
+
+  # Body reveals flattened pipeline
+  expect_length(unlist(as.list(baz)), 6)
+  expect_identical(
+    body(baz),
+    quote(`__6__`(`__5__`(`__4__`(`__3__`(`__2__`(`__1__`(.)))))))
+  )
 })
 
 test_that("for compose(), list of functions can be spliced", {
@@ -379,9 +397,19 @@ test_that("distilled non-composite function is itself", {
 
 context("Decomposing compositions")
 
-test_that("list of composite functions is flat", {
-  for (assoc in cmps)
-    expect_equivalent(as.list(assoc), fs)
+test_that("tree structure of composition preserved when converting to list", {
+  f <- identity %>>>%
+    mix: (sample %>>>% glue: paste) %>>>%
+    (toupper %>>>% identity) %>>>%
+    out: identity
+
+  expect_equivalent(
+    as.list(f),
+    list(identity,
+         mix = list(sample, glue = paste),
+         list(toupper, identity),
+         out = identity)
+  )
 })
 
 test_that("as.list() inverts compose()", {
@@ -740,25 +768,13 @@ test_that("composition length is the number of top-level component functions", {
     2L,
     length(sin %>>>% cos),
     length(sin %>>>% snd: (cos %>>>% tan)),
-    length(fst: (sin %>>>% cos) %>>>% tan)
+    length(fst: (sin %>>>% cos) %>>>% tan),
+    length((sin %>>>% cos) %>>>% tan),
+    length(sin %>>>% (cos %>>>% tan))
   )
   expect_all_identical(
     3L,
     length(sin %>>>% cos %>>>% tan),
-    length((sin %>>>% cos) %>>>% tan),
-    length(sin %>>>% (cos %>>>% tan))
-  )
-})
-
-test_that("tree structure of composition preserved when converting to list", {
-  f <- identity %>>>%
-    mix: (sample %>>>% glue: paste) %>>>%
-    out: identity
-
-  expect_equivalent(
-    as.list(f),
-    list(identity,
-         mix = list(sample, glue = paste),
-         out = identity)
+    length((sin %>>>% cos) %>>>% tan %>>>% identity)
   )
 })

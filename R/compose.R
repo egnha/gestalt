@@ -137,6 +137,8 @@ fn_interp.quosure <- function(x) {
   expr <- quo_get_expr(x)
   if (is_literal(expr))
     return(fn_interp(eval_tidy(x)))
+  if (is_group(expr))
+    return(fn_interp(list(eval_tidy(x))))
   if (is_named(expr))
     return(lambda_named(expr, quo_get_env(x)))
   if (is_lambda(expr))
@@ -147,12 +149,10 @@ fn_interp.quosure <- function(x) {
 is_literal <- function(expr) {
   !is.call(expr)        ||
     is_op_compose(expr) ||
-    is_paren(expr)      ||
     is_subsetter(expr)  ||
     is_op_namespace(expr)
 }
 is_op_compose <- check_head("%>>>%")
-is_paren      <- check_head("(")
 is_subsetter <- function(expr) {
   is_dollar(expr) || is_double_sq(expr) || is_single_sq(expr)
 }
@@ -165,9 +165,15 @@ is_single_sq  <- check_head("[")
 is_op_public  <- check_head("::")
 is_op_private <- check_head(":::")
 
+is_group <- check_head("(")
+
 is_named <- check_head(":")
 lambda_named <- function(expr, env) {
   expr[[1L]] <- quote(`:=`)
+  rhs <- expr[[3L]]
+  # quos() already nests, so subsequent grouping must be undone
+  if (is.call(rhs) && is_group(rhs))
+    expr[[3L]] <- rhs[[2L]]
   enquos <- as.call(c(quos, expr))
   fn_interp(eval(enquos, env))
 }
