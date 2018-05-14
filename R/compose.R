@@ -138,7 +138,7 @@ fn_interp.quosure <- function(x) {
   if (is_literal(expr))
     return(fn_interp(eval_tidy(x)))
   if (is_group(expr))
-    return(fn_interp(list(eval_tidy(x))))
+    return(list(fn_interp(eval_tidy(x))))
   if (is_named(expr))
     return(lambda_named(expr, quo_get_env(x)))
   if (is_lambda(expr))
