@@ -128,14 +128,17 @@ pick <- function(x, i) {
   x
 }
 
-`pick<-` <- function(x, i, value) {
-  if (is.atomic(i)) {
-    x[[i]] <- value
-    return(x)
-  }
+`pick<-` <- local({
   lhs <- quote(x)
-  for (idx in i)
-    lhs <- call("[[", lhs, idx)
-  eval(call("<-", lhs, value))
-  x
-}
+
+  function(x, i, value) {
+    if (is.atomic(i)) {
+      x[[i]] <- value
+      return(x)
+    }
+    for (idx in i)
+      lhs <- call("[[", lhs, idx)
+    eval(call("<-", lhs, value))
+    x
+  }
+})
