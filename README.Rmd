@@ -14,6 +14,49 @@ knitr::opts_chunk$set(
 
 # gestalt
 
+Every non-primitive function in R chains together other functions. The _gestalt_
+package enables you to naturally express this using the `%>>>%` operator. It
+adopts the semantics of the [magrittr](https://magrittr.tidyverse.org) `%>%`, in
+addition to supporting tidyverse-style
+[quasiquotation](https://rlang.r-lib.org/reference/quasiquotation.html).
+
+Use it
+to improve the modularity, reusability and comprehensibility of your functions.
+
+```{r}
+library(gestalt)
+
+model <- mpg ~ wt
+
+r2_cyl <- 
+  group: split(.$cyl) %>>>%
+  lapply(function(data) lm(!!model, data)) %>>>% 
+  summary: (
+    lapply(summary) %>>>%
+    stat: sapply(`[[`, "r.squared")
+  )
+
+r2_cyl(mtcars)
+
+(split(.$gear) %>>>% r2_cyl[-1])(mtcars)
+
+r2 <- r2_cyl
+r2$group <- function(x, grp) split(x, x[[grp]])
+r2(mtcars, "gear")
+
+residuals <- r2
+residuals$summary$stat <- function(s) lapply(s, `[[`, "residuals")
+residuals(mtcars, "cyl")[["6"]]
+```
+
+## Installation
+
+Install the development version from GitHub:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("egnha/gestalt")
+```
 ## License
 
 MIT Copyright © 2018 [Eugene Ha](https://github.com/egnha)
