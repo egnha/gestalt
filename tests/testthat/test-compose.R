@@ -417,6 +417,96 @@ test_that("function in composition can be extracted by name", {
   expect_equal(foo[["log"]](vals), log(vals))
 })
 
+test_that("function in composition can be extracted by index list", {
+  bar <- sq %>>>%
+    inc: {. + 1} %>>>%
+    out: (log %>>>% agg: (sum %>>>% dbl: {2 * .}))
+
+  is_composite <- function(x) inherits(x, "CompositeFunction")
+
+  expect_equal(bar[[list(1)]](vals), sq(vals))
+  expect_all_equal(
+    vals + 1,
+    bar[[list(2)]](vals),
+    bar[[list("inc")]](vals)
+  )
+  expect_all_equal(
+    2 * sum(log(vals)),
+    bar[[list(3)]](vals),
+    bar[[list("out")]](vals)
+  )
+  expect_all_identical(
+    FALSE,
+    is_composite(bar[[list(1)]]),
+    is_composite(bar[[list(2)]]),
+    is_composite(bar[[list("inc")]])
+  )
+  expect_all_identical(
+    TRUE,
+    is_composite(bar[[list(3)]]),
+    is_composite(bar[[list("out")]])
+  )
+
+  expect_all_equal(
+    log(vals),
+    bar[[list(3, 1)]](vals),
+    bar[[list("out", 1)]](vals)
+  )
+  expect_all_equal(
+    2 * sum(vals),
+    bar[[list(3, 2)]](vals),
+    bar[[list(3, "agg")]](vals),
+    bar[[list("out", 2)]](vals),
+    bar[[list("out", "agg")]](vals)
+  )
+  expect_all_identical(
+    FALSE,
+    is_composite(bar[[list(3, 1)]]),
+    is_composite(bar[[list("out", 1)]])
+  )
+  expect_all_identical(
+    TRUE,
+    is_composite(bar[[list(3, 2)]]),
+    is_composite(bar[[list(3, "agg")]]),
+    is_composite(bar[[list("out", 2)]]),
+    is_composite(bar[[list("out", "agg")]])
+  )
+
+  expect_all_equal(
+    sum(vals),
+    bar[[list(3, 2, 1)]](vals),
+    bar[[list("out", 2, 1)]](vals),
+    bar[[list(3, "agg", 1)]](vals),
+    bar[[list("out", "agg", 1)]](vals)
+  )
+  expect_all_equal(
+    2 * vals,
+    bar[[list(3, 2, 2)]](vals),
+    bar[[list("out", 2, 2)]](vals),
+    bar[[list(3, "agg", 2)]](vals),
+    bar[[list("out", "agg", 2)]](vals),
+    bar[[list(3, 2, "dbl")]](vals),
+    bar[[list("out", 2, "dbl")]](vals),
+    bar[[list(3, "agg", "dbl")]](vals),
+    bar[[list("out", "agg", "dbl")]](vals)
+  )
+  expect_all_identical(
+    FALSE,
+    is_composite(bar[[list(3, 2, 1)]]),
+    is_composite(bar[[list("out", 2, 1)]]),
+    is_composite(bar[[list(3, "agg", 1)]]),
+    is_composite(bar[[list("out", "agg", 1)]]),
+    is_composite(bar[[list(3, 2, 2)]]),
+    is_composite(bar[[list("out", 2, 2)]]),
+    is_composite(bar[[list(3, "agg", 2)]]),
+    is_composite(bar[[list("out", "agg", 2)]]),
+    is_composite(bar[[list(3, 2, "dbl")]]),
+    is_composite(bar[[list("out", 2, "dbl")]]),
+    is_composite(bar[[list(3, "agg", "dbl")]]),
+    is_composite(bar[[list("out", "agg", "dbl")]])
+  )
+})
+
 test_that("compositions can be filtered by name", {
   expect_equal(foo["inc"](vals), vals + 1)
   expect_equal(foo["log"](vals), log(vals))
@@ -525,6 +615,104 @@ test_that("compositions can be replaced by index", {
   expect_equal(bar(vals), sin(sq(vals)))
 })
 
+test_that("compositions can be replaced by index list", {
+  bar <- sq %>>>%
+    inc: {. + 1} %>>>%
+    out: (log %>>>% agg: (sum %>>>% dbl: {2 * .}))
+
+  bar[[list(1)]] <- identity
+  expect_equal(bar(vals), 2 * sum(log(vals + 1)))
+  bar[[list(1)]] <- sq
+
+  bar[[list(2)]] <- function(x) 2 * x
+  expect_equal(bar(vals), 2 * sum(log(2* sq(vals))))
+  bar[[list(2)]] <- function(x) x + 1
+
+  bar[[list("inc")]] <- function(x) 2 * x
+  expect_equal(bar(vals), 2 * sum(log(2* sq(vals))))
+  bar[[list("inc")]] <- function(x) x + 1
+
+  bar[[list(3)]] <- identity
+  expect_equal(bar(vals), sq(vals) + 1)
+  bar[[list(3)]] <- log %>>>% agg: (sum %>>>% dbl: {2 * .})
+
+  bar[[list("out")]] <- identity
+  expect_equal(bar(vals), sq(vals) + 1)
+  bar[[list("out")]] <- log %>>>% agg: (sum %>>>% dbl: {2 * .})
+
+  bar[[list(3, 1)]] <- sin
+  expect_equal(bar(vals), 2 * sum(sin(sq(vals) + 1)))
+  bar[[list(3, 1)]] <- log
+
+  bar[[list("out", 1)]] <- sin
+  expect_equal(bar(vals), 2 * sum(sin(sq(vals) + 1)))
+  bar[[list("out", 1)]] <- log
+
+  bar[[list(3, 2)]] <- sum
+  expect_equal(bar(vals), sum(log(sq(vals) + 1)))
+  bar[[list(3, 2)]] <- sum %>>>% dbl: {2 * .}
+
+  bar[[list("out", 2)]] <- sum
+  expect_equal(bar(vals), sum(log(sq(vals) + 1)))
+  bar[[list("out", 2)]] <- sum %>>>% dbl: {2 * .}
+
+  bar[[list(3, "agg")]] <- sum
+  expect_equal(bar(vals), sum(log(sq(vals) + 1)))
+  bar[[list(3, "agg")]] <- sum %>>>% dbl: {2 * .}
+
+  bar[[list("out", "agg")]] <- sum
+  expect_equal(bar(vals), sum(log(sq(vals) + 1)))
+  bar[[list("out", "agg")]] <- sum %>>>% dbl: {2 * .}
+
+  bar[[list(3, 2, 1)]] <- function(x) sum(x ^ 2)
+  expect_equal(bar(vals), 2 * sum(log(sq(vals) + 1) ^ 2))
+  bar[[list(3, 2, 1)]] <- sum
+
+  bar[[list("out", 2, 1)]] <- function(x) sum(x ^ 2)
+  expect_equal(bar(vals), 2 * sum(log(sq(vals) + 1) ^ 2))
+  bar[[list("out", 2, 1)]] <- sum
+
+  bar[[list(3, "agg", 1)]] <- function(x) sum(x ^ 2)
+  expect_equal(bar(vals), 2 * sum(log(sq(vals) + 1) ^ 2))
+  bar[[list(3, "agg", 1)]] <- sum
+
+  bar[[list("out", "agg", 1)]] <- function(x) sum(x ^ 2)
+  expect_equal(bar(vals), 2 * sum(log(sq(vals) + 1) ^ 2))
+  bar[[list("out", "agg", 1)]] <- sum
+
+  bar[[list(3, 2, 2)]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list(3, 2, 2)]] <- sum
+
+  bar[[list(3, "agg", 2)]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list(3, "agg", 2)]] <- sum
+
+  bar[[list("out", 2, 2)]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list("out", 2, 2)]] <- sum
+
+  bar[[list("out", "agg", 2)]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list("out", "agg", 2)]] <- sum
+
+  bar[[list(3, 2, "dbl")]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list(3, 2, "dbl")]] <- sum
+
+  bar[[list(3, "agg", "dbl")]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list(3, "agg", "dbl")]] <- sum
+
+  bar[[list("out", 2, "dbl")]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list("out", 2, "dbl")]] <- sum
+
+  bar[[list("out", "agg", "dbl")]] <- function(x) 3 * x
+  expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
+  bar[[list("out", "agg", "dbl")]] <- sum
+})
+
 test_that("composition names are in call-order", {
   expect_named(foo, c("", "inc", "log"))
 })
@@ -546,8 +734,31 @@ test_that("compositions can be renamed", {
   expect_named(bar, rep("", length(bar)))
 })
 
-test_that("composition length is the number of component functions", {
+test_that("composition length is the number of top-level component functions", {
   expect_length(compose(sin), 1)
-  expect_length(sin %>>>% cos, 2)
-  expect_length(sin %>>>% cos %>>>% tan, 3)
+  expect_all_identical(
+    2L,
+    length(sin %>>>% cos),
+    length(sin %>>>% snd: (cos %>>>% tan)),
+    length(fst: (sin %>>>% cos) %>>>% tan)
+  )
+  expect_all_identical(
+    3L,
+    length(sin %>>>% cos %>>>% tan),
+    length((sin %>>>% cos) %>>>% tan),
+    length(sin %>>>% (cos %>>>% tan))
+  )
+})
+
+test_that("tree structure of composition preserved when converting to list", {
+  f <- identity %>>>%
+    mix: (sample %>>>% glue: paste) %>>>%
+    out: identity
+
+  expect_equivalent(
+    as.list(f),
+    list(identity,
+         mix = list(sample, glue = paste),
+         out = identity)
+  )
 })

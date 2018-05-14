@@ -13,6 +13,8 @@ expect_errors_with_message <- expectations(expect_error)
 
 expect_all_equal <- expectations(expect_equal)
 
+expect_all_identical <- expectations(expect_identical)
+
 # As of testthat 1.0.2.9000, objects are captured as quosures by `expect_*()`.
 # This causes spurious test failures, due to a bug in `rlang::enquo()`
 # (https://github.com/tidyverse/rlang/issues/280) and its inability to
