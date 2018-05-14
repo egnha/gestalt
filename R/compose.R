@@ -372,36 +372,35 @@ print.CompositeFunction <- function(x, ...) {
   nms <- index_names(fns)
   pipeline <- unlist(fns)
   for (i in seq_along(pipeline)) {
-    out <- c(nms[[i]], trim_capture(pipeline[[i]]))
-    pad <- c("", rep("\ \ ", length(out) - 1L))
-    cat("\n", paste0(pad, out, "\n"), sep = "")
+    out <- trim_capture(pipeline[[i]])
+    pad <- rep("\ \ ", length(out))
+    cat("\n", nms[[i]], "\n", paste0(pad, out, "\n"), sep = "")
   }
   cat("\nRecover the list of functions with 'as.list()'.")
   invisible(x)
 }
 
 index_names <- function(xs) {
-  paths <- lapply(index_paths(xs), as_string)
-  sprintf("[[%s]]", vapply(paths, paste, collapse = "]][[", FUN.VALUE = ""))
+  path_nms <- vapply(index_paths(xs), paste, "", collapse = "]][[")
+  sprintf("[[%s]]", path_nms)
 }
 
 index_paths <- function(x) {
   if (!is.list(x))
     return(NULL)
-  nms <- as.list(names(x))
-  is_blank <- !nzchar(nms)
-  nms[is_blank] <- seq_along(nms)[is_blank]
+  nms <- as_indices(names(x))
   indices <- lapply(seq_along(x), function(i) {
     subindices <- index_paths(x[[i]]) %??% list(NULL)
-    lapply(subindices, function(idx) c(nms[[i]], as.list(idx)))
+    lapply(subindices, function(idx) c(nms[[i]], idx))
   })
   do.call(c, indices)
 }
 
-as_string <- function(path) {
-  lapply(path, function(p) {
-    if (is.character(p)) sprintf("\"%s\"", p) else as.character(p)
-  })
+as_indices <- function(nms) {
+  is_named <- nzchar(nms)
+  nms[ is_named] <- fmt('"%s"', nms[is_named])
+  nms[!is_named] <- seq_along(nms)[!is_named]
+  nms
 }
 
 #' @importFrom utils capture.output
