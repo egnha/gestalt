@@ -606,7 +606,7 @@ test_that("can take head or tail of a composition", {
 test_that("error signaled when predicate is of unequal length", {
   expect_error(
     foo[c(T, T, T, T)],
-    "Length of predicate \\(4\\) must equal length of composition \\(3\\)"
+    "Predicate length \\(4\\) must equal composition length \\(3\\)"
   )
 })
 

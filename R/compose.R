@@ -317,12 +317,16 @@ as_protected_name <- function(i) fmt("__%d__", i)
   if (missing(i))
     return(x)
   fns <- as.list.CompositeFunction(x)
-  if (is.numeric(i))
-    i <- i[abs(i) <= length(fns)]
-  if (is.logical(i) && length(i) != length(fns))
-    halt("Length of predicate (%d) must equal length of composition (%d)",
-         length(i), length(fns))
+  i <- standardize(i, length(fns))
   compose(.subset(fns, i))
+}
+standardize <- function(i, len) {
+  if (is.numeric(i))
+    i <- i[abs(i) <= len]
+  # Don't recycle predicate vectors
+  if (is.logical(i) && (l <- length(i)) != len)
+    halt("Predicate length (%d) must equal composition length (%d)", l, len)
+  i
 }
 
 #' @importFrom utils head
