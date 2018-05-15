@@ -102,11 +102,6 @@ check_head <- function(nm) {
 }
 # nocov end
 
-`%binds%` <- function(env, bindings) {
-  list2env(bindings, envir = env)
-  invisible(env)
-}
-
 `%encloses%` <- function(parent, bindings) {
   list2env(bindings, parent = parent)
 }
