@@ -152,13 +152,16 @@ is_literal <- function(expr) {
     is_subsetter(expr)  ||
     is_op_namespace(expr)
 }
+
 is_op_compose <- check_head("%>>>%")
+
 is_subsetter <- function(expr) {
   is_dollar(expr) || is_sqr_sqr(expr) || is_sqr(expr)
 }
 is_dollar  <- check_head("$")
 is_sqr_sqr <- check_head("[[")
 is_sqr     <- check_head("[")
+
 is_op_namespace <- function(expr) {
   is_op_public(expr) || is_op_private(expr)
 }
@@ -168,6 +171,7 @@ is_op_private <- check_head(":::")
 is_group <- check_head("(")
 
 is_named <- check_head(":")
+
 lambda_named <- function(expr, env) {
   expr[[1L]] <- quote(`:=`)
   rhs <- expr[[3L]]
@@ -179,6 +183,7 @@ lambda_named <- function(expr, env) {
 }
 
 is_lambda <- check_head("{")
+
 lambda <- function(body, env) {
   new_fn(alist(. = ), body, env)
 }
@@ -260,6 +265,7 @@ get_tree <- function(fs, env) {
     mut_nodes(nms, get, envir = env, mode = "function", inherits = FALSE)
   }
 }
+
 fn_names <- function(fs) {
   i <- 0L
   mut_nodes(fs, function(.) {
@@ -290,6 +296,7 @@ as_protected_name <- function(i) fmt("__%d__", i)
     return(fns)
   compose(fns)
 }
+
 #' @export
 `$<-.CompositeFunction` <- function(x, name, value) {
   fns <- as.list.CompositeFunction(x)
@@ -305,6 +312,7 @@ as_protected_name <- function(i) fmt("__%d__", i)
     return(fns)
   compose(fns)
 }
+
 #' @export
 `[[<-.CompositeFunction` <- function(x, i, value) {
   fns <- as.list.CompositeFunction(x)
