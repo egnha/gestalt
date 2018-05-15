@@ -375,6 +375,7 @@ tail.CompositeFunction <- function(x, n = 1L, ...) {
 names.CompositeFunction <- function(x) {
   names(as.list.CompositeFunction(x))
 }
+
 #' @export
 `names<-.CompositeFunction` <- function(x, value) {
   fs <- as.list.CompositeFunction(x)
