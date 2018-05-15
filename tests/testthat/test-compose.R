@@ -74,12 +74,13 @@ test_that("error is signalled when composing a non-interpretable object", {
     structure(NA, class = "foo")
   )
 
-  for (obj in noninterp) {
-    msg <- errmsg(obj)
-    expect_error(compose(obj), msg)
-    expect_error(compose(identity, obj), msg)
-    expect_error(compose(obj, identity), msg)
-  }
+  for (obj in noninterp)
+    expect_errors_with_message(
+      errmsg(obj),
+      compose(obj),
+      compose(identity, obj),
+      compose(obj, identity)
+    )
 })
 
 test_that("composition is associative", {
