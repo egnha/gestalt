@@ -415,20 +415,20 @@ print.CompositeFunction <- function(x, ...) {
   invisible(x)
 }
 
-index_names <- function(xs) {
-  path_nms <- vapply(index_paths(xs), paste, "", collapse = "]][[")
+index_names <- function(x) {
+  path_nms <- vapply(index_paths(x), paste, "", collapse = "]][[")
   sprintf("[[%s]]", path_nms)
 }
 
 index_paths <- function(x) {
   if (!is.list(x))
     return(NULL)
-  nms <- as_indices(names(x))
-  indices <- lapply(seq_along(x), function(i) {
-    subindices <- index_paths(x[[i]]) %??% list(NULL)
-    lapply(subindices, function(idx) c(nms[[i]], idx))
+  idx_nms <- as_indices(names(x))
+  paths <- lapply(seq_along(x), function(i) {
+    subpaths <- index_paths(x[[i]]) %??% list(NULL)
+    lapply(subpaths, function(path) c(idx_nms[[i]], path))
   })
-  do.call(c, indices)
+  do.call(c, paths)
 }
 
 as_indices <- function(nms) {

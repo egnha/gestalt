@@ -3,8 +3,8 @@ list_tidy <- list2
 names_chr <- names2
 `%named%` <- function(x, nm) `names<-`(x, nm)
 
-`%??%` <- function(lhs, rhs) {
-  if (length(lhs) == 0L) rhs else lhs
+`%??%` <- function(x, default) {
+  if (length(x) == 0L) default else x
 }
 
 new_fn <- function(..args, ..body, ..env = NULL, ...) {
@@ -33,12 +33,12 @@ has_dots <- function(x) {
   match("...", x, nomatch = 0L) > 0L
 }
 
-`%notin%` <- function(these, those) {
-  match(these, those, nomatch = 0L) == 0L
+`%notin%` <- function(xs, set) {
+  match(xs, set, nomatch = 0L) == 0L
 }
 
-`%are%` <- function(these, those) {
-  all(match(these, those, nomatch = 0L) > 0L)
+`%are%` <- function(xs, set) {
+  all(match(xs, set, nomatch = 0L) > 0L)
 }
 
 is_onesided <- function(fml) {
