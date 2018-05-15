@@ -606,7 +606,7 @@ test_that("can take head or tail of a composition", {
 test_that("error signaled when predicate is of unequal length", {
   expect_error(
     foo[c(T, T, T, T)],
-    "Predicate length \\(4\\) must equal composition length \\(3\\)"
+    "Predicate length \\(4\\) must be 3"
   )
 })
 
@@ -739,6 +739,77 @@ test_that("compositions can be replaced by index list", {
   bar[[list("out", "agg", "dbl")]] <- function(x) 3 * x
   expect_equal(bar(vals), 3 * sum(log(sq(vals) + 1)))
   bar[[list("out", "agg", "dbl")]] <- sum
+})
+
+test_that("compositions can be replaced by filter", {
+  vals <- {set.seed(1); runif(10)}
+
+  bar <- sq %>>>% inc:{. + 1} %>>>% log:log
+
+  # By position
+  bar[1] <- list(function(x) x ^ 3)
+  expect_equal(bar(vals), log(vals ^ 3 + 1))
+
+  bar[3:2] <- list(sin, cos)
+  expect_equal(bar(vals), sin(cos(vals ^ 3)))
+
+  bar[3:2] <- list(sq)
+  expect_equal(bar(vals), sq(sq(vals ^ 3)))
+
+  # By name
+  bar["inc"] <- list(function(x) x + 2)
+  expect_equal(bar(vals), sq(vals ^ 3 + 2))
+
+  bar[c("log", "inc")] <- list(log, function(x) x + 1)
+  expect_equal(bar(vals), log(vals ^ 3 + 1))
+
+  bar[c("log", "inc")] <- list(sin)
+  expect_equal(bar(vals), sin(sin(vals ^ 3)))
+
+  # By predicate
+  bar[c(TRUE, FALSE, FALSE)] <- list(sq)
+  expect_equal(bar(vals), sin(sin(sq(vals))))
+
+  bar[c(TRUE, FALSE, TRUE)] <- list(function(x) x + 1, cos)
+  expect_equal(bar(vals), cos(sin(vals + 1)))
+
+  bar[c(TRUE, FALSE, TRUE)] <- list(sq)
+  expect_equal(bar(vals), sq(sin(sq(vals))))
+
+  # Blanket replacement
+  bar[] <- list(sq, function(x) x + 1, sum)
+  expect_equal(bar(vals), sum(vals ^ 2 + 1))
+
+  bar[] <- list(sq)
+  expect_equal(bar(vals), sq(sq(sq(vals))))
+})
+
+test_that("non-singleton recycling is disallowed when replacing by filter", {
+  bar <- sq:sq %>>>% inc:{. + 1} %>>>% log:log %>>>% out:identity
+
+  value <- list(sq, sq)
+  expect_error(
+    bar[] <- value,
+    "Replacement length \\(2\\) must be 1 or 4"
+  )
+  expect_errors_with_message(
+    "Replacement length \\(2\\) must be 1 or 3",
+    bar[c(3, 4, 1)] <- value,
+    bar[c("inc", "log", "sq")] <- value,
+    bar[c(TRUE, FALSE, TRUE, TRUE)] <- value
+  )
+
+  value <- list(sq, sq, sq, sq, sq)
+  expect_error(
+    bar[] <- value,
+    "Replacement length \\(5\\) must be 1 or 4"
+  )
+  expect_errors_with_message(
+    "Replacement length \\(5\\) must be 1 or 3",
+    bar[c(3, 4, 1)] <- value,
+    bar[c("inc", "log", "sq")] <- value,
+    bar[c(TRUE, FALSE, TRUE, TRUE)] <- value
+  )
 })
 
 test_that("composition names are in call-order", {

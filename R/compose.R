@@ -320,12 +320,34 @@ as_protected_name <- function(i) fmt("__%d__", i)
   i <- standardize(i, length(fns))
   compose(.subset(fns, i))
 }
+
+#' @export
+`[<-.CompositeFunction` <- function(x, i, value) {
+  fns <- as.list.CompositeFunction(x)
+  fns <- replace_strictly(fns, i, value)
+  compose(fns)
+}
+
+replace_strictly <- function(x, i, value) {
+  len_value <- length(value)
+  if (missing(i)) {
+    len <- length(x)
+  } else {
+    i <- standardize(i, length(x))
+    len <- if (is.logical(i)) sum(i) else length(i)
+  }
+  (len_value == 1L || len_value == len) %because%
+    fmt("Replacement length (%d) must be 1 or %d", len_value, len)
+  x[i] <- value
+  x
+}
+
 standardize <- function(i, len) {
   if (is.numeric(i))
     i <- i[abs(i) <= len]
   # Don't recycle predicate vectors
   if (is.logical(i) && (l <- length(i)) != len)
-    halt("Predicate length (%d) must equal composition length (%d)", l, len)
+    halt("Predicate length (%d) must be %d", l, len)
   i
 }
 

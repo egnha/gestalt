@@ -3,6 +3,7 @@
 S3method("$",CompositeFunction)
 S3method("$<-",CompositeFunction)
 S3method("[",CompositeFunction)
+S3method("[<-",CompositeFunction)
 S3method("[[",CompositeFunction)
 S3method("[[<-",CompositeFunction)
 S3method("names<-",CompositeFunction)
