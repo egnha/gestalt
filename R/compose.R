@@ -154,14 +154,14 @@ is_literal <- function(expr) {
 }
 is_op_compose <- check_head("%>>>%")
 is_subsetter <- function(expr) {
-  is_dollar(expr) || is_double_sq(expr) || is_single_sq(expr)
+  is_dollar(expr) || is_sqr_sqr(expr) || is_sqr(expr)
 }
+is_dollar  <- check_head("$")
+is_sqr_sqr <- check_head("[[")
+is_sqr     <- check_head("[")
 is_op_namespace <- function(expr) {
   is_op_public(expr) || is_op_private(expr)
 }
-is_dollar     <- check_head("$")
-is_double_sq  <- check_head("[[")
-is_single_sq  <- check_head("[")
 is_op_public  <- check_head("::")
 is_op_private <- check_head(":::")
 
