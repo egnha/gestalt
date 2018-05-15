@@ -287,12 +287,23 @@ test_that("namespace operators are literally interpreted", {
   )
 })
 
-test_that("parentheses are literally interpreted", {
+test_that("parentheses evaluate and group", {
   . <- seq_len
   f <- identity(.) %>>>% (identity(.)) %>>>% (log(2) %>>>% sum)
   expect_equal(
     f(10),
     sum(log(seq_len(10), 2))
+  )
+  expect_equivalent(
+    as.list(f),
+    list(
+      function (.) identity(x = .),
+      seq_len,
+      list(
+        function(.) log(., 2),
+        sum
+      )
+    )
   )
 })
 
