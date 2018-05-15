@@ -2,7 +2,6 @@
 list_tidy <- list2
 names_chr <- names2
 `%named%` <- function(x, nm) `names<-`(x, nm)
-fmt       <- function(text, ...) sprintf(text, ...)
 
 `%??%` <- function(lhs, rhs) {
   if (length(lhs) == 0L) rhs else lhs
@@ -56,7 +55,7 @@ is_onesided <- function(fml) {
 }
 
 halt <- function(msg, ...) {
-  stop(fmt(msg, ...), call. = FALSE)
+  stop(sprintf(msg, ...), call. = FALSE)
 }
 
 `%subclass%` <- function(class, superclass) {

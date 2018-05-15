@@ -195,7 +195,7 @@ lambda_partial <- local({
   }
   conform <- function(call, to) {
     call_conform <- match.call(args(to) %||% as_closure(to), call) %unless%
-      fmt("%s is an invalid call: %%s", expr_label(call))
+      sprintf("%s is an invalid call: %%s", expr_label(call))
     if (is.primitive(to))
       return(call)
     call_conform
@@ -274,7 +274,7 @@ fn_names <- function(fs) {
   })
 }
 
-as_protected_name <- function(i) fmt("__%d__", i)
+as_protected_name <- function(i) sprintf("__%d__", i)
 
 #' @param inner,outer Functions. These may be optionally named using `:`, e.g.,
 #'   \code{f \%>>>\% nm: g} names the `g`-component.
@@ -345,7 +345,7 @@ replace_strictly <- function(x, i, value) {
     len <- if (is.logical(i)) sum(i) else length(i)
   }
   (len_value == 1L || len_value == len) %because%
-    fmt("Replacement length (%d) must be 1 or %d", len_value, len)
+    sprintf("Replacement length (%d) must be 1 or %d", len_value, len)
   x[i] <- value
   x
 }
@@ -432,7 +432,7 @@ index_paths <- function(x) {
 
 as_indices <- function(nms) {
   is_named <- nzchar(nms)
-  nms[ is_named] <- fmt('"%s"', nms[is_named])
+  nms[ is_named] <- sprintf('"%s"', nms[is_named])
   nms[!is_named] <- seq_along(nms)[!is_named]
   nms
 }
