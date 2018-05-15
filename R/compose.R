@@ -290,50 +290,50 @@ as_protected_name <- function(i) fmt("__%d__", i)
 
 #' @export
 `$.CompositeFunction` <- function(x, i) {
-  fns <- as.list.CompositeFunction(x)
-  fns <- .subset2(fns, i)
-  if (is.function(fns))
-    return(fns)
-  compose(fns)
+  fs <- as.list.CompositeFunction(x)
+  fs <- .subset2(fs, i)
+  if (is.function(fs))
+    return(fs)
+  compose(fs)
 }
 
 #' @export
 `$<-.CompositeFunction` <- function(x, name, value) {
-  fns <- as.list.CompositeFunction(x)
-  fns[[name]] <- value
-  compose(fns)
+  fs <- as.list.CompositeFunction(x)
+  fs[[name]] <- value
+  compose(fs)
 }
 
 #' @export
 `[[.CompositeFunction` <- function(x, i, ...) {
-  fns <- as.list.CompositeFunction(x)
-  fns <- pick(fns, i)
-  if (is.function(fns))
-    return(fns)
-  compose(fns)
+  fs <- as.list.CompositeFunction(x)
+  fs <- pick(fs, i)
+  if (is.function(fs))
+    return(fs)
+  compose(fs)
 }
 
 #' @export
 `[[<-.CompositeFunction` <- function(x, i, value) {
-  fns <- as.list.CompositeFunction(x)
-  pick(fns, i) <- value
-  compose(fns)
+  fs <- as.list.CompositeFunction(x)
+  pick(fs, i) <- value
+  compose(fs)
 }
 
 #' @export
 `[.CompositeFunction` <- function(x, i) {
   if (missing(i))
     return(x)
-  fns <- as.list.CompositeFunction(x)
-  i <- standardize(i, length(fns))
-  compose(.subset(fns, i))
+  fs <- as.list.CompositeFunction(x)
+  i <- standardize(i, length(fs))
+  compose(.subset(fs, i))
 }
 
 #' @export
 `[<-.CompositeFunction` <- function(x, i, value) {
-  fns <- as.list.CompositeFunction(x)
-  fns <- replace_strictly(fns, i, value)
-  compose(fns)
+  fs <- as.list.CompositeFunction(x)
+  fs <- replace_strictly(fs, i, value)
+  compose(fs)
 }
 
 replace_strictly <- function(x, i, value) {
@@ -377,15 +377,15 @@ names.CompositeFunction <- function(x) {
 }
 #' @export
 `names<-.CompositeFunction` <- function(x, value) {
-  fns <- as.list.CompositeFunction(x)
+  fs <- as.list.CompositeFunction(x)
   # From rlang::names2()
   if (is.null(value)) {
-    value <- rep("", length(fns))
+    value <- rep("", length(fs))
   } else {
     value <- value %|% ""
   }
-  names(fns) <- value
-  compose(fns)
+  names(fs) <- value
+  compose(fs)
 }
 
 #' @export
@@ -402,9 +402,9 @@ as.list.CompositeFunction <- function(x, ...) {
 print.CompositeFunction <- function(x, ...) {
   cat("<Function Composition>\n")
   cat("In order of application:\n")
-  fns <- as.list.CompositeFunction(x)
-  nms <- index_names(fns)
-  pipeline <- unlist(fns)
+  fs <- as.list.CompositeFunction(x)
+  nms <- index_names(fs)
+  pipeline <- unlist(fs)
   for (i in seq_along(pipeline)) {
     out <- trim_capture(pipeline[[i]])
     pad <- rep("\ \ ", length(out))
