@@ -343,58 +343,6 @@ test_that("error is signaled when implicit partialization is invalid (#43)", {
   )
 })
 
-test_that("distilling a composition drops identity components", {
-  cmps <- list(
-    log %>>>% sum: sum,
-    identity %>>>% log %>>>% sum: sum,
-    log %>>>% identity %>>>% sum: sum,
-    log %>>>% sum: sum %>>>% identity,
-    identity %>>>% identity %>>>% log %>>>% sum: sum,
-    identity %>>>% log %>>>% identity %>>>% sum: sum,
-    identity %>>>% log %>>>% sum: sum %>>>% identity,
-    log %>>>% identity %>>>% identity %>>>% sum: sum,
-    log %>>>% identity %>>>% sum: sum %>>>% identity,
-    log %>>>% sum: sum %>>>% identity %>>>% identity
-  )
-
-  vals <- {set.seed(1); runif(10, 1, 2)}
-  out <- sum(log(vals))
-
-  for (cmp in cmps) {
-    dist <- distill(cmp)
-    expect_true(inherits(dist, "CompositeFunction"))
-    expect_length(dist, 2)
-    expect_named(dist, c("", "sum"))
-    expect_identical(dist[[1]], log)
-    expect_identical(dist[[2]], sum)
-    expect_equal(dist(vals), out)
-  }
-})
-
-test_that("pipeline of identity function distills to identity function", {
-  cmps <- list(
-    identity,
-    identity %>>>% identity,
-    identity %>>>% identity %>>>% identity
-  )
-
-  for (cmp in cmps) {
-    dist <- distill(cmp)
-    if (inherits(cmp, "CompositeFunction")) {
-      expect_true(inherits(dist, "CompositeFunction"))
-      expect_length(dist, 1)
-      expect_identical(dist[[1]], identity)
-    } else {
-      expect_identical(dist, identity)
-    }
-  }
-})
-
-test_that("distilled non-composite function is itself", {
-  for (f in fn_kinds[names(fn_kinds) != "composition"])
-    expect_identical(distill(f), f)
-})
-
 context("Decomposing compositions")
 
 test_that("tree structure of composition preserved when converting to list", {

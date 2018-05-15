@@ -3,14 +3,11 @@
 \name{compose}
 \alias{compose}
 \alias{\%>>>\%}
-\alias{distill}
 \title{Compose functions}
 \usage{
 compose(...)
 
 inner \%>>>\% outer
-
-distill(f)
 }
 \arguments{
 \item{...}{Functions or lists thereof to compose. Lists of functions are
@@ -23,17 +20,11 @@ via \code{!!!}, are supported.}
 \link[rlang:quasiquotation]{Quasiquotation} and the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}}-\code{\%>\%}
 semantics are supported (see \emph{Examples}).}
-
-\item{f}{Function.}
 }
 \value{
 \code{compose()} returns a function of class \code{CompositeFunction}, whose
 \link[base:formals]{formals} match those of the inner function applied (as a
 closure).
-
-For a composite function, \code{distill()} drops every component function
-that is identical to \code{\link[base:identity]{base::identity()}}, yielding another composite
-function. Non-composite functions are returned unchanged.
 }
 \description{
 Compose functions in two ways:
@@ -126,14 +117,6 @@ stopifnot(
   nchar(nonsense) == 26L,
   identical(letters, sort(strsplit(nonsense, sep)[[1]])),
   identical(scramble$shuffle, sample)
-)
-
-# distill() drops identity components
-vals <- {set.seed(1); runif(10, 1, 2)}
-sum_log <- log \%>>>\% identity \%>>>\% sum \%>>>\% identity
-stopifnot(
-  length(distill(sum_log)) == 2L,
-  all.equal(sum_log(vals), sum(log(vals)))
 )
 
 }
