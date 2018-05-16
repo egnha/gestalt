@@ -1,11 +1,13 @@
 context("Cached functions")
 
-computing_value <- FALSE
+f <- local({
+  computing_value <- FALSE
 
-f <- function(...) {
-  computing_value <<- TRUE
-  "computed value"
-}
+  function(...) {
+    computing_value <<- TRUE
+    "value"
+  }
+})
 
 f_cached <- cache(f)
 
@@ -14,14 +16,14 @@ test_that("cached function has void formals", {
 })
 
 test_that("value of cached function is computed at most once", {
-  expect_identical(f_cached(), "computed value")
-  expect_true(computing_value)
+  expect_identical(f_cached(), "value")
+  expect_true(environment(f)$computing_value)
 
-  computing_value <- FALSE
+  environment(f)$computing_value <- FALSE
 
   for (. in seq_len(5)) {
-    expect_identical(f_cached(), "computed value")
-    expect_false(computing_value)
+    expect_identical(f_cached(), "value")
+    expect_false(environment(f)$computing_value)
   }
 })
 
