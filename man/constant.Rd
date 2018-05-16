@@ -21,16 +21,16 @@ underlying (uncached) function of a constant function.
 }
 \description{
 A \strong{constant} is a fixed value that incorporates the process of its very
-computation. These are none other than \emph{functions} that return an unchanging
+computation. These are none other than \emph{functions} that compute a fixed
 value when called without arguments. \code{constant()} makes such a function a
-bona fide constant by transforming it to a function that caches the value of
-its void call (i.e., \code{constant()}
+bona fide \emph{constant} by transforming it to a function that caches the value
+of its void call (i.e., \code{constant()}
 \href{https://en.wikipedia.org/wiki/Memoization}{memoizes} void functions).
 
-Use \code{\link[=compose]{\%>>>\%}} with \code{constant()} as a \emph{lazy},
+Combine \code{\link[=compose]{\%>>>\%}} with \code{constant()} for a \emph{lazy},
 \emph{structured} alternative to the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}
-(see \emph{Examples}).
+(see \sQuote{Examples}).
 }
 \examples{
 # Function with a constant return value

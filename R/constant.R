@@ -2,16 +2,16 @@
 #'
 #' @description
 #' A **constant** is a fixed value that incorporates the process of its very
-#' computation. These are none other than _functions_ that return an unchanging
+#' computation. These are none other than _functions_ that compute a fixed
 #' value when called without arguments. `constant()` makes such a function a
-#' bona fide constant by transforming it to a function that caches the value of
-#' its void call (i.e., `constant()`
+#' bona fide _constant_ by transforming it to a function that caches the value
+#' of its void call (i.e., `constant()`
 #' [memoizes](https://en.wikipedia.org/wiki/Memoization) void functions).
 #'
-#' Use \code{\link[=compose]{\%>>>\%}} with `constant()` as a _lazy_,
+#' Combine \code{\link[=compose]{\%>>>\%}} with `constant()` for a _lazy_,
 #' _structured_ alternative to the
 #' [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
-#' (see _Examples_).
+#' (see \sQuote{Examples}).
 #'
 #' @param f Function, or symbol or name (string) thereof, that can be called
 #'   without arguments. (NB: `constant()` itself does not check whether `f()` is
