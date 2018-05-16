@@ -37,3 +37,15 @@ test_that("attributes aside from class are preserved", {
   f_cached <- cache(f)
   expect_identical(non_class_attrs(f_cached), non_class_attrs(f))
 })
+
+test_that("uncaching recovers the original function", {
+  f_uncached <- uncache(f_cached)
+  expect_identical(f_uncached, f)
+
+  environment(f)$computing_value <- FALSE
+
+  for (. in seq_len(5)) {
+    expect_identical(f_uncached(), "value")
+    expect_true(environment(f)$computing_value)
+  }
+})

@@ -6,11 +6,13 @@
 #' `cache()` when you want to treat a computed value as a _constant_ with
 #' \dQuote{structure,} namely the computation that produced it.
 #'
-#' @param f Function that can be called without arguments. (NB: `cache()` itself
-#'   does not check whether `f()` is indeed a valid call.)
+#' @param f Function, or symbol or name (string) thereof, that can be called
+#'   without arguments. (NB: `cache()` itself does not check whether `f()` is
+#'   indeed a valid call.)
 #'
-#' @return Function without formal arguments that returns the (cached) value of
-#'   the void call `f()`.
+#' @return `cache()` returns a function without formal arguments that returns
+#'   the (cached) value of the void call `f()`. `uncache()` recovers the
+#'   underlying (uncached) function of a cached function.
 #'
 #' @seealso \code{\link[=compose]{\%>>>\%}}
 #'
@@ -65,10 +67,29 @@ cache <- local({
   cache <- list(`__value__` = NULL, `__was_called__` = FALSE)
 
   function(f) {
+    f <- match.fun(f)
     environment(cached) <- envir(f) %encloses% c(`__uncached__` = f, cache)
     attributes(cached) <- attributes(f)
     class(cached) <- "CachedVoidFunction" %subclass% class(f)
     cached
+  }
+})
+
+#' @examples
+#' # Use `uncache()` to recover the uncached function
+#' val_uncached <- uncache(val_cached)
+#' stopifnot(identical(uncache(val_cached), val))
+#' val_uncached()
+#' val_uncached()
+#'
+#' @rdname cache
+#' @export
+uncache <- local({
+  uncache_ <- getter("__uncached__")
+
+  function(f) {
+    f <- match.fun(f)
+    uncache_(f) %||% f
   }
 })
 

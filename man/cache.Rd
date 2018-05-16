@@ -2,17 +2,22 @@
 % Please edit documentation in R/cache.R
 \name{cache}
 \alias{cache}
+\alias{uncache}
 \title{Cache the value of a void function call}
 \usage{
 cache(f)
+
+uncache(f)
 }
 \arguments{
-\item{f}{Function that can be called without arguments. (NB: \code{cache()} itself
-does not check whether \code{f()} is indeed a valid call.)}
+\item{f}{Function, or symbol or name (string) thereof, that can be called
+without arguments. (NB: \code{cache()} itself does not check whether \code{f()} is
+indeed a valid call.)}
 }
 \value{
-Function without formal arguments that returns the (cached) value of
-the void call \code{f()}.
+\code{cache()} returns a function without formal arguments that returns
+the (cached) value of the void call \code{f()}. \code{uncache()} recovers the
+underlying (uncached) function of a cached function.
 }
 \description{
 \code{cache()} is a convenience helper that transforms a function into a function
@@ -59,6 +64,12 @@ val2 <- mtcars \%>\%
 # `val2` and `val()` are identical values. But in contrast to `val_cached()`,
 # the “structure” of `val2` is only implicit in source code.
 stopifnot(identical(val2, val_cached()))}
+
+# Use `uncache()` to recover the uncached function
+val_uncached <- uncache(val_cached)
+stopifnot(identical(uncache(val_cached), val))
+val_uncached()
+val_uncached()
 
 }
 \seealso{
