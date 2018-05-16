@@ -17,9 +17,9 @@ Collate:
     'gestalt.R'
     'utils.R'
     'compose.R'
+    'constant.R'
     'partial.R'
     'tidy.R'
     'fn.R'
-    'constant.R'
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
