@@ -3,9 +3,9 @@
 #' @description
 #' A **constant** is a fixed value that incorporates the process of its very
 #' computation. These are none other than _functions_ that compute a fixed
-#' value when called without arguments. `constant()` makes such a function a
-#' bona fide _constant_ by transforming it to a function that caches the value
-#' of its void call (i.e., `constant()`
+#' value when called without arguments. `constant()` declares that such a
+#' function is a bona fide _constant_ by transforming it to a function that
+#' caches the value of its void call (i.e., `constant()`
 #' [memoizes](https://en.wikipedia.org/wiki/Memoization) void functions).
 #'
 #' Combine \code{\link[=compose]{\%>>>\%}} with `constant()` for a _lazy_,

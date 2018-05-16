@@ -22,9 +22,9 @@ underlying (uncached) function of a constant function.
 \description{
 A \strong{constant} is a fixed value that incorporates the process of its very
 computation. These are none other than \emph{functions} that compute a fixed
-value when called without arguments. \code{constant()} makes such a function a
-bona fide \emph{constant} by transforming it to a function that caches the value
-of its void call (i.e., \code{constant()}
+value when called without arguments. \code{constant()} declares that such a
+function is a bona fide \emph{constant} by transforming it to a function that
+caches the value of its void call (i.e., \code{constant()}
 \href{https://en.wikipedia.org/wiki/Memoization}{memoizes} void functions).
 
 Combine \code{\link[=compose]{\%>>>\%}} with \code{constant()} for a \emph{lazy},
