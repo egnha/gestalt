@@ -66,6 +66,7 @@ cache <- local({
 
   function(f) {
     environment(cached) <- envir(f) %encloses% c(f = f, cache)
+    attributes(cached) <- attributes(f)
     class(cached) <- "CachedVoidFunction" %subclass% class(f)
     cached
   }
