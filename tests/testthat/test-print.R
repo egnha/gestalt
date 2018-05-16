@@ -58,3 +58,34 @@ test_that("composition of functions shows composite functions", {
   )
   expect_identical(capture.output(print(f)), out)
 })
+
+test_that("cached function prints according to its original class", {
+  three <- cache(partial(`+`, 1, 2))
+  out <- c(
+    "<Cached Void Function>",
+    "<Partially Applied Function>",
+    "",
+    "function() {",
+    "  (^1) + (^2)",
+    "}",
+    "",
+    "Recover the inner function with 'departial()'."
+  )
+  expect_identical(capture.output(print(three)), out)
+
+  void <- cache(list %>>>% c)
+  out <- c(
+    "<Cached Void Function>",
+    "<Function Composition>",
+    "In order of application:",
+    "",
+    "[[1]]",
+    "  function (...)  .Primitive(\"list\")",
+    "",
+    "[[2]]",
+    "  function (...)  .Primitive(\"c\")",
+    "",
+    "Recover the list of functions with 'as.list()'."
+  )
+  expect_identical(capture.output(print(void)), out)
+})
