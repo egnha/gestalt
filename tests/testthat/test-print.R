@@ -62,7 +62,7 @@ test_that("composition of functions shows composite functions", {
 test_that("constant function prints according to its original class", {
   three <- constant(partial(`+`, 1, 2))
   out <- c(
-    "<Constant Function>",
+    "Constant Function:",
     "<Partially Applied Function>",
     "",
     "function() {",
@@ -75,7 +75,7 @@ test_that("constant function prints according to its original class", {
 
   void <- constant(list %>>>% c)
   out <- c(
-    "<Constant Function>",
+    "Constant Function:",
     "<Function Composition>",
     "In order of application:",
     "",

@@ -111,7 +111,7 @@ variable <- local({
 
 #' @export
 print.ConstantFunction <- function(x, ...) {
-  cat("<Constant Function>\n")
+  cat("Constant Function:\n")
   NextMethod()
   invisible(x)
 }
