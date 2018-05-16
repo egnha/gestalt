@@ -56,16 +56,16 @@
 #' @export
 cache <- local({
   cached <- function() {
-    if (was_called)
-      return(value)
-    was_called <<- TRUE
-    value <<- f()
-    value
+    if (`__was_called__`)
+      return(`__value__`)
+    `__was_called__` <<- TRUE
+    `__value__` <<- `__uncached__`()
+    `__value__`
   }
-  cache <- list(value = NULL, was_called = FALSE)
+  cache <- list(`__value__` = NULL, `__was_called__` = FALSE)
 
   function(f) {
-    environment(cached) <- envir(f) %encloses% c(f = f, cache)
+    environment(cached) <- envir(f) %encloses% c(`__uncached__` = f, cache)
     attributes(cached) <- attributes(f)
     class(cached) <- "CachedVoidFunction" %subclass% class(f)
     cached
