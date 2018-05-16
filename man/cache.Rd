@@ -15,13 +15,13 @@ without arguments. (NB: \code{cache()} itself does not check whether \code{f()} 
 indeed a valid call.)}
 }
 \value{
-\code{cache()} returns a function without formal arguments that returns
+\code{cache()} yields a function without formal arguments that returns
 the (cached) value of the void call \code{f()}. \code{uncache()} recovers the
 underlying (uncached) function of a cached function.
 }
 \description{
-\code{cache()} is a convenience helper that transforms a function into a function
-that caches the value of its \emph{void call}, i.e., \code{cache()}
+\code{cache()} is an ad hoc helper that transforms a function into a function that
+caches the value of its \emph{void call}, i.e., \code{cache()}
 \href{https://en.wikipedia.org/wiki/Memoization}{memoizes} void functions. Use
 \code{cache()} when you want to treat a computed value as a \emph{constant} with
 \dQuote{structure,} namely the computation that produced it.

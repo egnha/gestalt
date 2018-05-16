@@ -1,7 +1,7 @@
 #' Cache the value of a void function call
 #'
-#' `cache()` is a convenience helper that transforms a function into a function
-#' that caches the value of its _void call_, i.e., `cache()`
+#' `cache()` is an ad hoc helper that transforms a function into a function that
+#' caches the value of its _void call_, i.e., `cache()`
 #' [memoizes](https://en.wikipedia.org/wiki/Memoization) void functions. Use
 #' `cache()` when you want to treat a computed value as a _constant_ with
 #' \dQuote{structure,} namely the computation that produced it.
@@ -10,7 +10,7 @@
 #'   without arguments. (NB: `cache()` itself does not check whether `f()` is
 #'   indeed a valid call.)
 #'
-#' @return `cache()` returns a function without formal arguments that returns
+#' @return `cache()` yields a function without formal arguments that returns
 #'   the (cached) value of the void call `f()`. `uncache()` recovers the
 #'   underlying (uncached) function of a cached function.
 #'
