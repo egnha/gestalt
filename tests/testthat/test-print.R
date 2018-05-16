@@ -59,10 +59,10 @@ test_that("composition of functions shows composite functions", {
   expect_identical(capture.output(print(f)), out)
 })
 
-test_that("cached function prints according to its original class", {
-  three <- cache(partial(`+`, 1, 2))
+test_that("constant function prints according to its original class", {
+  three <- constant(partial(`+`, 1, 2))
   out <- c(
-    "<Cached Void Function>",
+    "<Constant Function>",
     "<Partially Applied Function>",
     "",
     "function() {",
@@ -73,9 +73,9 @@ test_that("cached function prints according to its original class", {
   )
   expect_identical(capture.output(print(three)), out)
 
-  void <- cache(list %>>>% c)
+  void <- constant(list %>>>% c)
   out <- c(
-    "<Cached Void Function>",
+    "<Constant Function>",
     "<Function Composition>",
     "In order of application:",
     "",

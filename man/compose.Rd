@@ -121,7 +121,7 @@ stopifnot(
 
 }
 \seealso{
-\code{\%>>>\%} combined with \code{\link[=cache]{cache()}} provides a \emph{lazy} and
-\emph{structured} alternative to the
+\code{\link[=constant]{constant()}}: combined with \code{\%>>>\%}, this provides a lazy,
+structured alternative to the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}.
 }

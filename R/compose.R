@@ -51,8 +51,8 @@
 #'   `as.list(compose(fs))` is the same as `fs`, when `fs` is a list of
 #'   functions (though the names of `as.list()` are always strings).
 #'
-#' @seealso \code{\%>>>\%} combined with [cache()] provides a _lazy_ and
-#'   _structured_ alternative to the
+#' @seealso [constant()]: combined with \code{\%>>>\%}, this provides a lazy,
+#'   structured alternative to the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}.
 #'
 #' @examples
