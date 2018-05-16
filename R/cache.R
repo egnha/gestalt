@@ -39,6 +39,11 @@
 #' # For instance, you can inspect the intermediate summary:
 #' head(val_cached, -1)()
 #'
+#' # Which can itself be cached:
+#' summ <- cache(head(val_cached, -1))
+#' summ()
+#' summ()
+#'
 #' \dontrun{
 #' # You can think of `%>>>%` combined with `cache()` as a lazy, structured
 #' # alternative to the magrittr `%>%`.
