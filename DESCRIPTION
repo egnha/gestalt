@@ -20,5 +20,6 @@ Collate:
     'partial.R'
     'tidy.R'
     'fn.R'
+    'cache.R'
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)

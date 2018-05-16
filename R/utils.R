@@ -70,7 +70,10 @@ halt <- function(msg, ...) {
 # nocov start (build-time only)
 getter <- function(nm) {
   force(nm)
-  function(x) .subset2(environment(x), nm)
+  function(x) {
+    env <- environment(x) %||% emptyenv()
+    get0(nm, envir = env, ifnotfound = NULL)
+  }
 }
 
 assign_getter <- function(nm) {

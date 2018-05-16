@@ -51,6 +51,10 @@
 #'   `as.list(compose(fs))` is the same as `fs`, when `fs` is a list of
 #'   functions (though the names of `as.list()` are always strings).
 #'
+#' @seealso \code{\%>>>\%} combined with [cache()] provides a _lazy_ and
+#'   _structured_ alternative to the
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}.
+#'
 #' @examples
 #' # Functions are composed from right to left (following convention)
 #' inv <- partial(`/`, 1)  # reciprocal
