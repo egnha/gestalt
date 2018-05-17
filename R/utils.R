@@ -140,6 +140,11 @@ pick <- function(x, i) {
   }
 })
 
+not_fn_coercible <- function(x) {
+  cls <- paste(deparse(class(x)), collapse = "")
+  halt("Cannot interpret object of class %s as a function", cls)
+}
+
 #' Raw quotation of an expression
 #'
 #' `quo_get_expr_()` is an extension of [rlang::quo_get_expr()] that comprehends

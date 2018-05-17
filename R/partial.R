@@ -88,7 +88,40 @@
 #' )
 #'
 #' @export
-partial <- local({
+partial <- function(..f, ...) {
+  UseMethod("partial")
+}
+
+#' @export
+partial.default <- function(..f, ...) {
+  not_fn_coercible(..f)
+}
+
+#' @export
+partial.CompositeFunction <- function(..f, ...) {
+  fst <- pipeline_head(..f)
+  ..f[[fst$idx]] <- partial.function(fst$fn, ...)
+  ..f
+}
+
+pipeline_head <- local({
+  index_first <- function(x) {
+    depth <- 0L
+    while (is.list(x)) {
+      depth <- depth + 1L
+      x <- x[[1L]]
+    }
+    rep(1L, depth)
+  }
+
+  function(f) {
+    fs <- as.list.CompositeFunction(f)
+    list(idx = index_first(fs), fn = unlist(fs)[[1L]])
+  }
+})
+
+#' @export
+partial.function <- local({
   assign_setter("expr_partial")
 
   expr_fn <- function(..f, f) {
@@ -135,7 +168,7 @@ partial_ <- local({
 
   function(f, ...) {
     fix <- quos_match(f, ...)
-    f_bare <- departial_(f)
+    f_bare <- departial(f)
     nms_bare <- names(formals(f_bare))
     if (has_dots(nms_bare)) {
       no_name_reuse(f, fix) %because% "Can't reset previously fixed argument(s)"
@@ -216,16 +249,28 @@ eneval_tidy <- function(nm) {
 #' @rdname partial
 #' @export
 departial <- function(..f) {
-  ..f <- match.fun(..f)
-  departial_(..f)
+  UseMethod("departial")
 }
 
-departial_ <- local({
+#' @export
+departial.default <- function(..f) {
+  not_fn_coercible(..f)
+}
+
+#' @export
+departial.CompositeFunction <- function(..f) {
+  fst <- pipeline_head(..f)
+  ..f[[fst$idx]] <- departial.function(fst$fn)
+  ..f
+}
+
+#' @export
+departial.function <- local({
   get_bare    <- getter("__bare__")
   get_partial <- getter("__partial__")
 
-  function(f) {
-    get_bare(get_partial(f)) %||% f
+  function(..f) {
+    get_bare(get_partial(..f)) %||% ..f
   }
 })
 
@@ -261,7 +306,7 @@ call_with_fixed_args <- function(x) {
   }
   subst_called_args <- local({
     nms_fix <- names_fixed(x)
-    nms_fix <- nms_fix[names(nms_fix) %in% names(formals(departial_(x)))]
+    nms_fix <- nms_fix[names(nms_fix) %in% names(formals(departial(x)))]
     exprs_fix <- lapply(nms_fix, function(nm) uq(as.name(nm)))
 
     function(expr) {

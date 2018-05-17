@@ -541,6 +541,23 @@ test_that("function is not mutated, i.e., partial() has no side effects", {
   )
 })
 
+test_that("partializing a composition partializes the first function applied", {
+  f <- log
+
+  vals <- {set.seed(1); runif(10, 0.5, 1)}
+
+  for (. in seq_len(5)) {
+    f <- top: f %>>>% identity
+    fp <- partial(f, base = 2)
+    fst <- unlist(as.list(fp))[[1]]
+
+    expect_equal(fp(vals), log(vals, 2))
+    expect_true(inherits(fp, "CompositeFunction"))
+    expect_false(inherits(fp, "PartialFunction"))
+    expect_true(inherits(fst, "PartialFunction"))
+  }
+})
+
 context("Inverting partial function application")
 
 test_that("departial() of a partial function is the closure of the original function", {
@@ -563,8 +580,31 @@ test_that("departial() is the identity for non-partial functions", {
     expect_identical(departial(f), f)
 })
 
+test_that("departializing a partialized composition departializes the first function", {
+  f <- log
+
+  vals <- {set.seed(1); runif(10, 0.5, 1)}
+
+  for (. in seq_len(5)) {
+    f <- top: f %>>>% identity
+    dp <- departial(partial(f, base = 2))
+    fst <- unlist(as.list(dp))[[1]]
+
+    expect_equal(dp(vals), log(vals))
+    expect_true(inherits(dp, "CompositeFunction"))
+    expect_false(inherits(dp, "PartialFunction"))
+    expect_false(inherits(fst, "PartialFunction"))
+  }
+})
+
 test_that("error is signaled when applying departial() to a non-function", {
   foo <- quote(foo)
-  expect_error(departial(foo), "object 'foo' of mode 'function' was not found")
-  expect_error(departial(NULL), "'NULL' is not a function, character or symbol")
+  expect_error(
+    departial(foo),
+    'Cannot interpret object of class "name" as a function'
+  )
+  expect_error(
+    departial(NULL),
+    'Cannot interpret object of class "NULL" as a function'
+  )
 })

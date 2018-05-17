@@ -137,6 +137,11 @@ fn_interp <- function(x) {
 }
 
 #' @export
+fn_interp.default <- function(x) {
+  not_fn_coercible(x)
+}
+
+#' @export
 fn_interp.quosure <- function(x) {
   expr <- quo_get_expr_(x)
   if (is_literal(expr))
@@ -235,12 +240,6 @@ fn_interp.function <- function(x) x
 
 #' @export
 fn_interp.NULL <- function(x) NULL
-
-#' @export
-fn_interp.default <- function(x) {
-  cls <- paste(deparse(class(x)), collapse = "")
-  halt("Cannot interpret object of class %s as a function", cls)
-}
 
 fuse <- function(fs) {
   pipeline <- unlist(fs, use.names = FALSE)
