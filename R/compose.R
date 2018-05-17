@@ -445,7 +445,7 @@ as_indices <- function(nms) {
 #' @importFrom utils capture.output
 trim_capture <- function(f) {
   out <- capture.output(print(f))
-  if (inherits(f, c("PartialFunction", "TidyFunction")))
+  if (inherits(f, "PartialFunction"))
     out <- out[-c(2L, length(out) - 1L, length(out))]
   out
 }

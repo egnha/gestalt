@@ -2,11 +2,6 @@
 
 ## 0.0.0.9000
 
-  * The function transformer `tidy()` is introduced. It enhances functions by
-    enabling them to support unquoting and splicing of arguments, i.e.,
-    quasiquotation. This is handy when you want a function written by someone
-    else to comprehend quasiquotation. Apply `untidy()` to undo `tidy()`.
-
   * Compositions are available with the `compose()` function and its operator
     forms `%<<<%` and `%>>>%` (forward composition). Crucially, `compose()`
     is associative, both semantically and operationally, which prevents nested

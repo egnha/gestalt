@@ -18,19 +18,6 @@ test_that("partially applied function shows function with arguments fixed", {
   expect_identical(capture.output(print(draw_letters)), out)
 })
 
-test_that("tidy function shows underlying function", {
-  f <- tidy(identity)
-  out_identity <- capture.output(print(identity))
-  out <- c(
-    "<Tidy Function>",
-    "",
-    out_identity,
-    "",
-    "Recover the function shown with 'untidy()'."
-  )
-  expect_identical(capture.output(print(f)), out)
-})
-
 test_that("composition of functions shows composite functions", {
   f <- abs %>>>%
     inc: !!partial(`+`, 1) %>>>%
