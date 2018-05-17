@@ -54,7 +54,7 @@
 #' summ()
 #'
 #' \dontrun{
-#' # You can think of `%>>>%` combined with `constant()` as a lazy, structured
+#' # Think of `%>>>%` combined with `constant()` as a lazy, structured
 #' # alternative to the magrittr `%>%`.
 #'
 #' require(magrittr)
