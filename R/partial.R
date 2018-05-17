@@ -116,7 +116,8 @@ pipeline_head <- local({
 
   function(f) {
     fs <- as.list.CompositeFunction(f)
-    list(idx = index_head(fs), fn = unlist(fs)[[1L]])
+    idx <- index_head(fs)
+    list(idx = idx, fn = fs[[idx]])
   }
 })
 
