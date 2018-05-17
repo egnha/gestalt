@@ -168,7 +168,7 @@ partial_ <- local({
 
   function(f, ...) {
     fix <- quos_match(f, ...)
-    f_bare <- departial(f)
+    f_bare <- departial.function(f)
     nms_bare <- names(formals(f_bare))
     if (has_dots(nms_bare)) {
       no_name_reuse(f, fix) %because% "Can't reset previously fixed argument(s)"
