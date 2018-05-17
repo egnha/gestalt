@@ -355,6 +355,17 @@ test_that("error is signaled when implicit partialization is invalid (#43)", {
   )
 })
 
+test_that("unquoting operators can be literally expressed", {
+  . <- list(4, 5)
+  f <- list %>>>% {rlang::list2(QUQS(.), !!!.)}
+  expect_equal(f(1, 2, 3), rlang::list2(1, 2, 3, 4, 5))
+
+  x <- 1
+  . <- 2
+  f <- identity %>>>% {rlang::exprs(QUQ(.), !!.)}
+  expect_equal(f(x), rlang::exprs(1, 2))
+})
+
 context("Decomposing compositions")
 
 test_that("tree structure of composition preserved when converting to list", {

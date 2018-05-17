@@ -138,7 +138,7 @@ fn_interp <- function(x) {
 
 #' @export
 fn_interp.quosure <- function(x) {
-  expr <- quo_get_expr(x)
+  expr <- quo_get_expr_(x)
   if (is_literal(expr))
     return(fn_interp(eval_tidy(x)))
   if (is_group(expr))

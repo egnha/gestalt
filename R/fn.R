@@ -244,23 +244,10 @@ blank <- list(quote(expr = ))
 #' unquoting operators: `QUQ()`, `QUQS()` are substituted as `` `!!`() ``,
 #' `` `!!!`() ``, resp.
 #'
-#' @param ... Unevaluated expressions to capture.
-#' @return List of expressions.
-#'
 #' @noRd
-literal_tidy <- local({
-  quo_get_expr_ <- function(x) {
-    do.call("substitute", list(quo_get_expr(x), quq))
-  }
-  quq <- list(
-    QUQ  = as.name("!!"),
-    QUQS = as.name("!!!")
-  )
-
-  function(...) {
-    lapply(quos(...), quo_get_expr_)
-  }
-})
+literal_tidy <- function(...) {
+  lapply(quos(...), quo_get_expr_)
+}
 
 #' @rdname fn
 #' @export

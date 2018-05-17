@@ -139,3 +139,21 @@ pick <- function(x, i) {
     x
   }
 })
+
+#' Raw quotation of an expression
+#'
+#' `quo_get_expr_()` is an extension of [rlang::quo_get_expr()] that comprehends
+#' literal unquoting operators: `QUQ()`, `QUQS()` are substituted as
+#' `` `!!`() ``, and `` `!!!`() ``, resp.
+#'
+#' @noRd
+quo_get_expr_ <- local({
+  quq <- list(
+    QUQ  = as.name("!!"),
+    QUQS = as.name("!!!")
+  )
+
+  function(x) {
+    do.call("substitute", list(quo_get_expr(x), quq))
+  }
+})
