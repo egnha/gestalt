@@ -105,7 +105,7 @@ partial.CompositeFunction <- function(..f, ...) {
 }
 
 pipeline_head <- local({
-  index_first <- function(x) {
+  index_head <- function(x) {
     depth <- 0L
     while (is.list(x)) {
       depth <- depth + 1L
@@ -116,7 +116,7 @@ pipeline_head <- local({
 
   function(f) {
     fs <- as.list.CompositeFunction(f)
-    list(idx = index_first(fs), fn = unlist(fs)[[1L]])
+    list(idx = index_head(fs), fn = unlist(fs)[[1L]])
   }
 })
 
