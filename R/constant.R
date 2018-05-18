@@ -77,11 +77,11 @@ constant <- local({
   const <- function() {
     if (is.null(`__const__`)) {
       res <- withVisible(`__value__`())
-      value <- .subset2(res, "value")
+      val <- .subset2(res, "value")
       if (.subset2(res, "visible"))
-        `__const__` <<- function() value
+        `__const__` <<- function() val
       else
-        `__const__` <<- function() invisible(value)
+        `__const__` <<- function() invisible(val)
     }
     `__const__`()
   }
