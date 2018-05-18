@@ -1,11 +1,11 @@
-#' Values as processes
+#' Values as functions
 #'
 #' @description
-#' A **constant** is a fixed value that incorporates the process of its very
-#' computation. These are none other than _functions_ that compute a fixed
-#' value when called without arguments. `constant()` declares that such a
-#' function is a bona fide _constant_ by transforming it to a function that
-#' caches the value of its void call (i.e., `constant()`
+#' A **constant** is a fixed value that incorporates its very computation. This
+#' is none other than a _function_ that computes a fixed value when called
+#' without arguments. `constant()` declares such a function as a bona fide
+#' _constant_ by transforming it to a function that caches the value of its void
+#' call (i.e., `constant()`
 #' [memoizes](https://en.wikipedia.org/wiki/Memoization) void functions).
 #'
 #' Combine \code{\link[=compose]{\%>>>\%}} with `constant()` for a _lazy_,
