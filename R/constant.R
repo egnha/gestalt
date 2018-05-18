@@ -87,6 +87,8 @@ constant <- local({
 
   function(f) {
     f <- match.fun(f)
+    if (inherits(f, "ConstantFunction"))
+      return(f)
     environment(const) <- envir(f) %encloses% list(
       `__value__` = f,
       `__const__` = NULL

@@ -38,6 +38,11 @@ test_that("attributes aside from class are preserved", {
   expect_identical(non_class_attrs(const), non_class_attrs(val))
 })
 
+test_that("constant() is idempotent", {
+  const <- constant(function() NULL)
+  expect_identical(constant(const), const)
+})
+
 test_that("variable() recovers the original function", {
   val_var <- variable(const)
   expect_identical(val_var, val)
