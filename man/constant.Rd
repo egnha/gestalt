@@ -16,8 +16,9 @@ indeed a valid call.)}
 }
 \value{
 \code{constant()} yields a function without formal arguments that returns
-the (cached) value of the void call \code{f()}. \code{variable()} recovers the
-underlying (uncached) function of a constant function.
+the (cached, visibility-preserving) value of the void call \code{f()}.
+\code{variable()} recovers the underlying (uncached) function of a constant
+function.
 }
 \description{
 A \strong{constant} is a fixed value that incorporates the process of its very

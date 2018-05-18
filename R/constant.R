@@ -18,8 +18,9 @@
 #'   indeed a valid call.)
 #'
 #' @return `constant()` yields a function without formal arguments that returns
-#'   the (cached) value of the void call `f()`. `variable()` recovers the
-#'   underlying (uncached) function of a constant function.
+#'   the (cached, visibility-preserving) value of the void call `f()`.
+#'   `variable()` recovers the underlying (uncached) function of a constant
+#'   function.
 #'
 #' @seealso \code{\link[=compose]{\%>>>\%}}
 #'
