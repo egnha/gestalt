@@ -202,12 +202,10 @@ lambda_partial <- local({
   is_void <- function(call) {
     length(call) == 1L
   }
-  conform <- function(call, to) {
-    call_conform <- match.call(args(to) %||% as_closure(to), call) %unless%
+  verify_conformance <- function(call, to) {
+    match.call(args(to) %||% as_closure(to), call) %unless%
       sprintf("%s is an invalid call: %%s", expr_label(call))
-    if (is.primitive(to))
-      return(call)
-    call_conform
+    invisible(call)
   }
 
   function(call, env) {
@@ -217,7 +215,7 @@ lambda_partial <- local({
     args <- as.list(call)[-1L]
     if (all(args != point))
       call <- as.call(c(call[[1L]], point, args))
-    call <- conform(call, to = caller)
+    verify_conformance(call, to = caller)
     lambda(call, env)
   }
 })
