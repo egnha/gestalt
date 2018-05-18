@@ -74,17 +74,23 @@
 #' @export
 constant <- local({
   const <- function() {
-    if (`__was_called__`)
-      return(`__value__`)
-    `__was_called__` <<- TRUE
-    `__value__` <<- `__fn_variable__`()
-    `__value__`
+    if (is.null(`__const__`)) {
+      res <- withVisible(`__value__`())
+      value <- .subset2(res, "value")
+      if (.subset2(res, "visible"))
+        `__const__` <<- function() value
+      else
+        `__const__` <<- function() invisible(value)
+    }
+    `__const__`()
   }
-  cache <- list(`__value__` = NULL, `__was_called__` = FALSE)
 
   function(f) {
     f <- match.fun(f)
-    environment(const) <- envir(f) %encloses% c(`__fn_variable__` = f, cache)
+    environment(const) <- envir(f) %encloses% list(
+      `__value__` = f,
+      `__const__` = NULL
+    )
     attributes(const) <- attributes(f)
     class(const) <- "ConstantFunction" %subclass% class(f)
     const
@@ -101,7 +107,7 @@ constant <- local({
 #' @rdname constant
 #' @export
 variable <- local({
-  get_variable <- getter("__fn_variable__")
+  get_variable <- getter("__value__")
 
   function(f) {
     f <- match.fun(f)
