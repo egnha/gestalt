@@ -17,14 +17,15 @@ indeed a valid call.)}
 \value{
 \code{constant()} yields a function without formal arguments that returns
 the (cached, visibility-preserving) value of the void call \code{f()}.
-\code{variable()} recovers the underlying (uncached) function of a constant
-function.
+
+\code{variable()} is the inverse transformation of \code{constant()}: it
+recovers the underlying (uncached) function of a constant function.
 }
 \description{
 A \strong{constant} is a fixed value that incorporates its very computation. This
 is none other than a \emph{function} that computes a fixed value when called
 without arguments. \code{constant()} declares such a function as a bona fide
-\emph{constant} by transforming it to a function that caches the value of its void
+constant by transforming it to a function that caches the value of its void
 call (i.e., \code{constant()}
 \href{https://en.wikipedia.org/wiki/Memoization}{memoizes} void functions).
 

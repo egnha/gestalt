@@ -4,7 +4,7 @@
 #' A **constant** is a fixed value that incorporates its very computation. This
 #' is none other than a _function_ that computes a fixed value when called
 #' without arguments. `constant()` declares such a function as a bona fide
-#' _constant_ by transforming it to a function that caches the value of its void
+#' constant by transforming it to a function that caches the value of its void
 #' call (i.e., `constant()`
 #' [memoizes](https://en.wikipedia.org/wiki/Memoization) void functions).
 #'
@@ -19,8 +19,6 @@
 #'
 #' @return `constant()` yields a function without formal arguments that returns
 #'   the (cached, visibility-preserving) value of the void call `f()`.
-#'   `variable()` recovers the underlying (uncached) function of a constant
-#'   function.
 #'
 #' @seealso \code{\link[=compose]{\%>>>\%}}
 #'
@@ -100,6 +98,11 @@ constant <- local({
   }
 })
 
+#' @rdname constant
+#'
+#' @return `variable()` is the inverse transformation of `constant()`: it
+#'   recovers the underlying (uncached) function of a constant function.
+#'
 #' @examples
 #' # Use `variable()` to recover the original (“variable”) function
 #' val_var <- variable(const)
@@ -107,7 +110,6 @@ constant <- local({
 #' val_var()
 #' val_var()
 #'
-#' @rdname constant
 #' @export
 variable <- local({
   get_variable <- getter("__value__")
