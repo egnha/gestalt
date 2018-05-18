@@ -38,6 +38,16 @@ test_that("attributes aside from class are preserved", {
   expect_identical(non_class_attrs(const), non_class_attrs(val))
 })
 
+test_that("visibility of cached function value is preserved", {
+  const <- constant(function() "visible")
+  expect_identical(const(), "visible")
+  expect_true(withVisible(const())$visible)
+
+  const <- constant(function() invisible("invisible"))
+  expect_identical(const(), "invisible")
+  expect_false(withVisible(const())$visible)
+})
+
 test_that("constant() is idempotent", {
   const <- constant(function() NULL)
   expect_identical(constant(const), const)
