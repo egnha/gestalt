@@ -400,7 +400,8 @@ as.list.CompositeFunction <- function(x, ...) {
   fn_interp.CompositeFunction(x)
 }
 
-#' @rawNamespace S3method(unlist,CompositeFunction)
+#' @method unlist CompositeFunction
+#' @export
 unlist.CompositeFunction <- function(x, recursive = TRUE, use.names = TRUE) {
   unlist(as.list.CompositeFunction(x),
          recursive = recursive, use.names = use.names)
