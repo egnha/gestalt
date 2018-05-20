@@ -815,3 +815,31 @@ test_that("composition length is the number of top-level component functions", {
     length((sin %>>>% cos) %>>>% tan %>>>% identity)
   )
 })
+
+test_that("unlist() flattens the list of composite functions", {
+  # Default values: recursive = TRUE, use.names = TRUE
+  expect_identical(
+    unlist(abs: abs %>>>% (log %>>>% (sum: sum %>>>% identity))),
+    list(abs = abs, log, sum = sum, identity)
+  )
+  expect_identical(
+    unlist(abs: abs %>>>% (log %>>>% (sum: sum %>>>% identity)),
+           recursive = TRUE, use.names = TRUE),
+    list(abs = abs, log, sum = sum, identity)
+  )
+  expect_identical(
+    unlist(abs: abs %>>>% (log %>>>% (sum: sum %>>>% identity)),
+           recursive = FALSE),
+    list(abs = abs, log, list(sum = sum, identity))
+  )
+  expect_identical(
+    unlist(abs: abs %>>>% (log %>>>% (sum: sum %>>>% identity)),
+           use.names = FALSE),
+    list(abs, log, sum, identity)
+  )
+  expect_identical(
+    unlist(abs: abs %>>>% (log %>>>% (sum: sum %>>>% identity)),
+           recursive = FALSE, use.names = FALSE),
+    list(abs, log, list(sum = sum, identity))
+  )
+})
