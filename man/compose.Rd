@@ -7,7 +7,7 @@
 \usage{
 compose(...)
 
-inner \%>>>\% outer
+fst \%>>>\% snd
 }
 \arguments{
 \item{...}{Functions or lists thereof to compose. Lists of functions are
@@ -15,7 +15,7 @@ automatically spliced in. \link[rlang:quasiquotation]{Unquoting} of names, via
 \code{!!} on the left-hand side of \code{:=}, and \link[rlang:quasiquotation]{splicing},
 via \code{!!!}, are supported.}
 
-\item{inner, outer}{Functions. These may be optionally named using \code{:}, e.g.,
+\item{fst, snd}{Functions. These may be optionally named using \code{:}, e.g.,
 \code{f \%>>>\% nm: g} names the \code{g}-component.
 \link[rlang:quasiquotation]{Quasiquotation} and the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}}-\code{\%>\%}
@@ -23,15 +23,15 @@ semantics are supported (see \emph{Examples}).}
 }
 \value{
 \code{compose()} returns a function of class \code{CompositeFunction}, whose
-\link[base:formals]{formals} match those of the inner function applied (as a
+\link[base:formals]{formals} match those of the first function applied (as a
 closure).
 }
 \description{
 Compose functions in two ways:
 \itemize{
 \item Use \code{compose(f, g, ...)} to make the function that applies \code{f}, then \code{g},
-etc. It has the \link[base:formals]{formals} of the “inner” function \code{f}.
-Thus
+etc. It has the \link[base:formals]{formals} of the first function applied,
+namely \code{f}. Thus
 \preformatted{compose(paste, toupper)}
 is equivalent to the function\preformatted{function(..., sep = " ", collapse = NULL) {
   toupper(paste(..., sep = sep, collapse = collapse))
@@ -84,8 +84,8 @@ jsonify <- {fromJSON \%>>>\% .} \%>>>\% {. \%>>>\% toJSON}
 jsonify <- fn(f ~ fromJSON \%>>>\% f \%>>>\% toJSON)}
 
 # Formals of initial function are preserved
-inner <- function(a, b = 0) a + b
-stopifnot(identical(formals(compose(inner, inv)), formals(inner)))
+add <- function(a, b = 0) a + b
+stopifnot(identical(formals(compose(add, inv)), formals(add)))
 
 # Compositions can be provided by lists, in several equivalent ways
 f2 <- compose(list(abs, log, inv))

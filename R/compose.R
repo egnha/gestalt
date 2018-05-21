@@ -4,8 +4,8 @@
 #' Compose functions in two ways:
 #'
 #' - Use `compose(f, g, ...)` to make the function that applies `f`, then `g`,
-#'   etc. It has the [formals][base::formals()] of the “inner” function `f`.
-#'   Thus
+#'   etc. It has the [formals][base::formals()] of the first function applied,
+#'   namely `f`. Thus
 #'   \preformatted{compose(paste, toupper)}
 #'   is equivalent to the function
 #'   ```
@@ -35,7 +35,7 @@
 #'   via `!!!`, are supported.
 #'
 #' @return `compose()` returns a function of class `CompositeFunction`, whose
-#'   [formals][base::formals()] match those of the inner function applied (as a
+#'   [formals][base::formals()] match those of the first function applied (as a
 #'   closure).
 #'
 #' @section Properties: `compose()` is _associative_, semantically and
@@ -73,8 +73,8 @@
 #' jsonify <- fn(f ~ fromJSON %>>>% f %>>>% toJSON)}
 #'
 #' # Formals of initial function are preserved
-#' inner <- function(a, b = 0) a + b
-#' stopifnot(identical(formals(compose(inner, inv)), formals(inner)))
+#' add <- function(a, b = 0) a + b
+#' stopifnot(identical(formals(compose(add, inv)), formals(add)))
 #'
 #' # Compositions can be provided by lists, in several equivalent ways
 #' f2 <- compose(list(abs, log, inv))
@@ -277,7 +277,7 @@ fn_names <- function(fs) {
 
 as_protected_name <- function(i) sprintf("__%d__", i)
 
-#' @param inner,outer Functions. These may be optionally named using `:`, e.g.,
+#' @param fst,snd Functions. These may be optionally named using `:`, e.g.,
 #'   \code{f \%>>>\% nm: g} names the `g`-component.
 #'   [Quasiquotation][rlang::quasiquotation] and the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr)-\code{\%>\%}
@@ -285,8 +285,8 @@ as_protected_name <- function(i) sprintf("__%d__", i)
 #'
 #' @rdname compose
 #' @export
-`%>>>%` <- function(inner, outer) {
-  compose(enquo(inner), enquo(outer))
+`%>>>%` <- function(fst, snd) {
+  compose(enquo(fst), enquo(snd))
 }
 
 #' @export
