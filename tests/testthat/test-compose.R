@@ -310,6 +310,15 @@ test_that("subsetters are literally interpreted (#51)", {
   expect_equal(f(vals), exp(sum(log(vals)))^2)
 })
 
+test_that("fn() is literally interpreted", {
+  f <- fn(x ~ x^2) %>>>% log
+  g <- log %>>>% fn(x ~ x^2)
+
+  vals <- {set.seed(1); runif(10, 1, 2)}
+  expect_equal(f(vals), log(vals ^ 2))
+  expect_equal(g(vals), log(vals) ^ 2)
+})
+
 test_that("functions in composition can be named", {
   f0 <- function(x) log(abs(x) + 1)
 
