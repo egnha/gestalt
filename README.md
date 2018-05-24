@@ -141,13 +141,11 @@ Whenever you have a value that results from a series of pipes, such as
 ``` r
 library(magrittr)
 
-R2 <- mtcars %>% 
+mtcars %>% 
   split(.$cyl) %>% 
   lapply(function(data) lm(mpg ~ wt, data)) %>% 
   lapply(summary) %>% 
   sapply(`[[`, "r.squared")
-
-R2
 #>         4         6         8 
 #> 0.5086326 0.4645102 0.4229655
 ```
@@ -193,9 +191,9 @@ functions:
     #>  R2() 532 567 709.1435    585 647 39887308 1e+06
     ```
 
-3.  **Values as functions encode their computation**. Since the
-    composite function qua computation is a list-like object, you can
-    compute on it to extract **latent information**.
+3.  **Values as functions encode their computation**. Since a composite
+    function qua computation is a list-like object, you can compute on
+    it to extract **latent information**.
     
     For instance, you can get the normal Q–Q plot of the fitted model
     for 6-cylinder cars from the head of `R2`:
