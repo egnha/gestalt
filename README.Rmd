@@ -68,9 +68,9 @@ gestalt leverages the ubiquity of the [magrittr](https://magrittr.tidyverse.org)
 
 ### `%>>>%` is not a pipe
 
-Despite the syntax similarity, the `%>>>%` operator is fundamentally different
-from the magrittr `%>%` operator. Whereas `%>%` ”pipes” a value into a function
-to yield a value, `%>>>%` _composes_ functions to yield a function.
+Despite the syntactic similarity, the `%>>>%` operator is fundamentally
+different from the magrittr `%>%` operator. Whereas `%>%` “pipes” a value into a
+function to yield a value, `%>>>%` _composes_ functions to yield a function.
 
 The main difference, however, is that the idioms of lists apply to composite
 functions made by `%>>>%`, so that you inspect, modify, and repurpose them in an

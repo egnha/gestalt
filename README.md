@@ -62,8 +62,8 @@ to allow you to:
 
 ### `%>>>%` is not a pipe
 
-Despite the syntax similarity, the `%>>>%` operator is fundamentally
-different from the magrittr `%>%` operator. Whereas `%>%` ”pipes” a
+Despite the syntactic similarity, the `%>>>%` operator is fundamentally
+different from the magrittr `%>%` operator. Whereas `%>%` “pipes” a
 value into a function to yield a value, `%>>>%` *composes* functions to
 yield a function.
 
