@@ -25,16 +25,14 @@ More importantly, gestalt fosters a powerful way of thinking about
 The following example[\*](#adapted-from-purrr) illustrates a function
 that takes the name of a factor-column of the `mtcars` data frame, fits
 a linear model to the corresponding groups, then computes the
-R<sup>2</sup> of the summary. gestalt leverages the ubiquity of the
-[magrittr](https://magrittr.tidyverse.org) `%>%` by adopting its syntax.
+R<sup>2</sup> of the summary.
 
 ``` r
 library(gestalt)
 
 fit <- mpg ~ wt
 
-r2 <- 
-  {split(mtcars, mtcars[[.]])} %>>>%
+r2 <- {split(mtcars, mtcars[[.]])} %>>>%
   lapply(function(data) lm(!!fit, data)) %>>>%
   summarize: (
     lapply(summary) %>>>%
@@ -46,7 +44,8 @@ r2("cyl")
 #> 0.5086326 0.4645102 0.4229655
 ```
 
-In addition to supporting the magrittr `%>%` syntax, `%>>>%` extends it
+gestalt leverages the ubiquity of the
+[magrittr](https://magrittr.tidyverse.org) `%>%` by adopting its syntax
 to allow you to:
 
   - **Clarify intent** by annotating constituent functions with
@@ -115,7 +114,7 @@ scramble(letters, 5)
 #> [1] "GJNUE"
 ```
 
-We see the final result of the composition. But because `scramble()` is
+You see the final result of the composition. But because `scramble()` is
 list-like, we can also inspect its intermediate steps by modifying it
 using a standard “map-reduce” strategy (i.e., higher-order function):
 
@@ -136,8 +135,7 @@ stepwise(scramble)(letters, 5)
 
 ## The value of values as functions[\*\*](#value-of-values)
 
-Whenever you have a value that is transformed through a series of pipes,
-such as
+Whenever you have a value that results from a series of pipes, such as
 
 ``` r
 library(magrittr)
@@ -153,10 +151,10 @@ R2
 #> 0.5086326 0.4645102 0.4229655
 ```
 
-you can literally transpose it to a **constant (composite) function**
-that computes the same value, simply by treating the input value as a
-constant function (in this case, `function(.) mtcars`) and replacing
-each function application (`%>%`) by function composition (`%>>>%`):
+you can transpose it to a **constant composite function** that computes
+the same value, simply by treating the input value as a constant
+function and replacing each function application, `%>%`, by function
+composition, `%>>>%`:
 
 ``` r
 R2 <- {mtcars} %>>>% 
@@ -170,8 +168,8 @@ You reap a number of benefits by treating (piped) values as (composite)
 functions:
 
 1.  **Values as functions are lazy**. You can separate the value’s
-    declaration from its point of use—the value is only computed when
-    you demand it via a function call:
+    declaration from its point of use—the value is only computed on
+    demand:
     
     ``` r
     R2()
@@ -179,8 +177,8 @@ functions:
     #> 0.5086326 0.4645102 0.4229655
     ```
 
-2.  **Values as functions are cheap**. You make `R2` cache its value by
-    declaring it as a constant:
+2.  **Values as functions are cheap**. You can cache the value of `R2`
+    by declaring it as a constant:
     
     ``` r
     R2 <- constant(R2)
@@ -196,9 +194,7 @@ functions:
 
 3.  **Values as functions encode their computation**. Since the
     composite function qua computation is a list-like object, you can
-    easily compute on it to extract **latent information**, which is not
-    simply implicit in the source code, but directly accessible from the
-    value itself.
+    compute on it to extract **latent information**.
     
     For instance, you can get the normal Q–Q plot of the fitted model
     for 6-cylinder cars from the head of `R2`:
