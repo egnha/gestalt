@@ -73,11 +73,11 @@ repurpose them in an intuitive way.
 
 ### Select segments of functions using indexing
 
-To select the first two functions in `r2` to get just the fitted model
-(in this case, for cars with 6 cylinders), index with the vector `1:2`:
+To select the first two functions in `r2`, in order to get the fitted
+model, index with the vector `1:2`:
 
 ``` r
-r2[1:2]("cyl")[["6"]]
+r2[1:2]("cyl")[["6"]]  # Cars with 6 cylinders
 #> 
 #> Call:
 #> lm(formula = mpg ~ wt, data = data)
