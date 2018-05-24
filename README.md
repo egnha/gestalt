@@ -206,7 +206,7 @@ functions:
 
 ## Complements
 
-In conjunction with `%>>>%`, gestalt provides:
+In conjunction with `%>>>%`, gestalt also provides:
 
   - `fn()`, a more concise and flexible variation of `function()`, which
     supports tidyverse-style quasiquotation.
@@ -248,6 +248,22 @@ gestalt)`).
 devtools::install_github("egnha/gestalt")
 ```
 
+## Acknowledgments
+
+  - The core syntax for `%>>>%` conforms to the `%>%` syntax from the
+    [magrittr](https://magrittr.tidyverse.org) package by [Stefan Milton
+    Bache](https://github.com/smbache) and [Hadley
+    Wickham](https://github.com/hadley).
+
+  - The engine for quasiquotation and expression capture is powered by
+    the [rlang](https://rlang.r-lib.org) package by [Lionel
+    Henry](https://github.com/lionel-) and [Hadley
+    Wickham](https://github.com/hadley).
+
+  - The “triple arrow” notation for the composition operator is taken
+    from the Haskell
+    [Control.Arrow](https://hackage.haskell.org/package/base/docs/Control-Arrow.html)
+    library by Ross Paterson.
 
 ## License
 
