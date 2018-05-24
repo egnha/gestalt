@@ -22,7 +22,8 @@ More importantly, gestalt fosters a powerful way of thinking about
 
 ## Overview
 
-The following example[\*](#adapted-from-purrr) illustrates a function
+The following example (adapted from the
+[purrr](https://purrr.tidyverse.org) package) illustrates a function
 that takes the name of a factor-column of the `mtcars` data frame, fits
 a linear model to the corresponding groups, then computes the
 R<sup>2</sup> of the summary.
@@ -133,7 +134,7 @@ stepwise(scramble)(letters, 5)
 #> [1] "GJNUE"
 ```
 
-## The value of values as functions[\*\*](#value-of-values)
+## The [value of values](https://youtu.be/-6BsiVyC1kM) as functions
 
 Whenever you have a value that results from a series of pipes, such as
 
@@ -212,12 +213,8 @@ functions:
 devtools::install_github("egnha/gestalt")
 ```
 
+
+
 ## License
 
 MIT Copyright © 2018 [Eugene Ha](https://github.com/egnha)
-
-<a name="adapted-from-purrr">\*</a> Adapted from the
-[purrr](https://purrr.tidyverse.org) package.
-
-<a name="value-of-values">\*\*</a> With apologies to [Rich
-Hickey](https://youtu.be/-6BsiVyC1kM).
