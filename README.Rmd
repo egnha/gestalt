@@ -107,15 +107,15 @@ set.seed(1)
 scramble(letters, 5)
 ```
 
-You see the final result of the composition. But because `scramble()` is
-list-like, we can also inspect its intermediate steps by modifying it using a
-standard “map-reduce” strategy (i.e., higher-order function):
+You see the final result of the composition. But because `scramble` is a
+list-like object, you can inspect its intermediate steps using a standard
+“map-reduce” strategy (i.e., higher-order function):
 
 ```{r}
 stepwise <- lapply(`%>>>%`, print) %>>>% compose
 ```
 
-`stepwise()` maps over the constituent functions of a composite function to
+`stepwise` maps over the constituent functions of a composite function to
 add printing at each step:
 
 ```{r}
