@@ -46,7 +46,7 @@ r2("cyl")
 ```
 
 gestalt leverages the ubiquity of the
-[magrittr](https://magrittr.tidyverse.org) `%>%` by adopting its syntax
+[magrittr](https://magrittr.tidyverse.org) `%>%` by extending its syntax
 to allow you to:
 
   - **Clarify intent** by annotating constituent functions with
