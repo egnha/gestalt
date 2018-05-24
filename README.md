@@ -204,13 +204,49 @@ functions:
     
     <img src="inst/images/plot.svg"/>
 
+## Complements
+
+In conjunction with `%>>>%`, gestalt provides:
+
+  - `fn()`, a more concise and flexible variation of `function()`, which
+    supports tidyverse-style quasiquotation.
+    
+    ``` r
+    size <- 5L
+    fn(x, ... ~ sample(x, !!size, ...))
+    #> function (x, ...) 
+    #> sample(x, 5L, ...)
+    ```
+
+  - `partial()`, to make new functions from old by fixing a number of
+    arguments, i.e., [partial
+    application](https://en.wikipedia.org/wiki/Partial_application).
+    Like `fn()`, it also supports tidyverse-style quasiquotation.
+    
+    ``` r
+    (draw <- partial(sample, size = !!size, replace = TRUE))
+    #> <Partially Applied Function>
+    #> 
+    #> function(x, prob = NULL) {
+    #>   sample(x = x, size = ^5L, replace = ^TRUE, prob = prob)
+    #> }
+    #> 
+    #> Recover the inner function with 'departial()'.
+    
+    set.seed(2)
+    draw(letters)
+    #> [1] "e" "s" "o" "e" "y"
+    ```
+
+See the package documentation for more details (`help(package =
+gestalt)`).
+
 ## Installation
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("egnha/gestalt")
 ```
-
 
 
 ## License
