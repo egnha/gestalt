@@ -60,7 +60,7 @@ to allow you to:
     [`!!`](http://rlang.r-lib.org/reference/quasiquotation.html)
     operator, to enforce immutability or spare a runtime computation
 
-### `%>>>%` is not a pipe
+## `%>>>%` is not a pipe
 
 Despite the syntactic similarity, the `%>>>%` operator is fundamentally
 different from the magrittr `%>%` operator. Whereas `%>%` “pipes” a
@@ -71,7 +71,7 @@ The main difference, however, is that the idioms of lists apply to
 composite functions made by `%>>>%`, so that you inspect, modify, and
 repurpose them in an intuitive way.
 
-#### Select segments of functions using indexing
+### Select segments of functions using indexing
 
 To select the first two functions in `r2` to get just the fitted model
 (in this case, for cars with 6 cylinders), index with the vector `1:2`:
@@ -87,7 +87,7 @@ r2[1:2]("cyl")[["6"]]
 #>       28.41        -2.78
 ```
 
-#### Repurpose using subset-assignment
+### Repurpose using subset-assignment
 
 To compute the residuals rather than the R<sup>2</sup>, reassign the
 summary-statistic function:
@@ -102,7 +102,7 @@ residuals("cyl")[["6"]]
 #>     -1.0452801     -1.0079511
 ```
 
-#### Inspect or modify using higher-order functions
+### Inspect or modify using higher-order functions
 
 Consider a function that capitalizes and joins a random selection of
 characters:
