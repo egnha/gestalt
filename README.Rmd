@@ -197,7 +197,7 @@ In conjunction with `%>>>%`, gestalt also provides:
  - `partial()`, to make new functions from old by fixing a number of arguments,
    i.e.,
    [partial application](https://en.wikipedia.org/wiki/Partial_application).
-   Like `fn()`, it also supports tidyverse-style quasiquotation.
+   Like `fn()`, it also supports quasiquotation.
     ```{r}
     (draw <- partial(sample, size = !!size, replace = TRUE))
     
