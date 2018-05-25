@@ -47,7 +47,7 @@ r2("cyl")
 
 gestalt leverages the ubiquity of the
 [magrittr](https://magrittr.tidyverse.org) `%>%` by adopting its syntax,
-then augmenting it to allow you to:
+then augments it to help you:
 
   - **Clarify intent** by annotating constituent functions with
     descriptive names, which also serve as [subsetting
@@ -250,10 +250,9 @@ devtools::install_github("egnha/gestalt")
 
 ## Acknowledgments
 
-  - The core syntax for `%>>>%` conforms to the `%>%` syntax from the
-    [magrittr](https://magrittr.tidyverse.org) package by [Stefan Milton
-    Bache](https://github.com/smbache) and [Hadley
-    Wickham](https://github.com/hadley).
+  - The core syntax for `%>>>%` conforms to the
+    [magrittr](https://magrittr.tidyverse.org) `%>%` syntax developed by
+    [Stefan Milton Bache](https://github.com/smbache).
 
   - The engine for quasiquotation and expression capture is powered by
     the [rlang](https://rlang.r-lib.org) package by [Lionel
