@@ -22,11 +22,11 @@ More importantly, gestalt fosters a powerful way of thinking about
 
 ## Overview
 
-The following example (adapted from the
-[purrr](https://purrr.tidyverse.org) package) illustrates the use of
-`%>>>%` to express a function that takes the name of a factor-column of
-the `mtcars` data frame, fits a linear model to the corresponding
-groups, then computes the R² of the summary.
+The following example (adapted from
+[purrr](https://purrr.tidyverse.org)) illustrates the use of `%>>>%` to
+express a function that takes the name of a factor-column of the
+`mtcars` data frame, fits a linear model to the corresponding groups,
+then computes the R² of the summary.
 
 ``` r
 library(gestalt)
@@ -46,8 +46,8 @@ r2("cyl")
 ```
 
 gestalt leverages the ubiquity of the
-[magrittr](https://magrittr.tidyverse.org) `%>%` by adopting its syntax,
-then augments it to help you:
+[magrittr](https://magrittr.tidyverse.org) `%>%`, by adopting its syntax
+and augmenting it to enable you to:
 
   - **Clarify intent** by annotating constituent functions with
     descriptive names, which also serve as [subsetting
@@ -62,14 +62,14 @@ then augments it to help you:
 
 ## `%>>>%` is not a pipe
 
-Despite the syntactic similarity, the `%>>>%` operator is fundamentally
-different from the magrittr `%>%` operator. Whereas `%>%` “pipes” a
-value into a function to yield a value, `%>>>%` *composes* functions to
-yield a function.
+Despite the syntactic similarity, the `%>>>%` operator is conceptually
+distinct from the magrittr `%>%` operator. Whereas `%>%` “pipes” a value
+into a function to yield a value, `%>>>%` *composes* functions to yield
+a function.
 
-The main difference, however, is that the idioms of lists apply to
-composite functions made by `%>>>%`, so that you inspect, modify, and
-repurpose them in an intuitive way.
+The most significant distinction, however, is that list idioms apply to
+composite functions made by `%>>>%`, so that you can inspect, modify,
+and repurpose them, intuitively.
 
 ### Select segments of functions using indexing
 
@@ -116,7 +116,7 @@ scramble(letters, 5)
 ```
 
 You see the final result of the composition. But because `scramble` is a
-list-like object, you can inspect its intermediate steps using a
+list-like object, you can inspect its intermediate steps by applying a
 standard “map-reduce” strategy (i.e., higher-order function):
 
 ``` r
