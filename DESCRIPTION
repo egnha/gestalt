@@ -10,7 +10,7 @@ LazyData: true
 ByteCompile: true
 Depends: R (>= 3.1.0)
 Imports: rlang (>= 0.2.0), utils
-Suggests: testthat (>= 2.0.0)
+Suggests: testthat (>= 2.0.0), knitr, rmarkdown
 URL: https://github.com/egnha/gestalt
 BugReports: https://github.com/egnha/gestalt/issues
 Collate:
@@ -22,3 +22,4 @@ Collate:
     'fn.R'
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
