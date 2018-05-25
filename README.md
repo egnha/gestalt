@@ -26,7 +26,7 @@ The following example (adapted from the
 [purrr](https://purrr.tidyverse.org) package) illustrates the use of
 `%>>>%` to express a function that takes the name of a factor-column of
 the `mtcars` data frame, fits a linear model to the corresponding
-groups, then computes the R<sup>2</sup> of the summary.
+groups, then computes the R² of the summary.
 
 ``` r
 library(gestalt)
@@ -89,7 +89,7 @@ r2[1:2]("cyl")[["6"]]  # Cars with 6 cylinders
 
 ### Repurpose using subset-assignment
 
-To compute the residuals rather than the R<sup>2</sup>, reassign the
+To compute the residuals rather than the R², reassign the
 summary-statistic function:
 
 ``` r
