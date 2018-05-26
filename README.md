@@ -54,7 +54,8 @@ and augmenting it to enable you to:
     references](#repurpose-using-subset-assignment)
 
   - **Express nested sub-compositions**, while nonetheless preserving
-    the runtime characteristics of a flattened composition
+    the runtime characteristics of a flattened composition, so you can
+    focus on expressing structure that is most natural for your function
 
   - **Unquote sub-expressions** with the tidyverse
     [`!!`](http://rlang.r-lib.org/reference/quasiquotation.html)
