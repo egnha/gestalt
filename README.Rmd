@@ -149,8 +149,7 @@ R2 <- {mtcars} %>>>%
   sapply(`[[`, "r.squared")
 ```
 
-You reap a number of benefits by treating (piped) values as (composite)
-functions:
+You gain power by treating (piped) values as (composite) functions:
 
  1. **Values as functions are lazy**. You can separate the value’s declaration
     from its point of use—the value is only computed on demand:
