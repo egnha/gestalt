@@ -209,7 +209,7 @@ functions:
 
 In conjunction with `%>>>%`, gestalt also provides:
 
-  - `fn()`, a more concise and flexible variation of `function()`, which
+  - `fn`, a more concise and flexible variation of `function`, which
     supports tidyverse-style quasiquotation.
     
     ``` r
@@ -219,10 +219,10 @@ In conjunction with `%>>>%`, gestalt also provides:
     #> sample(x, 5L, ...)
     ```
 
-  - `partial()`, to make new functions from old by fixing a number of
+  - `partial`, to make new functions from old by fixing a number of
     arguments, i.e., [partial
     application](https://en.wikipedia.org/wiki/Partial_application).
-    Like `fn()`, it also supports quasiquotation.
+    Like `fn`, it also supports quasiquotation.
     
     ``` r
     (draw <- partial(sample, size = !!size, replace = TRUE))
@@ -238,6 +238,28 @@ In conjunction with `%>>>%`, gestalt also provides:
     draw(letters)
     #> [1] "e" "s" "o" "e" "y"
     ```
+    
+    Additionally, `partial` is:
+    
+      - **Hygenic**: The fixed argument values are [tidily
+        evaluated](http://rlang.r-lib.org/reference/eval_tidy.html)
+        promises; in particular, the usual lazy behavior of function
+        arguments, which can be overridden via unquoting, is respected
+        even for fixed arguments.
+    
+      - **Flat**: Fixing arguments in stages is operationally equivalent
+        to fixing them all at once—you get the same function either way:
+        
+        ``` r
+        partial(partial(sample, replace = TRUE), size = 5L)
+        #> <Partially Applied Function>
+        #> 
+        #> function(x, prob = NULL) {
+        #>   sample(x = x, size = ^5L, replace = ^TRUE, prob = prob)
+        #> }
+        #> 
+        #> Recover the inner function with 'departial()'.
+        ```
 
 See the package documentation for more details (`help(package =
 gestalt)`).
