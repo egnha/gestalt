@@ -137,7 +137,8 @@ stepwise(scramble)(letters, 5)
 
 ## The [value of values](https://youtu.be/-6BsiVyC1kM) as functions
 
-Whenever you have a value that results from a series of pipes, such as
+Whenever you have a value that results from a series of piped values,
+such as
 
 ``` r
 library(magrittr)
