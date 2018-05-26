@@ -115,9 +115,10 @@ scramble(letters, 5)
 #> [1] "GJNUE"
 ```
 
-You see the final result of the composition. But because `scramble` is a
-list-like object, you can inspect its intermediate steps by applying a
-standard “map-reduce” strategy (i.e., higher-order function):
+Here you see the final result of the composition. But because `scramble`
+is a list-like object, you can also inspect its intermediate steps by
+applying a standard “map-reduce” strategy, such as the following
+higher-order function:
 
 ``` r
 stepwise <- lapply(`%>>>%`, print) %>>>% compose
