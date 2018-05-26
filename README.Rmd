@@ -212,8 +212,8 @@ In conjunction with `%>>>%`, gestalt also provides:
       which can be overridden via unquoting, is respected even for fixed
       arguments.
       
-    * **Flat**: Fixing arguments in stages is operationally equivalent to fixing
-      them all at once—you get the same function either way:
+    * **Flat**: Fixing arguments in stages is _operationally_ equivalent to
+      fixing them all at once—you get the same function either way:
       ```{r}
       partial(partial(sample, replace = TRUE), size = 5L)
       ```
