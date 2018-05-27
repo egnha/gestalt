@@ -25,24 +25,24 @@ A function whose enclosing environment is \code{..env}.
 signature. Use it in place of the usual \code{function()} invocation whenever you
 want to:
 \itemize{
-\item type less:
-\preformatted{
-    fn(x, y = 1 ~ x + y)
-    function(x, y = 1) x + y}
+\item Be concise:
+\preformatted{%
+  fn(x, y = 1 ~ x + y)
+  function(x, y = 1) x + y}
 are equivalent
-\item guard against changes in lexical scope: by enabling tidyverse
+\item Guard against changes in lexical scope: by enabling tidyverse
 \link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to
 \dQuote{burn in} values at the point of function creation (see
-\emph{Pure functions via quasiquotation})
+‘Pure functions via quasiquotation’)
 }
 }
 \section{Function declarations}{
  A \emph{function declaration} is an expression
 that specifies a function’s arguments and body, as a comma-separated
-expression of the form\preformatted{    arg1, arg2, ..., argN ~ body
+expression of the form\preformatted{  arg1, arg2, ..., argN ~ body
 }
 
-or\preformatted{    arg1, arg2, ..., argN, ~ body
+or\preformatted{  arg1, arg2, ..., argN, ~ body
 }
 
 (Note in the second form that the body is a one-sided formula. This
@@ -62,30 +62,30 @@ All parts of a function declaration support tidyverse
 \link[rlang:quasiquotation]{quasiquotation}:
 \itemize{
 \item To unquote values (of arguments or parts of the body), use \code{!!}:
-\preformatted{
-    z <- 0
-    fn(x, y = !!z ~ x + y)
-    fn(x ~ x > !!z)}
+\preformatted{%
+  z <- 0
+  fn(x, y = !!z ~ x + y)
+  fn(x ~ x > !!z)}
 \item To unquote argument names (with default value), use \code{:=}
 (definition operator):
-\preformatted{
-    arg <- "y"
-    fn(x, !!arg := 0 ~ x + !!as.name(arg))}
+\preformatted{%
+  arg <- "y"
+  fn(x, !!arg := 0 ~ x + !!as.name(arg))}
 \item To splice in a (formal) list of arguments, use \code{!!!}:
-\preformatted{
-    fn(!!!alist(x, y = 0), ~ x + y)}
+\preformatted{%
+  fn(!!!alist(x, y = 0), ~ x + y)}
 (Note that the body, in this case, must be given as a one-sided
 formula.)
 \item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()}:
-\preformatted{
-    library(dplyr)
+\preformatted{%
+  library(dplyr)
 
-    my_summarise <- fn(df, ... ~ {
-      group_by <- quos(...)
-      df \%>\%
-        group_by(QUQS(group_by)) \%>\%
-        summarise(a = mean(a))
-    })}
+  my_summarise <- fn(df, ... ~ {
+    group_by <- quos(...)
+    df \%>\%
+      group_by(QUQS(group_by)) \%>\%
+      summarise(a = mean(a))
+  })}
 (Source:
 \emph{\href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr}})
 }
@@ -107,15 +107,15 @@ interface
 it can be tricky to ensure that you haven’t unwittingly mutated an object
 that an earlier function depends upon.
 
-\strong{Example} — Consider the following function:\preformatted{    a <- 1
-    foo <- function(x) x + a
+\strong{Example} — Consider the following function:\preformatted{  a <- 1
+  foo <- function(x) x + a
 }
 
 What is the value of \code{foo(1)}? It is not necessarily \code{2}, because the value
 of \code{a} may have changed between the \emph{creation} of \code{foo()} and the \emph{calling}
-of \code{foo(1)}:\preformatted{    foo(1)  #> [1] 2
-    a <- 0
-    foo(1)  #> [1] 1
+of \code{foo(1)}:\preformatted{  foo(1)  #> [1] 2
+  a <- 0
+  foo(1)  #> [1] 1
 }
 
 In other words, \code{foo()} is impure because the value of \code{foo(x)} depends not
@@ -126,13 +126,13 @@ only on the value of \code{x} but also on the \emph{externally mutable} value of
 to eliminate such indeterminacy.
 
 \strong{Example} — With \code{fn()}, you can unquote \code{a} to \dQuote{burn in} its
-value at the point of creation:\preformatted{    a <- 1
-    foo <- fn(x ~ x + !!a)
+value at the point of creation:\preformatted{  a <- 1
+  foo <- fn(x ~ x + !!a)
 }
 
-Now \code{foo()} is a pure function, unaffected by changes in its lexical scope:\preformatted{    foo(1)  #> [1] 2
-    a <- 0
-    foo(1)  #> [1] 2
+Now \code{foo()} is a pure function, unaffected by changes in its lexical scope:\preformatted{  foo(1)  #> [1] 2
+  a <- 0
+  foo(1)  #> [1] 2
 }
 }
 
@@ -161,7 +161,7 @@ stopifnot(identical(frankenstein, function(x, y) x - y))
 
 ## mixing unquoting and literal unquoting is possible
 \dontrun{
-require(dplyr)
+library(dplyr)
 summariser <- quote(mean)
 my_summarise <- fn(df, ... ~ {
   group_by <- quos(...)

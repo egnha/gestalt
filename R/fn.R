@@ -4,15 +4,15 @@
 #' signature. Use it in place of the usual `function()` invocation whenever you
 #' want to:
 #' \itemize{
-#'   \item type less:
-#'     \preformatted{
-#'     fn(x, y = 1 ~ x + y)
-#'     function(x, y = 1) x + y}
+#'   \item Be concise:
+#'     \preformatted{%
+#'   fn(x, y = 1 ~ x + y)
+#'   function(x, y = 1) x + y}
 #'     are equivalent
-#'   \item guard against changes in lexical scope: by enabling tidyverse
+#'   \item Guard against changes in lexical scope: by enabling tidyverse
 #'     [quasiquotation][rlang::quasiquotation], `fn()` allows you to
 #'     \dQuote{burn in} values at the point of function creation (see
-#'     _Pure functions via quasiquotation_)
+#'     ‘Pure functions via quasiquotation’)
 #' }
 #'
 #' @param ... Function declaration, which supports
@@ -26,11 +26,11 @@
 #'   that specifies a function’s arguments and body, as a comma-separated
 #'   expression of the form
 #'   ```
-#'       arg1, arg2, ..., argN ~ body
+#'     arg1, arg2, ..., argN ~ body
 #'   ```
 #'   or
 #'   ```
-#'       arg1, arg2, ..., argN, ~ body
+#'     arg1, arg2, ..., argN, ~ body
 #'   ```
 #'   (Note in the second form that the body is a one-sided formula. This
 #'   distinction is relevant for argument [splicing][rlang::quasiquotation], see
@@ -49,30 +49,30 @@
 #'     [quasiquotation][rlang::quasiquotation]:
 #'     \itemize{
 #'       \item To unquote values (of arguments or parts of the body), use `!!`:
-#'         \preformatted{
-#'     z <- 0
-#'     fn(x, y = !!z ~ x + y)
-#'     fn(x ~ x > !!z)}
+#'         \preformatted{%
+#'   z <- 0
+#'   fn(x, y = !!z ~ x + y)
+#'   fn(x ~ x > !!z)}
 #'       \item To unquote argument names (with default value), use `:=`
 #'         (definition operator):
-#'         \preformatted{
-#'     arg <- "y"
-#'     fn(x, !!arg := 0 ~ x + !!as.name(arg))}
+#'         \preformatted{%
+#'   arg <- "y"
+#'   fn(x, !!arg := 0 ~ x + !!as.name(arg))}
 #'       \item To splice in a (formal) list of arguments, use `!!!`:
-#'         \preformatted{
-#'     fn(!!!alist(x, y = 0), ~ x + y)}
+#'         \preformatted{%
+#'   fn(!!!alist(x, y = 0), ~ x + y)}
 #'         (Note that the body, in this case, must be given as a one-sided
 #'         formula.)
 #'       \item To write literal unquoting operators, use `QUQ()`, `QUQS()`:
-#'         \preformatted{
-#'     library(dplyr)
+#'         \preformatted{%
+#'   library(dplyr)
 #'
-#'     my_summarise <- fn(df, ... ~ {
-#'       group_by <- quos(...)
-#'       df \%>\%
-#'         group_by(QUQS(group_by)) \%>\%
-#'         summarise(a = mean(a))
-#'     })}
+#'   my_summarise <- fn(df, ... ~ {
+#'     group_by <- quos(...)
+#'     df \%>\%
+#'       group_by(QUQS(group_by)) \%>\%
+#'       summarise(a = mean(a))
+#'   })}
 #'         (Source:
 #'         _[Programming with dplyr](http://dplyr.tidyverse.org/articles/programming.html)_)
 #'     }
@@ -94,16 +94,16 @@
 #'
 #'   **Example** — Consider the following function:
 #'   ```
-#'       a <- 1
-#'       foo <- function(x) x + a
+#'     a <- 1
+#'     foo <- function(x) x + a
 #'   ```
 #'   What is the value of `foo(1)`? It is not necessarily `2`, because the value
 #'   of `a` may have changed between the _creation_ of `foo()` and the _calling_
 #'   of `foo(1)`:
 #'   ```
-#'       foo(1)  #> [1] 2
-#'       a <- 0
-#'       foo(1)  #> [1] 1
+#'     foo(1)  #> [1] 2
+#'     a <- 0
+#'     foo(1)  #> [1] 1
 #'   ```
 #'   In other words, `foo()` is impure because the value of `foo(x)` depends not
 #'   only on the value of `x` but also on the _externally mutable_ value of `a`.
@@ -115,14 +115,14 @@
 #'   **Example** — With `fn()`, you can unquote `a` to \dQuote{burn in} its
 #'   value at the point of creation:
 #'   ```
-#'       a <- 1
-#'       foo <- fn(x ~ x + !!a)
+#'     a <- 1
+#'     foo <- fn(x ~ x + !!a)
 #'   ```
 #'   Now `foo()` is a pure function, unaffected by changes in its lexical scope:
 #'   ```
-#'       foo(1)  #> [1] 2
-#'       a <- 0
-#'       foo(1)  #> [1] 2
+#'     foo(1)  #> [1] 2
+#'     a <- 0
+#'     foo(1)  #> [1] 2
 #'   ```
 #'
 #' @examples
@@ -150,7 +150,7 @@
 #'
 #' ## mixing unquoting and literal unquoting is possible
 #' \dontrun{
-#' require(dplyr)
+#' library(dplyr)
 #' summariser <- quote(mean)
 #' my_summarise <- fn(df, ... ~ {
 #'   group_by <- quos(...)
