@@ -117,23 +117,25 @@ gives a function that is identical to
 }
 }
 
-\section{Properties}{
+\section{Composite functions are unsimplified, yet flattened when called}{
 
-\code{compose()} is \emph{associative}, semantically and operationally. This means,
-for instance, that
-\code{compose(f, g, h)},
-\code{compose(f, compose(g, h))},
-\code{compose(compose(f, g), h)},
-are implemented as the \emph{same function}. In other words, lists of functions
-are automatically “flattened out” \emph{when they are composed}—intermediate
-compositions are spliced rather than nested.
+\code{compose()} is \strong{associative}, semantically and operationally. Thus
+\preformatted{%
+  compose(f, g, h)
+  compose(f, compose(g, h))
+  compose(compose(f, g), h)}
+are implemented as the \emph{same function}—lists of functions are automatically
+“flattened out” when composed. In practical terms, this means the speed of
+a composite function made by \code{compose()} or \code{\%>>>\%}, regardless of
+its nested depth, is on par with a manually constructed \emph{serial}
+composition.
 
 Nonetheless, the original nested structure of constituent functions is
-recovered when \code{as.list()} is applied to a composite function. In
-particular, \code{as.list()} and \code{compose()} are \emph{mutually invertible}.
-\code{as.list(compose(fs))} is the same as \code{fs}, when \code{fs} is a list of
-functions (though the names of \code{as.list()} are always strings, possibly
-empty).
+faithfully recovered when \code{as.list()} is applied to a composite function.
+In particular, \code{as.list()} and \code{compose()} are \strong{mutually invertible}:
+\code{as.list(compose(fs))} is the same as \code{fs}, when \code{fs} is a (nested) list of
+functions. (Though the names of \code{as.list()} are always strings, possibly
+empty.)
 }
 
 \examples{

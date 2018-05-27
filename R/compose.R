@@ -103,22 +103,24 @@
 #'   abs \%>>>\% log \%>>>\% sum}
 #'   }
 #'
-#' @section Properties:
-#'   `compose()` is _associative_, semantically and operationally. This means,
-#'   for instance, that
-#'   `compose(f, g, h)`,
-#'   `compose(f, compose(g, h))`,
-#'   `compose(compose(f, g), h)`,
-#'   are implemented as the _same function_. In other words, lists of functions
-#'   are automatically “flattened out” _when they are composed_—intermediate
-#'   compositions are spliced rather than nested.
+#' @section Composite functions are unsimplified, yet flattened when called:
+#'   `compose()` is **associative**, semantically and operationally. Thus
+#'   \preformatted{%
+#'   compose(f, g, h)
+#'   compose(f, compose(g, h))
+#'   compose(compose(f, g), h)}
+#'   are implemented as the _same function_—lists of functions are automatically
+#'   “flattened out” when composed. In practical terms, this means the speed of
+#'   a composite function made by `compose()` or \code{\%>>>\%}, regardless of
+#'   its nested depth, is on par with a manually constructed _serial_
+#'   composition.
 #'
 #'   Nonetheless, the original nested structure of constituent functions is
-#'   recovered when `as.list()` is applied to a composite function. In
-#'   particular, `as.list()` and `compose()` are _mutually invertible_.
-#'   `as.list(compose(fs))` is the same as `fs`, when `fs` is a list of
-#'   functions (though the names of `as.list()` are always strings, possibly
-#'   empty).
+#'   faithfully recovered when `as.list()` is applied to a composite function.
+#'   In particular, `as.list()` and `compose()` are **mutually invertible**:
+#'   `as.list(compose(fs))` is the same as `fs`, when `fs` is a (nested) list of
+#'   functions. (Though the names of `as.list()` are always strings, possibly
+#'   empty.)
 #'
 #' @seealso [constant()]: combined with \code{\%>>>\%}, this provides a lazy,
 #'   structured alternative to the
