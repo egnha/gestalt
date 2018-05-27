@@ -41,6 +41,87 @@
 #'   [formals][base::formals()] match those of the first function applied (as a
 #'   closure).
 #'
+#' @section Syntax of \code{\%>>>\%}:
+#'   \code{\%>>>\%} adopts the (non-standard) syntax of the
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}:
+#'   \enumerate{
+#'     \item Names are matched to functions.
+#'     \item Function calls are implicitly “partialized” as a unary function of
+#'       `.` (a point). The rule is that when the point matches an argument
+#'       value, such as in
+#'       \preformatted{%
+#'   ... \%>>>\% f(x, .) \%>>>\% ...
+#'   ... \%>>>\% f(x, y = .) \%>>>\% ...}
+#'       the `f(x, .)`, resp. `f(x, y = .)`, is interpreted as the function
+#'       `function(.) f(x, .)`, resp. `function(.) f(x, y = .)`. Otherwise, the
+#'       call is implicitly “partialized,” e.g., in sequences such as
+#'       \preformatted{%
+#'   ... \%>>>\% f(x, y) \%>>>\% ...
+#'   ... \%>>>\% f(x, y(.)) \%>>>\% ...}
+#'       the ‘`f(x, y)`’, resp. ‘`f(x, y(.))`’, is interpreted as the function
+#'       `function(.) f(., x, y)`, resp. `function(.) f(., x, y(.))`.
+#'     \item Expressions in curly braces are interpreted as unary-function
+#'       bodies (i.e., curly braces represent “lambda functions”). For example,
+#'       in
+#'       \preformatted{%
+#'   ... \%>>>\% {f(.); g(.)} \%>>>\% ...}
+#'       the ‘`{f(.); g(.)}`’ is interpreted as the function
+#'       `function(.) {f(.); g(.)}`. Curly braces are useful when you want to
+#'       circumvent the implicit-partialization rule for function calls.
+#'   }
+#'   \subsection{Exceptions to the rule of implicit partialization}{
+#'     As a convenience, exceptions to the rule of implicit partialization are
+#'     made in a few cases:
+#'     \itemize{
+#'       \item Parenthesis (`` `(` ``) applies grouping. In particular,
+#'         expressions within parentheses are literally interpreted.
+#'       \item Colon (`` `:` ``) applies naming, according to the syntax
+#'       ‘`<name>: <function>`’. For example, in
+#'       \preformatted{%
+#'   ... \%>>>\% a_name: f \%>>>\% ...}
+#'       the function `f` is named `"a_name"`.
+#'       \item [fn()], namespace operators (`` `::`  ``, `` `:::` ``) and extractors
+#'         (`` `$` ``, `` `[[` ``, `` `[` ``) are literally interpreted. This
+#'         allows for list extractors to be applied to composite functions
+#'         appearing in a \code{\%>>>\%} call (see ‘Operate on a composite
+#'         function’).
+#'     }
+#'   }
+#'   \subsection{Quasiquotation}{
+#'     Tidyverse-style [unquoting][rlang::quasiquotation] using `!!` is
+#'     supported. Use it to:
+#'     \itemize{
+#'       \item Enforce immutability. For example, by unquoting `res` in
+#'         \preformatted{%
+#'   res <- "result"
+#'   get_result <- identity \%>>>\% lapply(`[[`, !!res)}
+#'         you ensure that the function `get_result()` always extracts the
+#'         component named `"result"`, even if the binding `res` mutates, or
+#'         disappears altogether.
+#'       \item Interpret ‘`.`’ in the lexical scope. For example,
+#'         \preformatted{%
+#'   . <- "point"
+#'   is_point <- {.[!is.na(.)]} \%>>>\% {. == !!.}}
+#'         determines those non-`NA` components of a (character) vector that
+#'         equal the string `"point"`.
+#'       \item Programmatically assign names. For example, unquoting `nm` in
+#'         \preformatted{%
+#'   nm <- "a_name"
+#'   ... \%>>>\% !!nm: f \%>>>\% ...}
+#'         names the `f`-component of the resulting composite function
+#'         `"a_name"`.
+#'       \item Expend a computation upfront to spare a runtime cost. For
+#'         example, presuming the value of the call `f()` is immutable and that
+#'         `g` is a pure function, both
+#'         \preformatted{%
+#'   ... \%>>>\% g(f()) \%>>>\% ...
+#'   ... \%>>>\% g(!!f()) \%>>>\% ...}
+#'         would be functions yielding the same values. But the first would
+#'         compute `f()` anew with each call, whereas the second would simply
+#'         depend on a pre-computed value of `f()`.
+#'     }
+#'   }
+#'
 #' @section Operate on a composite function as if it were a list:
 #'   You can think of a composite function as embodying the (possibly nested)
 #'   structure of its list of constituent functions. In fact, you can apply

@@ -53,6 +53,89 @@ is equivalent to the function\preformatted{  function(x, size, replace = FALSE, 
 
 Use \code{as.list()} to recover the list of composite functions.
 }
+\section{Syntax of \code{\%>>>\%}}{
+
+\code{\%>>>\%} adopts the (non-standard) syntax of the
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}:
+\enumerate{
+\item Names are matched to functions.
+\item Function calls are implicitly “partialized” as a unary function of
+\code{.} (a point). The rule is that when the point matches an argument
+value, such as in
+\preformatted{%
+  ... \%>>>\% f(x, .) \%>>>\% ...
+  ... \%>>>\% f(x, y = .) \%>>>\% ...}
+the \code{f(x, .)}, resp. \code{f(x, y = .)}, is interpreted as the function
+\code{function(.) f(x, .)}, resp. \code{function(.) f(x, y = .)}. Otherwise, the
+call is implicitly “partialized,” e.g., in sequences such as
+\preformatted{%
+  ... \%>>>\% f(x, y) \%>>>\% ...
+  ... \%>>>\% f(x, y(.)) \%>>>\% ...}
+the ‘\code{f(x, y)}’, resp. ‘\code{f(x, y(.))}’, is interpreted as the function
+\code{function(.) f(., x, y)}, resp. \code{function(.) f(., x, y(.))}.
+\item Expressions in curly braces are interpreted as unary-function
+bodies (i.e., curly braces represent “lambda functions”). For example,
+in
+\preformatted{%
+  ... \%>>>\% {f(.); g(.)} \%>>>\% ...}
+the ‘\code{{f(.); g(.)}}’ is interpreted as the function
+\code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to
+circumvent the implicit-partialization rule for function calls.
+}
+\subsection{Exceptions to the rule of implicit partialization}{
+As a convenience, exceptions to the rule of implicit partialization are
+made in a few cases:
+\itemize{
+\item Parenthesis (\code{`(`}) applies grouping. In particular,
+expressions within parentheses are literally interpreted.
+\item Colon (\code{`:`}) applies naming, according to the syntax
+‘\code{<name>: <function>}’. For example, in
+\preformatted{%
+  ... \%>>>\% a_name: f \%>>>\% ...}
+the function \code{f} is named \code{"a_name"}.
+\item \code{\link[=fn]{fn()}}, namespace operators (\code{`::`}, \code{`:::`}) and extractors
+(\code{`$`}, \code{`[[`}, \code{`[`}) are literally interpreted. This
+allows for list extractors to be applied to composite functions
+appearing in a \code{\%>>>\%} call (see ‘Operate on a composite
+function’).
+}
+}
+\subsection{Quasiquotation}{
+Tidyverse-style \link[rlang:quasiquotation]{unquoting} using \code{!!} is
+supported. Use it to:
+\itemize{
+\item Enforce immutability. For example, by unquoting \code{res} in
+\preformatted{%
+  res <- "result"
+  get_result <- identity \%>>>\% lapply(`[[`, !!res)}
+you ensure that the function \code{get_result()} always extracts the
+component named \code{"result"}, even if the binding \code{res} mutates, or
+disappears altogether.
+\item Interpret ‘\code{.}’ in the lexical scope. For example,
+\preformatted{%
+  . <- "point"
+  is_point <- {.[!is.na(.)]} \%>>>\% {. == !!.}}
+determines those non-\code{NA} components of a (character) vector that
+equal the string \code{"point"}.
+\item Programmatically assign names. For example, unquoting \code{nm} in
+\preformatted{%
+  nm <- "a_name"
+  ... \%>>>\% !!nm: f \%>>>\% ...}
+names the \code{f}-component of the resulting composite function
+\code{"a_name"}.
+\item Expend a computation upfront to spare a runtime cost. For
+example, presuming the value of the call \code{f()} is immutable and that
+\code{g} is a pure function, both
+\preformatted{%
+  ... \%>>>\% g(f()) \%>>>\% ...
+  ... \%>>>\% g(!!f()) \%>>>\% ...}
+would be functions yielding the same values. But the first would
+compute \code{f()} anew with each call, whereas the second would simply
+depend on a pre-computed value of \code{f()}.
+}
+}
+}
+
 \section{Operate on a composite function as if it were a list}{
 
 You can think of a composite function as embodying the (possibly nested)
