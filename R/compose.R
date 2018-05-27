@@ -208,7 +208,7 @@
 #' f0 <- compose(abs, log, inv)
 #' stopifnot(all.equal(f0(-2), 1 / log(abs(-2))))
 #'
-#' # Forward composition operator composes from left to right
+#' # Alternatively, compose using the `%>>>%` operator
 #' f1 <- abs %>>>% log %>>>% {1 / .}
 #' stopifnot(all.equal(f1(-2), f0(-2)))
 #'
@@ -219,7 +219,7 @@
 #' # By composing higher-order functions:
 #' jsonify <- {fromJSON %>>>% .} %>>>% {. %>>>% toJSON}
 #'
-#' # Or by directly composing with input/output transformers:
+#' # By directly composing with input/output transformers:
 #' jsonify <- fn(f ~ fromJSON %>>>% f %>>>% toJSON)}
 #'
 #' # Formals of initial function are preserved
