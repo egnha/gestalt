@@ -19,7 +19,7 @@ of \code{:=}, and \link[rlang:quasiquotation]{splicing}, via \code{!!!}, are sup
 \code{f \%>>>\% nm: g} names the \code{g}-component.
 \link[rlang:quasiquotation]{Quasiquotation} and the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}
-semantics are supported (see \sQuote{Examples}).}
+semantics are supported (see ‘Syntax of \code{\%>>>\%}’ and ‘Examples’).}
 }
 \value{
 Function of class \code{CompositeFunction}, whose
