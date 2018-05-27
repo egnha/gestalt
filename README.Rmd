@@ -191,6 +191,7 @@ In conjunction with `%>>>%`, gestalt also provides:
    tidyverse-style quasiquotation.
     ```{r}
     size <- 5L
+    
     fn(x, ... ~ sample(x, !!size, ...))
     ```
     

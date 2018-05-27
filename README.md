@@ -215,6 +215,7 @@ In conjunction with `%>>>%`, gestalt also provides:
     
     ``` r
     size <- 5L
+    
     fn(x, ... ~ sample(x, !!size, ...))
     #> function (x, ...) 
     #> sample(x, 5L, ...)
