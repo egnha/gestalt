@@ -52,13 +52,9 @@
 #'     For instance, the ‘\code{sum}’ in the following composite function
 #'     \preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
 #'     can be extracted in the usual ways: \preformatted{%
-#'   f[[2]][[2]]
-#'   f[[c(2, 2)]]
-#'   f$out$agg
-#'   f[["out"]][["agg"]]
-#'   f[["out"]]$agg
-#'   f$out[[2]]
-#'   f[[list("out", 2)]]}
+#'   f[[2]][[2]], f[[c(2, 2)]],
+#'   f$out$agg, f[["out"]][["agg"]], f[["out"]]$agg,
+#'   f$out[[2]], f[[list("out", 2)]], ...}
 #'     The last form of indexing with a mixed list is handy when you need to
 #'     create an index programmatically.
 #'     \cr\cr
