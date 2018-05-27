@@ -10,19 +10,19 @@ compose(...)
 fst \%>>>\% snd
 }
 \arguments{
-\item{...}{Functions or lists thereof to compose. Lists of functions are
-automatically spliced in. \link[rlang:quasiquotation]{Unquoting} of names, via
-\code{!!} on the left-hand side of \code{:=}, and \link[rlang:quasiquotation]{splicing},
-via \code{!!!}, are supported.}
+\item{...}{Functions or lists thereof to compose, in order of application.
+Lists of functions are automatically spliced in.
+\link[rlang:quasiquotation]{Unquoting} of names, via \code{!!} on the left-hand side
+of \code{:=}, and \link[rlang:quasiquotation]{splicing}, via \code{!!!}, are supported.}
 
 \item{fst, snd}{Functions. These may be optionally named using \code{:}, e.g.,
 \code{f \%>>>\% nm: g} names the \code{g}-component.
 \link[rlang:quasiquotation]{Quasiquotation} and the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}}-\code{\%>\%}
-semantics are supported (see \emph{Examples}).}
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}
+semantics are supported (see \sQuote{Examples}).}
 }
 \value{
-\code{compose()} returns a function of class \code{CompositeFunction}, whose
+Function of class \code{CompositeFunction}, whose
 \link[base:formals]{formals} match those of the first function applied (as a
 closure).
 }
@@ -31,39 +31,107 @@ Compose functions in two ways:
 \itemize{
 \item Use \code{compose(f, g, ...)} to make the function that applies \code{f}, then \code{g},
 etc. It has the \link[base:formals]{formals} of the first function applied,
-namely \code{f}. Thus
-\preformatted{compose(paste, toupper)}
-is equivalent to the function\preformatted{function(..., sep = " ", collapse = NULL) {
-  toupper(paste(..., sep = sep, collapse = collapse))
+namely \code{f}. Thus\preformatted{  compose(paste, toupper)
 }
+
+is equivalent to the function\preformatted{  function(..., sep = " ", collapse = NULL) {
+    toupper(paste(..., sep = sep, collapse = collapse))
+  }
 }
 \item Alternatively, use the infix notation \code{f \%>>>\% g \%>>>\% ...}, which
 comprehends the semantics of the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}}-\code{\%>\%}
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}
 operator and, additionally, \link[rlang:quasiquotation]{quasiquotation}.
 Thus, assuming \code{sep} has the value \code{""},
-\preformatted{sample \%>>>\% paste(collapse = !!sep)}
-is equivalent to the function\preformatted{function(x, size, replace = FALSE, prob = NULL) {
-  paste(sample(x, size, replace, prob), collapse = "")
-}
+\preformatted{
+  sample \%>>>\% paste(collapse = !!sep)}
+is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) {
+    paste(sample(x, size, replace, prob), collapse = "")
+  }
 }
 }
 
 Use \code{as.list()} to recover the list of composite functions.
 }
+\section{Operate on a composite function as if it were a list}{
+
+You can think of a composite function as embodying the (possibly nested)
+structure of its list of constituent functions. In fact, you can apply
+familiar index and assignment operations on a composite function, as if it
+were this list, getting another function in return. This enables you to
+leverage composite functions as \emph{structured computations}.
+
+\subsection{Indexing}{
+For instance, the ‘\code{sum}’ in the following composite function
+\preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
+can be extracted in the usual ways: \preformatted{%
+  f[[2]][[2]]
+  f[[c(2, 2)]]
+  f$out$agg
+  f[["out"]][["agg"]]
+  f[["out"]]$agg
+  f$out[[2]]
+  f[[list("out", 2)]]}
+The last form of indexing with a mixed list is handy when you need to
+create an index programmatically.
+\cr\cr
+Additionally, excise sub-composite functions with \code{`[`}. For
+example:
+\itemize{
+\item \code{f[1]} gets the ‘\code{abs}’ as a composite function, namely
+\code{compose(abs)}
+\item \code{f[2:1]} reverses the order of the top-level functions to
+yield \preformatted{  out: (log \%>>>\% agg: sum) \%>>>\% abs}
+\item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named)
+composite function
+}
+}
+\subsection{Subset assignment}{
+Similarily, subset assignment works as it does for lists. For instance,
+you can replace the ‘\code{sum}’ with the identity function:
+\preformatted{%
+  f[[2]][[2]] <- identity
+  f$out$agg <- identity
+  f[["out"]][["agg"]] <- identity
+  f$out[[2]] <- identity
+  f[[c("out", 2)]] <- identity}
+Multiple constituent functions can be reassigned using \code{`[<-`}. For
+example \preformatted{%
+  f[2] <- list(log)
+  f["out"] <- list(log)
+  f[c(FALSE, TRUE)] <- list(log)}
+replace the second constituent function, so that \code{f} becomes
+\code{abs \%>>>\% log}.
+}
+\subsection{Other list methods}{
+The generic methods \code{unlist()}, \code{length()}, \code{names()} also
+apply to composite functions. In conjunction with \code{compose()}, you
+can use \code{unlist()} to “flatten” compositions. For example
+\preformatted{%
+  compose(unlist(f, use.names = FALSE))}
+gives a function that is identical to
+\preformatted{%
+  abs \%>>>\% log \%>>>\% sum}
+}
+}
+
 \section{Properties}{
- \code{compose()} is \emph{associative}, semantically and
-operationally. This means, for instance, that
+
+\code{compose()} is \emph{associative}, semantically and operationally. This means,
+for instance, that
 \code{compose(f, g, h)},
 \code{compose(f, compose(g, h))},
 \code{compose(compose(f, g), h)},
 are implemented as the \emph{same function}. In other words, lists of functions
-are automatically “flattened out” when they are composed—intermediate
+are automatically “flattened out” \emph{when they are composed}—intermediate
 compositions are spliced rather than nested.
 
-\code{as.list()} and \code{compose()} are \emph{mutually invertible}.
+Nonetheless, the original nested structure of constituent functions is
+recovered when \code{as.list()} is applied to a composite function. In
+particular, \code{as.list()} and \code{compose()} are \emph{mutually invertible}.
 \code{as.list(compose(fs))} is the same as \code{fs}, when \code{fs} is a list of
-functions (though the names of \code{as.list()} are always strings).
+functions (though the names of \code{as.list()} are always strings, possibly
+empty).
 }
 
 \examples{
@@ -76,11 +144,14 @@ stopifnot(all.equal(f0(-2), 1 / log(abs(-2))))
 f1 <- abs \%>>>\% log \%>>>\% {1 / .}
 stopifnot(all.equal(f1(-2), f0(-2)))
 
-# Compose higher-order functions
 \dontrun{
-# Transforms function to a JSON function
-require(jsonlite)
+# Transform a function to a JSON function
+library(jsonlite)
+
+# By composing higher-order functions:
 jsonify <- {fromJSON \%>>>\% .} \%>>>\% {. \%>>>\% toJSON}
+
+# Or by directly composing with input/output transformers:
 jsonify <- fn(f ~ fromJSON \%>>>\% f \%>>>\% toJSON)}
 
 # Formals of initial function are preserved
@@ -109,7 +180,7 @@ stopifnot(all.equal(check.attributes = FALSE,
   as.list(compose(fs)), fs,
 ))
 
-# `\%>>>\%` supports names, magrittr-`\%>\%` semantics, quasiquotation
+# `\%>>>\%` supports names, magrittr `\%>\%` semantics, quasiquotation
 sep <- ""
 scramble <- shuffle: sample \%>>>\% paste(collapse = !!sep)
 nonsense <- scramble(letters)

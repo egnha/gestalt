@@ -6,50 +6,117 @@
 #' - Use `compose(f, g, ...)` to make the function that applies `f`, then `g`,
 #'   etc. It has the [formals][base::formals()] of the first function applied,
 #'   namely `f`. Thus
-#'   \preformatted{compose(paste, toupper)}
+#'   ```
+#'     compose(paste, toupper)
+#'   ```
 #'   is equivalent to the function
 #'   ```
-#'   function(..., sep = " ", collapse = NULL) {
-#'     toupper(paste(..., sep = sep, collapse = collapse))
-#'   }
+#'     function(..., sep = " ", collapse = NULL) {
+#'       toupper(paste(..., sep = sep, collapse = collapse))
+#'     }
 #'   ```
 #'
 #' - Alternatively, use the infix notation \code{f \%>>>\% g \%>>>\% ...}, which
 #'   comprehends the semantics of the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr)-\code{\%>\%}
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
 #'   operator and, additionally, [quasiquotation][rlang::quasiquotation].
 #'   Thus, assuming `sep` has the value `""`,
-#'   \preformatted{sample \%>>>\% paste(collapse = !!sep)}
+#'   \preformatted{
+#'   sample \%>>>\% paste(collapse = !!sep)}
 #'   is equivalent to the function
 #'   ```
-#'   function(x, size, replace = FALSE, prob = NULL) {
-#'     paste(sample(x, size, replace, prob), collapse = "")
-#'   }
+#'     function(x, size, replace = FALSE, prob = NULL) {
+#'       paste(sample(x, size, replace, prob), collapse = "")
+#'     }
 #'   ```
 #'
 #' Use `as.list()` to recover the list of composite functions.
 #'
-#' @param ... Functions or lists thereof to compose. Lists of functions are
-#'   automatically spliced in. [Unquoting][rlang::quasiquotation] of names, via
-#'   `!!` on the left-hand side of `:=`, and [splicing][rlang::quasiquotation],
-#'   via `!!!`, are supported.
+#' @param ... Functions or lists thereof to compose, in order of application.
+#'   Lists of functions are automatically spliced in.
+#'   [Unquoting][rlang::quasiquotation] of names, via `!!` on the left-hand side
+#'   of `:=`, and [splicing][rlang::quasiquotation], via `!!!`, are supported.
 #'
-#' @return `compose()` returns a function of class `CompositeFunction`, whose
+#' @return Function of class `CompositeFunction`, whose
 #'   [formals][base::formals()] match those of the first function applied (as a
 #'   closure).
 #'
-#' @section Properties: `compose()` is _associative_, semantically and
-#'   operationally. This means, for instance, that
+#' @section Operate on a composite function as if it were a list:
+#'   You can think of a composite function as embodying the (possibly nested)
+#'   structure of its list of constituent functions. In fact, you can apply
+#'   familiar index and assignment operations on a composite function, as if it
+#'   were this list, getting another function in return. This enables you to
+#'   leverage composite functions as _structured computations_.
+#'
+#'   \subsection{Indexing}{
+#'     For instance, the ‘\code{sum}’ in the following composite function
+#'     \preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
+#'     can be extracted in the usual ways: \preformatted{%
+#'   f[[2]][[2]]
+#'   f[[c(2, 2)]]
+#'   f$out$agg
+#'   f[["out"]][["agg"]]
+#'   f[["out"]]$agg
+#'   f$out[[2]]
+#'   f[[list("out", 2)]]}
+#'     The last form of indexing with a mixed list is handy when you need to
+#'     create an index programmatically.
+#'     \cr\cr
+#'     Additionally, excise sub-composite functions with \code{`[`}. For
+#'     example:
+#'     \itemize{
+#'       \item \code{f[1]} gets the ‘\code{abs}’ as a composite function, namely
+#'         \code{compose(abs)}
+#'       \item \code{f[2:1]} reverses the order of the top-level functions to
+#'         yield \preformatted{  out: (log \%>>>\% agg: sum) \%>>>\% abs}
+#'       \item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named)
+#'         composite function
+#'     }
+#'   }
+#'   \subsection{Subset assignment}{
+#'     Similarily, subset assignment works as it does for lists. For instance,
+#'     you can replace the ‘\code{sum}’ with the identity function:
+#'     \preformatted{%
+#'   f[[2]][[2]] <- identity
+#'   f$out$agg <- identity
+#'   f[["out"]][["agg"]] <- identity
+#'   f$out[[2]] <- identity
+#'   f[[c("out", 2)]] <- identity}
+#'     Multiple constituent functions can be reassigned using \code{`[<-`}. For
+#'     example \preformatted{%
+#'   f[2] <- list(log)
+#'   f["out"] <- list(log)
+#'   f[c(FALSE, TRUE)] <- list(log)}
+#'     replace the second constituent function, so that `f` becomes
+#'     \code{abs \%>>>\% log}.
+#'   }
+#'   \subsection{Other list methods}{
+#'     The generic methods \code{unlist()}, \code{length()}, \code{names()} also
+#'     apply to composite functions. In conjunction with \code{compose()}, you
+#'     can use \code{unlist()} to “flatten” compositions. For example
+#'     \preformatted{%
+#'   compose(unlist(f, use.names = FALSE))}
+#'     gives a function that is identical to
+#'     \preformatted{%
+#'   abs \%>>>\% log \%>>>\% sum}
+#'   }
+#'
+#' @section Properties:
+#'   `compose()` is _associative_, semantically and operationally. This means,
+#'   for instance, that
 #'   `compose(f, g, h)`,
 #'   `compose(f, compose(g, h))`,
 #'   `compose(compose(f, g), h)`,
 #'   are implemented as the _same function_. In other words, lists of functions
-#'   are automatically “flattened out” when they are composed—intermediate
+#'   are automatically “flattened out” _when they are composed_—intermediate
 #'   compositions are spliced rather than nested.
 #'
-#'   `as.list()` and `compose()` are _mutually invertible_.
+#'   Nonetheless, the original nested structure of constituent functions is
+#'   recovered when `as.list()` is applied to a composite function. In
+#'   particular, `as.list()` and `compose()` are _mutually invertible_.
 #'   `as.list(compose(fs))` is the same as `fs`, when `fs` is a list of
-#'   functions (though the names of `as.list()` are always strings).
+#'   functions (though the names of `as.list()` are always strings, possibly
+#'   empty).
 #'
 #' @seealso [constant()]: combined with \code{\%>>>\%}, this provides a lazy,
 #'   structured alternative to the
@@ -65,11 +132,14 @@
 #' f1 <- abs %>>>% log %>>>% {1 / .}
 #' stopifnot(all.equal(f1(-2), f0(-2)))
 #'
-#' # Compose higher-order functions
 #' \dontrun{
-#' # Transforms function to a JSON function
-#' require(jsonlite)
+#' # Transform a function to a JSON function
+#' library(jsonlite)
+#'
+#' # By composing higher-order functions:
 #' jsonify <- {fromJSON %>>>% .} %>>>% {. %>>>% toJSON}
+#'
+#' # Or by directly composing with input/output transformers:
 #' jsonify <- fn(f ~ fromJSON %>>>% f %>>>% toJSON)}
 #'
 #' # Formals of initial function are preserved
@@ -98,7 +168,7 @@
 #'   as.list(compose(fs)), fs,
 #' ))
 #'
-#' # `%>>>%` supports names, magrittr-`%>%` semantics, quasiquotation
+#' # `%>>>%` supports names, magrittr `%>%` semantics, quasiquotation
 #' sep <- ""
 #' scramble <- shuffle: sample %>>>% paste(collapse = !!sep)
 #' nonsense <- scramble(letters)
@@ -283,8 +353,8 @@ as_protected_name <- function(i) sprintf("__%d__", i)
 #' @param fst,snd Functions. These may be optionally named using `:`, e.g.,
 #'   \code{f \%>>>\% nm: g} names the `g`-component.
 #'   [Quasiquotation][rlang::quasiquotation] and the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr)-\code{\%>\%}
-#'   semantics are supported (see _Examples_).
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
+#'   semantics are supported (see \sQuote{Examples}).
 #'
 #' @rdname compose
 #' @export
