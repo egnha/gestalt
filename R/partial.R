@@ -10,13 +10,19 @@
 #' the original function.
 #'
 #' @param ..f Function.
-#' @param ... Argument values of `..f` to fix, specified by name. Captured as
-#'   [quosures][rlang::quotation]. [Unquoting][rlang::quasiquotation] and
-#'   [splicing][rlang::quasiquotation] are supported (see _Examples_).
+#' @param ... Argument values of `..f` to fix, specified by name or position.
+#'   Captured as [quosures][rlang::quotation].
+#'   [Unquoting][rlang::quasiquotation] and [splicing][rlang::quasiquotation]
+#'   are supported (see ‘Examples’).
 #'
 #' @return `partial()` returns a function whose [formals][base::formals()] are a
 #'   literal truncation of the formals of `..f()` (as a closure) by the fixed
-#'   arguments. `partial(..f)` is identical to `..f`.
+#'   arguments. In conformance with R’s calling convention, fixed argument
+#'   values are [promises][base::delayedAssign()] that are, moreover,
+#'   [tidily evaluated][rlang::eval_tidy()]. (Lazy evaluation of fixed arguments
+#'   can be overridden via unquoting, see ‘Examples’.)
+#'
+#'   `partial(..f)` is identical to `..f`.
 #'
 #' @section Technical Note:
 #'   Even while `partial()` truncates formals, it remains compatible with
@@ -34,7 +40,12 @@
 #'   `ls(all.names = TRUE)` from an (ephemeral) execution environment.
 #'
 #' @examples
+#' # Arguments can be fixed by name
 #' draw3 <- partial(sample, size = 3)
+#' draw3(letters)
+#'
+#' # Arguments can be fixed by position
+#' draw3 <- partial(sample, , 3)
 #' draw3(letters)
 #'
 #' # Use departial() to recover the original function
@@ -47,23 +58,23 @@
 #'
 #' # Eagerly evaluate argument values with unquoting (`!!`)
 #' # The value of 'n' is fixed when 'rnd_eager' is created.
-#' rnd_eager <- partial(runif, n = !! rpois(1, 5))
+#' rnd_eager <- partial(runif, n = !!rpois(1, 5))
 #' len <- length(rnd_eager())
 #' reps <- replicate(4, rnd_eager(), simplify = FALSE)   # constant length
 #' stopifnot(all(vapply(reps, length, integer(1)) == len))
 #'
 #' # Mix evaluation schemes by combining lazy evaluation with unquoting (`!!`)
 #' # Here 'n' is lazily evaluated, while 'max' is eagerly evaluated.
-#' rnd_mixed <- partial(runif, n = rpois(1, 5), max = !! sample(10, 1))
+#' rnd_mixed <- partial(runif, n = rpois(1, 5), max = !!sample(10, 1))
 #' replicate(4, rnd_mixed(), simplify = FALSE)
 #'
 #' # Arguments to fix can be spliced
 #' args_eager <- list(n = rpois(1, 5), max = sample(10, 1))
-#' rnd_eager2 <- partial(runif, !!! args_eager)
+#' rnd_eager2 <- partial(runif, !!!args_eager)
 #' replicate(4, rnd_eager2(), simplify = FALSE)
 #'
-#' args_mixed <- rlang::exprs(n = rpois(1, 5), max = !! sample(10, 1))
-#' rnd_mixed2 <- partial(runif, !!! args_mixed)
+#' args_mixed <- rlang::exprs(n = rpois(1, 5), max = !!sample(10, 1))
+#' rnd_mixed2 <- partial(runif, !!!args_mixed)
 #' replicate(4, rnd_mixed2(), simplify = FALSE)
 #'
 #' # partial() truncates formals by the fixed arguments
