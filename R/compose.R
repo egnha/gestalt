@@ -62,13 +62,15 @@
 #'     The last form of indexing with a mixed list is handy when you need to
 #'     create an index programmatically.
 #'     \cr\cr
-#'     Additionally, excise sub-composite functions with \code{`[`}. For
+#'     Additionally, excise sub-composite functions with \code{`[`},
+#'     \code{head()}, \code{tail()}. For
 #'     example:
 #'     \itemize{
-#'       \item \code{f[1]} gets the ‘\code{abs}’ as a composite function, namely
-#'         \code{compose(abs)}
+#'       \item Both \code{f[1]} and \code{head(f, 1)} get the ‘\code{abs}’ as a
+#'         composite function, namely \code{compose(abs)}
 #'       \item \code{f[2:1]} reverses the order of the top-level functions to
-#'         yield \preformatted{  out: (log \%>>>\% agg: sum) \%>>>\% abs}
+#'         yield \preformatted{%
+#'   out: (log \%>>>\% agg: sum) \%>>>\% abs}
 #'       \item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named)
 #'         composite function
 #'     }
