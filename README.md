@@ -211,7 +211,8 @@ You gain power by treating (piped) values as (composite) functions:
 In conjunction with `%>>>%`, gestalt also provides:
 
   - `fn`, a more concise and flexible variation of `function`, which
-    supports tidyverse-style quasiquotation.
+    supports tidyverse-style
+    [quasiquotation](http://rlang.r-lib.org/reference/quasiquotation.html).
     
     ``` r
     size <- 5L
@@ -224,7 +225,8 @@ In conjunction with `%>>>%`, gestalt also provides:
   - `partial`, to make new functions from old by fixing a number of
     arguments, i.e., [partial
     application](https://en.wikipedia.org/wiki/Partial_application).
-    Like `fn`, it also supports quasiquotation.
+    Like `fn`, it also supports
+    [quasiquotation](http://rlang.r-lib.org/reference/quasiquotation.html).
     
     ``` r
     (draw <- partial(sample, size = !!size, replace = TRUE))
