@@ -110,7 +110,7 @@ supported. Use it to:
   get_result <- identity \%>>>\% lapply(`[[`, !!res)}
 you ensure that the function \code{get_result()} always extracts the
 component named \code{"result"}, even if the binding \code{res} mutates or
-is unbound.
+is removed.
 \item Interpret ‘\code{.}’ in the lexical scope. For example,
 \preformatted{%
   . <- "point"

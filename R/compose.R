@@ -97,7 +97,7 @@
 #'   get_result <- identity \%>>>\% lapply(`[[`, !!res)}
 #'         you ensure that the function `get_result()` always extracts the
 #'         component named `"result"`, even if the binding `res` mutates or
-#'         is unbound.
+#'         is removed.
 #'       \item Interpret ‘`.`’ in the lexical scope. For example,
 #'         \preformatted{%
 #'   . <- "point"
