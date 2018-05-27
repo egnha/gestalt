@@ -41,8 +41,8 @@
 #'   [formals][base::formals()] match those of the first function applied (as a
 #'   closure).
 #'
-#' @section Syntax of \code{\%>>>\%}:
-#'   \code{\%>>>\%} adopts the (non-standard) syntax of the
+#' @section Semantics of \code{\%>>>\%}:
+#'   \code{\%>>>\%} adopts the semantics of the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}:
 #'   \enumerate{
 #'     \item Names are matched to functions.
@@ -272,7 +272,7 @@ compose <- function(...) {
 #'   \code{f \%>>>\% nm: g} names the `g`-component.
 #'   [Quasiquotation][rlang::quasiquotation] and the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
-#'   semantics are supported (see ‘Syntax of \code{\%>>>\%}’ and ‘Examples’).
+#'   semantics are supported (see ‘Semantics of \code{\%>>>\%}’ and ‘Examples’).
 #'
 #' @rdname compose
 #' @export
