@@ -112,11 +112,10 @@
 #'   composition.
 #'
 #'   Nonetheless, the original nested structure of constituent functions is
-#'   faithfully recovered when `as.list()` is applied to a composite function.
-#'   In particular, `as.list()` and `compose()` are **mutually invertible**:
-#'   `as.list(compose(fs))` is the same as `fs`, when `fs` is a (nested) list of
-#'   functions. (Though the names of `as.list()` are always strings, possibly
-#'   empty.)
+#'   faithfully recovered by `as.list()`. In particular, `as.list()` and
+#'   `compose()` are **mutually invertible**: `as.list(compose(fs))` is the same
+#'   as `fs`, when `fs` is a (nested) list of functions. (Though the names of
+#'   `as.list()` are always strings, possibly empty.)
 #'
 #' @seealso [constant()]: combined with \code{\%>>>\%}, this provides a lazy,
 #'   structured alternative to the

@@ -127,11 +127,10 @@ its nested depth, is on par with a manually constructed \emph{serial}
 composition.
 
 Nonetheless, the original nested structure of constituent functions is
-faithfully recovered when \code{as.list()} is applied to a composite function.
-In particular, \code{as.list()} and \code{compose()} are \strong{mutually invertible}:
-\code{as.list(compose(fs))} is the same as \code{fs}, when \code{fs} is a (nested) list of
-functions. (Though the names of \code{as.list()} are always strings, possibly
-empty.)
+faithfully recovered by \code{as.list()}. In particular, \code{as.list()} and
+\code{compose()} are \strong{mutually invertible}: \code{as.list(compose(fs))} is the same
+as \code{fs}, when \code{fs} is a (nested) list of functions. (Though the names of
+\code{as.list()} are always strings, possibly empty.)
 }
 
 \examples{
