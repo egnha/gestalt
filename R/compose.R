@@ -268,6 +268,18 @@ compose <- function(...) {
   cmp
 }
 
+#' @param fst,snd Functions. These may be optionally named using `:`, e.g.,
+#'   \code{f \%>>>\% nm: g} names the `g`-component.
+#'   [Quasiquotation][rlang::quasiquotation] and the
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
+#'   semantics are supported (see ‘Syntax of \code{\%>>>\%}’ and ‘Examples’).
+#'
+#' @rdname compose
+#' @export
+`%>>>%` <- function(fst, snd) {
+  compose(enquo(fst), enquo(snd))
+}
+
 fn_tree <- function(...) {
   fs <- lapply(list_tidy(...), fn_interp)
   fs <- drop_null(fs)
@@ -429,18 +441,6 @@ fn_names <- function(fs) {
 }
 
 as_protected_name <- function(i) sprintf("__%d__", i)
-
-#' @param fst,snd Functions. These may be optionally named using `:`, e.g.,
-#'   \code{f \%>>>\% nm: g} names the `g`-component.
-#'   [Quasiquotation][rlang::quasiquotation] and the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
-#'   semantics are supported (see \sQuote{Examples}).
-#'
-#' @rdname compose
-#' @export
-`%>>>%` <- function(fst, snd) {
-  compose(enquo(fst), enquo(snd))
-}
 
 #' @export
 `$.CompositeFunction` <- function(x, i) {
