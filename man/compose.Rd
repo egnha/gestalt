@@ -109,8 +109,8 @@ supported. Use it to:
   res <- "result"
   get_result <- identity \%>>>\% lapply(`[[`, !!res)}
 you ensure that the function \code{get_result()} always extracts the
-component named \code{"result"}, even if the binding \code{res} mutates, or
-disappears altogether.
+component named \code{"result"}, even if the binding \code{res} mutates or
+is unbound.
 \item Interpret ‘\code{.}’ in the lexical scope. For example,
 \preformatted{%
   . <- "point"
