@@ -278,7 +278,7 @@ devtools::install_github("egnha/gestalt")
 
 ## Acknowledgments
 
-  - The core semantics of `%>>>%` conform to the semantics of the
+  - The core semantics of `%>>>%` conform to those of the
     [magrittr](https://magrittr.tidyverse.org) `%>%` developed by
     [Stefan Milton Bache](https://github.com/smbache).
 
