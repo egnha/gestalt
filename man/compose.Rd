@@ -83,8 +83,8 @@ the ‘\code{{f(.); g(.)}}’ is interpreted as the function
 circumvent the implicit-partialization rule for function calls.
 }
 \subsection{Exceptions to the rule of implicit partialization}{
-As a convenience, exceptions to the rule of implicit partialization are
-made in a few cases:
+Exceptions to the rule of implicit partialization are made in a few cases
+of convenience:
 \itemize{
 \item Parenthesis (\code{`(`}) applies grouping. In particular,
 expressions within parentheses are literally interpreted.
