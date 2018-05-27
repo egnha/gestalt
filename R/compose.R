@@ -45,8 +45,8 @@
 #'   You can think of a composite function as embodying the (possibly nested)
 #'   structure of its list of constituent functions. In fact, you can apply
 #'   familiar index and assignment operations on a composite function, as if it
-#'   were this list, getting another function in return. This enables you to
-#'   leverage composite functions as _structured computations_.
+#'   were this list, getting a function in return. This enables you to leverage
+#'   composite functions as _structured computations_.
 #'
 #'   \subsection{Indexing}{
 #'     For instance, the ‘\code{sum}’ in the following composite function
@@ -62,7 +62,7 @@
 #'     The last form of indexing with a mixed list is handy when you need to
 #'     create an index programmatically.
 #'     \cr\cr
-#'     Additionally, excise sub-composite functions with \code{`[`},
+#'     Additionally, you can excise sub-composite functions with \code{`[`},
 #'     \code{head()}, \code{tail()}. For
 #'     example:
 #'     \itemize{
@@ -83,7 +83,7 @@
 #'   f$out$agg <- identity
 #'   f[["out"]][["agg"]] <- identity
 #'   f$out[[2]] <- identity
-#'   f[[c("out", 2)]] <- identity}
+#'   f[[list("out", 2)]] <- identity}
 #'     Multiple constituent functions can be reassigned using \code{`[<-`}. For
 #'     example \preformatted{%
 #'   f[2] <- list(log)
@@ -92,7 +92,7 @@
 #'     replace the second constituent function, so that `f` becomes
 #'     \code{abs \%>>>\% log}.
 #'   }
-#'   \subsection{Other list methods}{
+#'   \subsection{Other methods}{
 #'     The generic methods \code{unlist()}, \code{length()}, \code{names()} also
 #'     apply to composite functions. In conjunction with \code{compose()}, you
 #'     can use \code{unlist()} to “flatten” compositions. For example
@@ -125,7 +125,7 @@
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}.
 #'
 #' @examples
-#' # Functions are composed from right to left (following convention)
+#' # Functions are applied in the order in which they are listed
 #' inv <- partial(`/`, 1)  # reciprocal
 #' f0 <- compose(abs, log, inv)
 #' stopifnot(all.equal(f0(-2), 1 / log(abs(-2))))
