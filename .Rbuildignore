@@ -1,8 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^README\.md$
-^LICENSE.md$
-^codecov.yml$
-^.travis.yml$
+^.*\.md$
+^.*\.yml$
 ^.*\.org$
