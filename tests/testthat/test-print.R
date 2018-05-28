@@ -60,7 +60,7 @@ test_that("constant function prints according to its original class", {
   )
   expect_identical(capture.output(print(three)), out)
 
-  void <- constant(list %>>>% c)
+  void <- constant(list %>>>% length)
   out <- c(
     "Constant Function:",
     "<Function Composition>",
@@ -70,7 +70,7 @@ test_that("constant function prints according to its original class", {
     "  function (...)  .Primitive(\"list\")",
     "",
     "[[2]]",
-    "  function (...)  .Primitive(\"c\")",
+    "  function (x)  .Primitive(\"length\")",
     "",
     "Recover the list of functions with 'as.list()'."
   )
