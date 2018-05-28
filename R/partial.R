@@ -6,8 +6,8 @@
 #' given a function, it fixes the value of selected arguments to produce a
 #' function of the remaining arguments.
 #'
-#' `departial()` \dQuote{inverts} the application of `partial()` by returning
-#' the original function.
+#' `departial()` “inverts” the application of `partial()` by returning the
+#' original function.
 #'
 #' @param ..f Function.
 #' @param ... Argument values of `..f` to fix, specified by name or position.
@@ -17,27 +17,28 @@
 #'
 #' @return `partial()` returns a function whose [formals][base::formals()] are a
 #'   literal truncation of the formals of `..f()` (as a closure) by the fixed
-#'   arguments. In conformance with R’s calling convention, fixed argument
-#'   values are [promises][base::delayedAssign()] that are, moreover,
-#'   [tidily evaluated][rlang::eval_tidy()]. (Lazy evaluation of fixed arguments
-#'   can be overridden via unquoting, see ‘Examples’.)
+#'   arguments. `partial(..f)` is identical to `..f`.
 #'
-#'   `partial(..f)` is identical to `..f`.
+#'   In conformance with R’s calling convention, fixed argument values are lazy
+#'   [promises][base::delayedAssign()]. Moreover, when forced, they are [tidily
+#'   evaluated][rlang::eval_tidy()]. Lazy evaluation of fixed arguments can be
+#'   overridden via unquoting, see ‘Examples’.
 #'
-#' @section Technical Note:
+#' @section Technical Notes:
 #'   Even while `partial()` truncates formals, it remains compatible with
 #'   functions that use [`missing()`][base::missing()] to test whether a
 #'   specified argument was supplied in a call. For example,
 #'   `draw3 <- partial(sample, size = 3)` works as a function that randomly
-#'   draws three elements, even though `sample()` invokes `missing(size)` and?
+#'   draws three elements, even though `sample()` invokes `missing(size)` and
 #'   `draw3()` has signature `function (x, replace = FALSE, prob = NULL)`.
 #'
-#'   Consequently, in rare cases, impure functions that depend on introspection
-#'   of the calling context may not be amenable to `partial()`. For example,
-#'   `partial(ls, all.names = TRUE)()` is not equivalent to
-#'   `ls(all.names = TRUE)`, because `ls()` inspects the calling environment to
-#'   produce its value and `partial(ls, all.names = TRUE)()` calls
-#'   `ls(all.names = TRUE)` from an (ephemeral) execution environment.
+#'   Because partially applied functions call the original function in an ad hoc
+#'   environment, impure functions that depend on the calling context as a
+#'   _value_, rather than as a lexical scope, may not be amenable to
+#'   `partial()`. For example, `partial(ls, all.names = TRUE)()` is not
+#'   equivalent to `ls(all.names = TRUE)`, because `ls()` inspects the calling
+#'   environment to produce its value, whereas `partial(ls, all.names = TRUE)()`
+#'   calls `ls(all.names = TRUE)` from an (ephemeral) execution environment.
 #'
 #' @examples
 #' # Arguments can be fixed by name
