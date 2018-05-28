@@ -187,6 +187,7 @@ You gain power by treating (piped) values as (composite) functions:
     #>         4         6         8 
     #> 0.5086326 0.4645102 0.4229655
     
+    # On a 2016 vintage laptop
     microbenchmark::microbenchmark(R2(), times = 1e6)  
     #> Unit: nanoseconds
     #>  expr min  lq     mean median  uq      max neval
