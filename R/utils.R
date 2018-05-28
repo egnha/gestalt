@@ -72,7 +72,9 @@ getter <- function(nm) {
   force(nm)
   function(x) {
     env <- environment(x) %||% emptyenv()
-    get0(nm, envir = env, ifnotfound = NULL)
+    if (exists(nm, envir = env))
+      return(get(nm, envir = env))
+    NULL
   }
 }
 
