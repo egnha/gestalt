@@ -56,7 +56,7 @@ const()
 # has structure, namely the function `const`:
 const
 
-# For instance, you can inspect the intermediate summary:
+# For instance, you can inspect the intermediate summaries:
 head(const, -1)()
 
 # Which can itself be a constant:
@@ -67,8 +67,7 @@ summ()
 \dontrun{
 # Think of `\%>>>\%` combined with `constant()` as a lazy, structured
 # alternative to the magrittr `\%>\%`.
-
-require(magrittr)
+library(magrittr)
 
 val2 <- mtcars \%>\%
   split(.$cyl) \%>\%

@@ -69,14 +69,15 @@
 #'       `function(.) {f(.); g(.)}`. Curly braces are useful when you want to
 #'       circumvent the implicit-partialization rule for function calls.
 #'   }
-#'   \subsection{Exceptions to the rule of implicit partialization}{
-#'     Exceptions to the rule of implicit partialization are made in a few cases
-#'     of convenience:
+#'   \subsection{Exceptional function calls}{
+#'     Exceptions to the rule of implicit partialization of function calls are
+#'     made in a few cases of convenience:
 #'     \itemize{
 #'       \item Parenthesis ([`(`][base::Paren]) applies grouping. In particular,
 #'         expressions within parentheses are literally interpreted.
 #'       \item Colon ([`:`][base::Colon]) applies naming, according to the
-#'         syntax ‘`<name>: <function>`’. For example, in
+#'         syntax ‘`<name>: <function>`’, where ‘`<function>`’ is interpreted
+#'         according to the semantics of `` `%>>>%` ``. For example, in
 #'       \preformatted{%
 #'   ... \%>>>\% a_name: f \%>>>\% ...}
 #'       the function `f` is named `"a_name"`.
@@ -168,8 +169,8 @@
 #'   f[2] <- list(log)
 #'   f["out"] <- list(log)
 #'   f[c(FALSE, TRUE)] <- list(log)}
-#'     replace the second constituent function, so that `f` becomes
-#'     `abs %>>>% log`.
+#'     all replace the second constituent function with `log`, so that `f`
+#'     becomes `abs %>>>% log`.
 #'   }
 #'   \subsection{Other methods}{
 #'     The generic methods [unlist()], [length()], [names()] also apply to
@@ -183,11 +184,12 @@
 #'   }
 #'
 #' @section Composite functions are unsimplified, yet flattened when called:
-#'   `compose()` is **associative**, semantically and operationally. Thus
+#'   `compose()` and `` `%>>>%` `` are **associative**, semantically and
+#'   operationally. Thus, for instance,
 #'   \preformatted{%
-#'   compose(f, g, h)
-#'   compose(f, compose(g, h))
-#'   compose(compose(f, g), h)}
+#'   compose(f, g, h), f \%>>>\% g \%>>>\% h
+#'   compose(f, compose(g, h)), f \%>>>\% (g \%>>>\% h)
+#'   compose(compose(f, g), h), (f \%>>>\% g) \%>>>\% h}
 #'   are implemented as the _same function_—lists of functions are automatically
 #'   “flattened out” when composed. In practical terms, this means the speed of
 #'   a composite function made by `compose()` or `` `%>>>%` ``, regardless of

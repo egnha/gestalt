@@ -82,14 +82,15 @@ the ‘\code{{f(.); g(.)}}’ is interpreted as the function
 \code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to
 circumvent the implicit-partialization rule for function calls.
 }
-\subsection{Exceptions to the rule of implicit partialization}{
-Exceptions to the rule of implicit partialization are made in a few cases
-of convenience:
+\subsection{Exceptional function calls}{
+Exceptions to the rule of implicit partialization of function calls are
+made in a few cases of convenience:
 \itemize{
 \item Parenthesis (\code{\link[base:Paren]{(}}) applies grouping. In particular,
 expressions within parentheses are literally interpreted.
 \item Colon (\code{\link[base:Colon]{:}}) applies naming, according to the
-syntax ‘\code{<name>: <function>}’. For example, in
+syntax ‘\code{<name>: <function>}’, where ‘\code{<function>}’ is interpreted
+according to the semantics of \code{`\%>>>\%`}. For example, in
 \preformatted{%
   ... \%>>>\% a_name: f \%>>>\% ...}
 the function \code{f} is named \code{"a_name"}.
@@ -183,8 +184,8 @@ Multiple constituent functions can be reassigned using
   f[2] <- list(log)
   f["out"] <- list(log)
   f[c(FALSE, TRUE)] <- list(log)}
-replace the second constituent function, so that \code{f} becomes
-\code{abs \%>>>\% log}.
+all replace the second constituent function with \code{log}, so that \code{f}
+becomes \code{abs \%>>>\% log}.
 }
 \subsection{Other methods}{
 The generic methods \code{\link[=unlist]{unlist()}}, \code{\link[=length]{length()}}, \code{\link[=names]{names()}} also apply to
@@ -200,11 +201,12 @@ gives a function that is identical to
 
 \section{Composite functions are unsimplified, yet flattened when called}{
 
-\code{compose()} is \strong{associative}, semantically and operationally. Thus
+\code{compose()} and \code{`\%>>>\%`} are \strong{associative}, semantically and
+operationally. Thus, for instance,
 \preformatted{%
-  compose(f, g, h)
-  compose(f, compose(g, h))
-  compose(compose(f, g), h)}
+  compose(f, g, h), f \%>>>\% g \%>>>\% h
+  compose(f, compose(g, h)), f \%>>>\% (g \%>>>\% h)
+  compose(compose(f, g), h), (f \%>>>\% g) \%>>>\% h}
 are implemented as the \emph{same function}—lists of functions are automatically
 “flattened out” when composed. In practical terms, this means the speed of
 a composite function made by \code{compose()} or \code{`\%>>>\%`}, regardless of
