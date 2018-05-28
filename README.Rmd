@@ -227,7 +227,7 @@ See the package documentation for more details (`help(package = gestalt)`).
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("egnha/gestalt")
+devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
 ```
 
 ## Acknowledgments

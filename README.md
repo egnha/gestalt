@@ -273,7 +273,7 @@ gestalt)`).
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("egnha/gestalt")
+devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
 ```
 
 ## Acknowledgments
