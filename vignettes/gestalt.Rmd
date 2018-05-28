@@ -219,9 +219,9 @@ In conjunction with `%>>>%`, gestalt also provides:
       
     * **Flat**: Fixing arguments in stages is _operationally_ equivalent to
       fixing them all at once—you get the same function either way:
-      ```{r}
-      partial(partial(sample, replace = TRUE), size = 5L)
-      ```
+        ```{r}
+        partial(partial(sample, replace = TRUE), size = 5L)
+        ```
  
 See the package documentation for more details (`help(package = gestalt)`).
 
