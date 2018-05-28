@@ -2,7 +2,6 @@
 % Please edit documentation in R/fn.R
 \name{fn}
 \alias{fn}
-\alias{fn}
 \alias{fn_}
 \title{Low-cost anonymous functions}
 \usage{
@@ -22,18 +21,18 @@ A function whose enclosing environment is \code{..env}.
 }
 \description{
 \code{fn()} enables you to create (anonymous) functions, of arbitrary call
-signature. Use it in place of the usual \code{function()} invocation whenever you
+signature. Use it in place of the usual \code{\link[=function]{function()}} invocation whenever you
 want to:
 \itemize{
-\item Be concise:
-\preformatted{%
-  fn(x, y = 1 ~ x + y)
-  function(x, y = 1) x + y}
-are equivalent
+\item Be concise:\preformatted{  fn(x, y = 1 ~ x + y)
+  function(x, y = 1) x + y
+}
+
+are equivalent.
 \item Guard against changes in lexical scope: by enabling tidyverse
-\link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to
-\dQuote{burn in} values at the point of function creation (see
-‘Pure functions via quasiquotation’)
+\link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to “burn in”
+values at the point of function creation (see ‘Pure functions via
+quasiquotation’).
 }
 }
 \section{Function declarations}{
@@ -142,24 +141,24 @@ fn(x, y ~ x + y)
 fn(x, y = 2 ~ x + y)
 fn(x, y = 1, ... ~ log(x + y, ...))
 
-## to specify '...' in the middle, write '... = '
+# to specify '...' in the middle, write '... = '
 fn(x, ... = , y ~ log(x + y, ...))
 
-## use one-sided formula for constant functions or commands
+# use one-sided formula for constant functions or commands
 fn(~ NA)
 fn(~ message("!"))
 
-## unquoting is supported (using `!!` from rlang)
+# unquoting is supported (using `!!` from rlang)
 zero <- 0
 fn(x = !!zero ~ x > !!zero)
 
-## formals and function bodies can also be spliced in
+# formals and function bodies can also be spliced in
 f <- function(x, y) x + y
 g <- function(y, x, ...) x - y
 frankenstein <- fn(!!!formals(f), ~ !!body(g))
 stopifnot(identical(frankenstein, function(x, y) x - y))
 
-## mixing unquoting and literal unquoting is possible
+# mixing unquoting and literal unquoting is possible
 \dontrun{
 library(dplyr)
 summariser <- quote(mean)

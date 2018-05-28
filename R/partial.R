@@ -26,10 +26,10 @@
 #'
 #' @section Technical Note:
 #'   Even while `partial()` truncates formals, it remains compatible with
-#'   functions that use \code{\link[base:missing]{missing()}} to test whether a
+#'   functions that use [`missing()`][base::missing()] to test whether a
 #'   specified argument was supplied in a call. For example,
 #'   `draw3 <- partial(sample, size = 3)` works as a function that randomly
-#'   draws three elements, even though `sample()` invokes `missing(size)` and
+#'   draws three elements, even though `sample()` invokes `missing(size)` and?
 #'   `draw3()` has signature `function (x, replace = FALSE, prob = NULL)`.
 #'
 #'   Consequently, in rare cases, impure functions that depend on introspection

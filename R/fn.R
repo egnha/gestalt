@@ -1,19 +1,21 @@
 #' Low-cost anonymous functions
 #'
+#' @description
 #' `fn()` enables you to create (anonymous) functions, of arbitrary call
-#' signature. Use it in place of the usual `function()` invocation whenever you
+#' signature. Use it in place of the usual [function()] invocation whenever you
 #' want to:
-#' \itemize{
-#'   \item Be concise:
-#'     \preformatted{%
-#'   fn(x, y = 1 ~ x + y)
-#'   function(x, y = 1) x + y}
-#'     are equivalent
-#'   \item Guard against changes in lexical scope: by enabling tidyverse
-#'     [quasiquotation][rlang::quasiquotation], `fn()` allows you to
-#'     \dQuote{burn in} values at the point of function creation (see
-#'     ‘Pure functions via quasiquotation’)
-#' }
+#'
+#' - Be concise:
+#'   ```
+#'     fn(x, y = 1 ~ x + y)
+#'     function(x, y = 1) x + y
+#'   ```
+#'   are equivalent.
+#'
+#' - Guard against changes in lexical scope: by enabling tidyverse
+#'   [quasiquotation][rlang::quasiquotation], `fn()` allows you to “burn in”
+#'   values at the point of function creation (see ‘Pure functions via
+#'   quasiquotation’).
 #'
 #' @param ... Function declaration, which supports
 #'   [quasiquotation][rlang::quasiquotation].
@@ -131,24 +133,24 @@
 #' fn(x, y = 2 ~ x + y)
 #' fn(x, y = 1, ... ~ log(x + y, ...))
 #'
-#' ## to specify '...' in the middle, write '... = '
+#' # to specify '...' in the middle, write '... = '
 #' fn(x, ... = , y ~ log(x + y, ...))
 #'
-#' ## use one-sided formula for constant functions or commands
+#' # use one-sided formula for constant functions or commands
 #' fn(~ NA)
 #' fn(~ message("!"))
 #'
-#' ## unquoting is supported (using `!!` from rlang)
+#' # unquoting is supported (using `!!` from rlang)
 #' zero <- 0
 #' fn(x = !!zero ~ x > !!zero)
 #'
-#' ## formals and function bodies can also be spliced in
+#' # formals and function bodies can also be spliced in
 #' f <- function(x, y) x + y
 #' g <- function(y, x, ...) x - y
 #' frankenstein <- fn(!!!formals(f), ~ !!body(g))
 #' stopifnot(identical(frankenstein, function(x, y) x - y))
 #'
-#' ## mixing unquoting and literal unquoting is possible
+#' # mixing unquoting and literal unquoting is possible
 #' \dontrun{
 #' library(dplyr)
 #' summariser <- quote(mean)

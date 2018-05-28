@@ -8,10 +8,10 @@
 #' call (i.e., `constant()`
 #' [memoizes](https://en.wikipedia.org/wiki/Memoization) void functions).
 #'
-#' Combine \code{\link[=compose]{\%>>>\%}} with `constant()` for a _lazy_,
+#' Combine ``\link[=compose]{`%>>>%`}`` with `constant()` for a _lazy_,
 #' _structured_ alternative to the
-#' [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
-#' (see \sQuote{Examples}).
+#' [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
+#' (see ‘Examples’).
 #'
 #' @param f Function, or symbol or name (string) thereof, that can be called
 #'   without arguments. (NB: `constant()` itself does not check whether `f()` is
@@ -20,7 +20,7 @@
 #' @return `constant()` yields a function without formal arguments that returns
 #'   the (cached, visibility-preserving) value of the void call `f()`.
 #'
-#' @seealso \code{\link[=compose]{\%>>>\%}}
+#' @seealso ``\link[=compose]{`%>>>%`}``
 #'
 #' @examples
 #' # Function with a constant return value

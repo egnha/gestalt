@@ -16,12 +16,12 @@
 #'     }
 #'   ```
 #'
-#' - Alternatively, use the infix notation \code{f \%>>>\% g \%>>>\% ...}, which
+#' - Alternatively, use the infix notation `f %>>>% g %>>>% ...`, which
 #'   comprehends the semantics of the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
 #'   operator and, additionally, [quasiquotation][rlang::quasiquotation].
 #'   Thus, assuming `sep` has the value `""`,
-#'   \preformatted{
+#'   \preformatted{%
 #'   sample \%>>>\% paste(collapse = !!sep)}
 #'   is equivalent to the function
 #'   ```
@@ -30,7 +30,7 @@
 #'     }
 #'   ```
 #'
-#' Use `as.list()` to recover the list of composite functions.
+#' Use [as.list()] to recover the list of composite functions.
 #'
 #' @param ... Functions or lists thereof to compose, in order of application.
 #'   Lists of functions are automatically spliced in.
@@ -41,9 +41,9 @@
 #'   [formals][base::formals()] match those of the first function applied (as a
 #'   closure).
 #'
-#' @section Semantics of \code{\%>>>\%}:
-#'   \code{\%>>>\%} adopts the semantics of the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}:
+#' @section Semantics of `` `%>>>%` ``:
+#'   `` `%>>>%` `` adopts the semantics of the
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``:
 #'   \enumerate{
 #'     \item Names are matched to functions.
 #'     \item Function calls are implicitly “partialized” as a unary function of
@@ -73,18 +73,18 @@
 #'     Exceptions to the rule of implicit partialization are made in a few cases
 #'     of convenience:
 #'     \itemize{
-#'       \item Parenthesis (`` `(` ``) applies grouping. In particular,
+#'       \item Parenthesis ([`(`][base::Paren]) applies grouping. In particular,
 #'         expressions within parentheses are literally interpreted.
-#'       \item Colon (`` `:` ``) applies naming, according to the syntax
-#'       ‘`<name>: <function>`’. For example, in
+#'       \item Colon ([`:`][base::Colon]) applies naming, according to the
+#'         syntax ‘`<name>: <function>`’. For example, in
 #'       \preformatted{%
 #'   ... \%>>>\% a_name: f \%>>>\% ...}
 #'       the function `f` is named `"a_name"`.
-#'       \item [fn()], namespace operators (`` `::`  ``, `` `:::` ``) and extractors
-#'         (`` `$` ``, `` `[[` ``, `` `[` ``) are literally interpreted. This
-#'         allows for list extractors to be applied to composite functions
-#'         appearing in a \code{\%>>>\%} call (see ‘Operate on a composite
-#'         function’).
+#'       \item [fn()], [namespace operators][base::ns-dblcolon] (`` `::`  ``,
+#'         `` `:::` ``) and [extractors][base::Extract] (`` `$` ``, `` `[[` ``,
+#'         `` `[` ``) are literally interpreted. This allows for list extractors
+#'         to be applied to composite functions appearing in a `` `%>>>%` ``
+#'         call (see ‘Operate on a composite function’).
 #'     }
 #'   }
 #'   \subsection{Quasiquotation}{
@@ -130,49 +130,51 @@
 #'   composite functions as _structured computations_.
 #'
 #'   \subsection{Indexing}{
-#'     For instance, the ‘\code{sum}’ in the following composite function
-#'     \preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
-#'     can be extracted in the usual ways: \preformatted{%
+#'     For instance, the ‘`sum`’ in the following composite function
+#'     \preformatted{%
+#'   f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
+#'     can be [extracted][base::Extract] in the usual ways:
+#'     \preformatted{%
 #'   f[[2]][[2]], f[[c(2, 2)]],
 #'   f$out$agg, f[["out"]][["agg"]], f[["out"]]$agg,
 #'   f$out[[2]], f[[list("out", 2)]], ...}
 #'     The last form of indexing with a mixed list is handy when you need to
 #'     create an index programmatically.
 #'     \cr\cr
-#'     Additionally, you can excise sub-composite functions with \code{`[`},
-#'     \code{head()}, \code{tail()}. For
-#'     example:
+#'     Additionally, you can excise sub-composite functions with
+#'     [`[`][base::Extract], [head()], [tail()]. For example:
 #'     \itemize{
-#'       \item Both \code{f[1]} and \code{head(f, 1)} get the ‘\code{abs}’ as a
-#'         composite function, namely \code{compose(abs)}
-#'       \item \code{f[2:1]} reverses the order of the top-level functions to
-#'         yield \preformatted{%
+#'       \item Both `f[1]` and `head(f, 1)` get the ‘`abs`’ as a composite
+#'         function, namely `compose(abs)`
+#'       \item `f[2:1]` reverses the order of the top-level functions to yield
+#'         \preformatted{%
 #'   out: (log \%>>>\% agg: sum) \%>>>\% abs}
-#'       \item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named)
-#'         composite function
+#'       \item `f$out[c(FALSE, TRUE)]` gets the ‘`sum`’ as a (named) composite
+#'         function
 #'     }
 #'   }
 #'   \subsection{Subset assignment}{
 #'     Similarily, subset assignment works as it does for lists. For instance,
-#'     you can replace the ‘\code{sum}’ with the identity function:
+#'     you can replace the ‘`sum`’ with the identity function:
 #'     \preformatted{%
 #'   f[[2]][[2]] <- identity
 #'   f$out$agg <- identity
 #'   f[["out"]][["agg"]] <- identity
 #'   f$out[[2]] <- identity
 #'   f[[list("out", 2)]] <- identity}
-#'     Multiple constituent functions can be reassigned using \code{`[<-`}. For
-#'     example \preformatted{%
+#'     Multiple constituent functions can be reassigned using
+#'     [`[<-`][base::Extract]. For example
+#'     \preformatted{%
 #'   f[2] <- list(log)
 #'   f["out"] <- list(log)
 #'   f[c(FALSE, TRUE)] <- list(log)}
 #'     replace the second constituent function, so that `f` becomes
-#'     \code{abs \%>>>\% log}.
+#'     `abs %>>>% log`.
 #'   }
 #'   \subsection{Other methods}{
-#'     The generic methods \code{unlist()}, \code{length()}, \code{names()} also
-#'     apply to composite functions. In conjunction with \code{compose()}, you
-#'     can use \code{unlist()} to “flatten” compositions. For example
+#'     The generic methods [unlist()], [length()], [names()] also apply to
+#'     composite functions. In conjunction with `compose()`, you can use
+#'     `unlist()` to “flatten” compositions. For example
 #'     \preformatted{%
 #'   compose(unlist(f, use.names = FALSE))}
 #'     gives a function that is identical to
@@ -188,19 +190,19 @@
 #'   compose(compose(f, g), h)}
 #'   are implemented as the _same function_—lists of functions are automatically
 #'   “flattened out” when composed. In practical terms, this means the speed of
-#'   a composite function made by `compose()` or \code{\%>>>\%}, regardless of
+#'   a composite function made by `compose()` or `` `%>>>%` ``, regardless of
 #'   its nested depth, is on par with a manually constructed _serial_
 #'   composition.
 #'
 #'   Nonetheless, the original nested structure of constituent functions is
-#'   faithfully recovered by `as.list()`. In particular, `as.list()` and
+#'   faithfully recovered by [as.list()]. In particular, `as.list()` and
 #'   `compose()` are **mutually invertible**: `as.list(compose(fs))` is the same
 #'   as `fs`, when `fs` is a (nested) list of functions. (Though the names of
 #'   `as.list()` are always strings, possibly empty.)
 #'
-#' @seealso [constant()]: combined with \code{\%>>>\%}, this provides a lazy,
+#' @seealso [constant()]; combined with `` `%>>>%` ``, this provides a lazy,
 #'   structured alternative to the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}.
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``.
 #'
 #' @examples
 #' # Functions are applied in the order in which they are listed
@@ -269,10 +271,10 @@ compose <- function(...) {
 }
 
 #' @param fst,snd Functions. These may be optionally named using `:`, e.g.,
-#'   \code{f \%>>>\% nm: g} names the `g`-component.
+#'   `f %>>>% nm: g` names the `g`-component.
 #'   [Quasiquotation][rlang::quasiquotation] and the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) \code{\%>\%}
-#'   semantics are supported (see ‘Semantics of \code{\%>>>\%}’ and ‘Examples’).
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
+#'   semantics are supported (see ‘Semantics of `` `%>>>%` ``’ and ‘Examples’).
 #'
 #' @rdname compose
 #' @export

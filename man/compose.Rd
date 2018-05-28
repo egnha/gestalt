@@ -18,8 +18,8 @@ of \code{:=}, and \link[rlang:quasiquotation]{splicing}, via \code{!!!}, are sup
 \item{fst, snd}{Functions. These may be optionally named using \code{:}, e.g.,
 \code{f \%>>>\% nm: g} names the \code{g}-component.
 \link[rlang:quasiquotation]{Quasiquotation} and the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}
-semantics are supported (see ‘Semantics of \code{\%>>>\%}’ and ‘Examples’).}
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
+semantics are supported (see ‘Semantics of \code{`\%>>>\%`}’ and ‘Examples’).}
 }
 \value{
 Function of class \code{CompositeFunction}, whose
@@ -40,10 +40,10 @@ is equivalent to the function\preformatted{  function(..., sep = " ", collapse =
 }
 \item Alternatively, use the infix notation \code{f \%>>>\% g \%>>>\% ...}, which
 comprehends the semantics of the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 operator and, additionally, \link[rlang:quasiquotation]{quasiquotation}.
 Thus, assuming \code{sep} has the value \code{""},
-\preformatted{
+\preformatted{%
   sample \%>>>\% paste(collapse = !!sep)}
 is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) {
     paste(sample(x, size, replace, prob), collapse = "")
@@ -51,12 +51,12 @@ is equivalent to the function\preformatted{  function(x, size, replace = FALSE, 
 }
 }
 
-Use \code{as.list()} to recover the list of composite functions.
+Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions.
 }
-\section{Semantics of \code{\%>>>\%}}{
+\section{Semantics of \code{`\%>>>\%`}}{
 
-\code{\%>>>\%} adopts the semantics of the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}:
+\code{`\%>>>\%`} adopts the semantics of the
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}:
 \enumerate{
 \item Names are matched to functions.
 \item Function calls are implicitly “partialized” as a unary function of
@@ -86,18 +86,18 @@ circumvent the implicit-partialization rule for function calls.
 Exceptions to the rule of implicit partialization are made in a few cases
 of convenience:
 \itemize{
-\item Parenthesis (\code{`(`}) applies grouping. In particular,
+\item Parenthesis (\code{\link[base:Paren]{(}}) applies grouping. In particular,
 expressions within parentheses are literally interpreted.
-\item Colon (\code{`:`}) applies naming, according to the syntax
-‘\code{<name>: <function>}’. For example, in
+\item Colon (\code{\link[base:Colon]{:}}) applies naming, according to the
+syntax ‘\code{<name>: <function>}’. For example, in
 \preformatted{%
   ... \%>>>\% a_name: f \%>>>\% ...}
 the function \code{f} is named \code{"a_name"}.
-\item \code{\link[=fn]{fn()}}, namespace operators (\code{`::`}, \code{`:::`}) and extractors
-(\code{`$`}, \code{`[[`}, \code{`[`}) are literally interpreted. This
-allows for list extractors to be applied to composite functions
-appearing in a \code{\%>>>\%} call (see ‘Operate on a composite
-function’).
+\item \code{\link[=fn]{fn()}}, \link[base:ns-dblcolon]{namespace operators} (\code{`::`},
+\code{`:::`}) and \link[base:Extract]{extractors} (\code{`$`}, \code{`[[`},
+\code{`[`}) are literally interpreted. This allows for list extractors
+to be applied to composite functions appearing in a \code{`\%>>>\%`}
+call (see ‘Operate on a composite function’).
 }
 }
 \subsection{Quasiquotation}{
@@ -146,25 +146,26 @@ composite functions as \emph{structured computations}.
 
 \subsection{Indexing}{
 For instance, the ‘\code{sum}’ in the following composite function
-\preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
-can be extracted in the usual ways: \preformatted{%
+\preformatted{%
+  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
+can be \link[base:Extract]{extracted} in the usual ways:
+\preformatted{%
   f[[2]][[2]], f[[c(2, 2)]],
   f$out$agg, f[["out"]][["agg"]], f[["out"]]$agg,
   f$out[[2]], f[[list("out", 2)]], ...}
 The last form of indexing with a mixed list is handy when you need to
 create an index programmatically.
 \cr\cr
-Additionally, you can excise sub-composite functions with \code{`[`},
-\code{head()}, \code{tail()}. For
-example:
+Additionally, you can excise sub-composite functions with
+\code{\link[base:Extract]{[}}, \code{\link[=head]{head()}}, \code{\link[=tail]{tail()}}. For example:
 \itemize{
-\item Both \code{f[1]} and \code{head(f, 1)} get the ‘\code{abs}’ as a
-composite function, namely \code{compose(abs)}
-\item \code{f[2:1]} reverses the order of the top-level functions to
-yield \preformatted{%
+\item Both \code{f[1]} and \code{head(f, 1)} get the ‘\code{abs}’ as a composite
+function, namely \code{compose(abs)}
+\item \code{f[2:1]} reverses the order of the top-level functions to yield
+\preformatted{%
   out: (log \%>>>\% agg: sum) \%>>>\% abs}
-\item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named)
-composite function
+\item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named) composite
+function
 }
 }
 \subsection{Subset assignment}{
@@ -176,8 +177,9 @@ you can replace the ‘\code{sum}’ with the identity function:
   f[["out"]][["agg"]] <- identity
   f$out[[2]] <- identity
   f[[list("out", 2)]] <- identity}
-Multiple constituent functions can be reassigned using \code{`[<-`}. For
-example \preformatted{%
+Multiple constituent functions can be reassigned using
+\code{\link[base:Extract]{[<-}}. For example
+\preformatted{%
   f[2] <- list(log)
   f["out"] <- list(log)
   f[c(FALSE, TRUE)] <- list(log)}
@@ -185,9 +187,9 @@ replace the second constituent function, so that \code{f} becomes
 \code{abs \%>>>\% log}.
 }
 \subsection{Other methods}{
-The generic methods \code{unlist()}, \code{length()}, \code{names()} also
-apply to composite functions. In conjunction with \code{compose()}, you
-can use \code{unlist()} to “flatten” compositions. For example
+The generic methods \code{\link[=unlist]{unlist()}}, \code{\link[=length]{length()}}, \code{\link[=names]{names()}} also apply to
+composite functions. In conjunction with \code{compose()}, you can use
+\code{unlist()} to “flatten” compositions. For example
 \preformatted{%
   compose(unlist(f, use.names = FALSE))}
 gives a function that is identical to
@@ -205,12 +207,12 @@ gives a function that is identical to
   compose(compose(f, g), h)}
 are implemented as the \emph{same function}—lists of functions are automatically
 “flattened out” when composed. In practical terms, this means the speed of
-a composite function made by \code{compose()} or \code{\%>>>\%}, regardless of
+a composite function made by \code{compose()} or \code{`\%>>>\%`}, regardless of
 its nested depth, is on par with a manually constructed \emph{serial}
 composition.
 
 Nonetheless, the original nested structure of constituent functions is
-faithfully recovered by \code{as.list()}. In particular, \code{as.list()} and
+faithfully recovered by \code{\link[=as.list]{as.list()}}. In particular, \code{as.list()} and
 \code{compose()} are \strong{mutually invertible}: \code{as.list(compose(fs))} is the same
 as \code{fs}, when \code{fs} is a (nested) list of functions. (Though the names of
 \code{as.list()} are always strings, possibly empty.)
@@ -274,7 +276,7 @@ stopifnot(
 
 }
 \seealso{
-\code{\link[=constant]{constant()}}: combined with \code{\%>>>\%}, this provides a lazy,
+\code{\link[=constant]{constant()}}; combined with \code{`\%>>>\%`}, this provides a lazy,
 structured alternative to the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{\%>\%}.
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}.
 }
