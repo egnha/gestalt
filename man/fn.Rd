@@ -124,8 +124,8 @@ only on the value of \code{x} but also on the \emph{externally mutable} value of
 \href{http://rlang.tidyverse.org/reference/quasiquotation.html}{quasiquotation}
 to eliminate such indeterminacy.
 
-\strong{Example} — With \code{fn()}, you can unquote \code{a} to \dQuote{burn in} its
-value at the point of creation:\preformatted{  a <- 1
+\strong{Example} — With \code{fn()}, you can unquote \code{a} to “burn in” its value at
+the point of creation:\preformatted{  a <- 1
   foo <- fn(x ~ x + !!a)
 }
 

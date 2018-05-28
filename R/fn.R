@@ -114,8 +114,8 @@
 #'   [quasiquotation](http://rlang.tidyverse.org/reference/quasiquotation.html)
 #'   to eliminate such indeterminacy.
 #'
-#'   **Example** — With `fn()`, you can unquote `a` to \dQuote{burn in} its
-#'   value at the point of creation:
+#'   **Example** — With `fn()`, you can unquote `a` to “burn in” its value at
+#'   the point of creation:
 #'   ```
 #'     a <- 1
 #'     foo <- fn(x ~ x + !!a)
