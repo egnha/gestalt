@@ -1,7 +1,6 @@
 ---
 title: "Introduction to gestalt"
 author: "Eugene Ha"
-date: "May 2018"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to gestalt}
