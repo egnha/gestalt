@@ -4,9 +4,15 @@
 \name{gestalt-package}
 \alias{gestalt}
 \alias{gestalt-package}
-\title{gestalt: Package Title TBD}
+\title{gestalt: Tools for Making and Combining Functions}
 \description{
-Package description TBD.
+Provides a suite of function-building tools centered around a
+(forward) composition operator, %>>>%, which extends the semantics of the
+magrittr %>% operator and supports tidyverse-style quasiquotation. It enables
+you to construct composite functions that can be inspected and transformed as
+list-like objects. In conjunction with %>>>%, a compact function constructor,
+fn(), and a function that performs partial application, partial(), are also
+provided. Both support quasiquotation.
 }
 \seealso{
 Useful links:
