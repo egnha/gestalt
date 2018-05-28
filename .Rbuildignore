@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^README-.*\.png$
+^README\.md$
 ^LICENSE.md$
 ^codecov.yml$
 ^.travis.yml$
