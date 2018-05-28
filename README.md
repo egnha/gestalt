@@ -1,6 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![Travis-CI Build
+Status](https://travis-ci.org/egnha/gestalt.svg?branch=master)](https://travis-ci.org/egnha/gestalt)
+[![codecov](https://codecov.io/gh/egnha/gestalt/branch/master/graph/badge.svg)](https://codecov.io/gh/egnha/gestalt)
+
 # gestalt
 
 The **gestalt** package provides a function composition operator,
