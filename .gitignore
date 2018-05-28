@@ -5,3 +5,4 @@
 *.org
 \#*\#
 inst/doc
+cran-comments.md
