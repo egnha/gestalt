@@ -149,11 +149,12 @@
 #' g <- function(y, x, ...) x - y
 #' frankenstein <- fn(!!!formals(f), ~ !!body(g))
 #' stopifnot(identical(frankenstein, function(x, y) x - y))
-#'
-#' # mixing unquoting and literal unquoting is possible
 #' \donttest{
+#' # mixing unquoting and literal unquoting is possible
 #' library(dplyr)
+#'
 #' summariser <- quote(mean)
+#'
 #' my_summarise <- fn(df, ... ~ {
 #'   group_by <- quos(...)
 #'   df %>%
