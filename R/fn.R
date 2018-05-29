@@ -151,7 +151,7 @@
 #' stopifnot(identical(frankenstein, function(x, y) x - y))
 #'
 #' # mixing unquoting and literal unquoting is possible
-#' \dontrun{
+#' \donttest{
 #' library(dplyr)
 #' summariser <- quote(mean)
 #' my_summarise <- fn(df, ... ~ {
@@ -166,7 +166,7 @@
 #' enforce <- fn_(cond ~ fn(. ~ {stopifnot(!!substitute(cond)); .}))
 #' nonans <- enforce(!is.nan(.))
 #' log_strict <- fn(x ~ nonans(log(x)))
-#' \dontrun{
+#' \donttest{
 #' log_strict(2)   # 0.6931472
 #' log_strict(-1)  # Error: !is.nan(.) is not TRUE}
 #'
