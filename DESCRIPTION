@@ -19,6 +19,7 @@ Imports:
     utils
 Suggests:
     magrittr (>= 1.5),
+    dplyr (>= 0.7.5),
     testthat (>= 2.0.0),
     knitr,
     rmarkdown
