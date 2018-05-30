@@ -1,4 +1,4 @@
-#' Fix a number of arguments to a function
+#' Fix a Number of Arguments to a Function
 #'
 #' @description
 #' `partial()` enables
@@ -24,7 +24,7 @@
 #'   evaluated][rlang::eval_tidy()]. Lazy evaluation of fixed arguments can be
 #'   overridden via unquoting, see ‘Examples’.
 #'
-#' @section Technical Notes:
+#' @details
 #'   Even while `partial()` truncates formals, it remains compatible with
 #'   functions that use [`missing()`][base::missing()] to test whether a
 #'   specified argument was supplied in a call. For example,

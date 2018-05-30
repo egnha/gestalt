@@ -1,4 +1,4 @@
-#' Compose functions
+#' Compose Functions
 #'
 #' @description
 #' Compose functions in two ways:
@@ -52,7 +52,7 @@
 #'       \preformatted{%
 #'   ... \%>>>\% f(x, .) \%>>>\% ...
 #'   ... \%>>>\% f(x, y = .) \%>>>\% ...}
-#'       the `f(x, .)`, resp. `f(x, y = .)`, is interpreted as the function
+#'       the ‘`f(x, .)`’, resp. ‘`f(x, y = .)`’, is interpreted as the function
 #'       `function(.) f(x, .)`, resp. `function(.) f(x, y = .)`. Otherwise, the
 #'       call is implicitly “partialized,” e.g., in sequences such as
 #'       \preformatted{%
@@ -69,7 +69,7 @@
 #'       `function(.) {f(.); g(.)}`. Curly braces are useful when you want to
 #'       circumvent the implicit-partialization rule for function calls.
 #'   }
-#'   \subsection{Exceptional function calls}{
+#'   \subsection{Exceptional Function Calls}{
 #'     Exceptions to the rule of implicit partialization of function calls are
 #'     made in a few cases of convenience:
 #'     \itemize{
@@ -85,12 +85,12 @@
 #'         `` `:::` ``) and [extractors][base::Extract] (`` `$` ``, `` `[[` ``,
 #'         `` `[` ``) are literally interpreted. This allows for list extractors
 #'         to be applied to composite functions appearing in a `` `%>>>%` ``
-#'         call (see ‘Operate on a composite function’).
+#'         call (see ‘Operate on a Composite Function’).
 #'     }
 #'   }
 #'   \subsection{Quasiquotation}{
-#'     Tidyverse-style [unquoting][rlang::quasiquotation] using `!!` is
-#'     supported. Use it to:
+#'     Tidyverse [unquoting][rlang::quasiquotation] via `!!` is supported. Use
+#'     it to:
 #'     \itemize{
 #'       \item Enforce immutability. For example, by unquoting `res` in
 #'         \preformatted{%
@@ -111,7 +111,7 @@
 #'   ... \%>>>\% !!nm: f \%>>>\% ...}
 #'         names the `f`-component of the resulting composite function
 #'         `"a_name"`.
-#'       \item Expend a computation upfront to spare a runtime cost. For
+#'       \item Expend a computation upfront to spare a runtime expense. For
 #'         example, presuming the value of the call `f()` is immutable and that
 #'         `g` is a pure function, both
 #'         \preformatted{%
@@ -123,10 +123,10 @@
 #'     }
 #'   }
 #'
-#' @section Operate on a composite function as if it were a list:
+#' @section Operate on a Composite Function as If It Were a List:
 #'   You can think of a composite function as embodying the (possibly nested)
 #'   structure of its list of constituent functions. In fact, you can apply
-#'   familiar index and assignment operations on a composite function, as if it
+#'   familiar index and assignment operations to a composite function, as if it
 #'   were this list, getting a function in return. This enables you to leverage
 #'   composite functions as _structured computations_.
 #'
@@ -154,7 +154,7 @@
 #'         function
 #'     }
 #'   }
-#'   \subsection{Subset assignment}{
+#'   \subsection{Subset Assignment}{
 #'     Similarily, subset assignment works as it does for lists. For instance,
 #'     you can replace the ‘`sum`’ with the identity function:
 #'     \preformatted{%
@@ -172,7 +172,7 @@
 #'     all replace the second constituent function with `log`, so that `f`
 #'     becomes `abs %>>>% log`.
 #'   }
-#'   \subsection{Other methods}{
+#'   \subsection{Other Methods}{
 #'     The generic methods [unlist()], [length()], [names()] also apply to
 #'     composite functions. In conjunction with `compose()`, you can use
 #'     `unlist()` to “flatten” compositions. For example
@@ -183,7 +183,7 @@
 #'   abs \%>>>\% log \%>>>\% sum}
 #'   }
 #'
-#' @section Composite functions are unsimplified, yet flattened when called:
+#' @section Composite Functions Are Unsimplified, yet Flattened When Called:
 #'   `compose()` and `` `%>>>%` `` are **associative**, semantically and
 #'   operationally. Thus, for instance,
 #'   \preformatted{%

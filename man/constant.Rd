@@ -3,7 +3,7 @@
 \name{constant}
 \alias{constant}
 \alias{variable}
-\title{Values as functions}
+\title{Values as Functions}
 \usage{
 constant(f)
 

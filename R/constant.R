@@ -1,4 +1,4 @@
-#' Values as functions
+#' Values as Functions
 #'
 #' @description
 #' A **constant** is a fixed value that incorporates its very computation. This

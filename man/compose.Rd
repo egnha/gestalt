@@ -3,7 +3,7 @@
 \name{compose}
 \alias{compose}
 \alias{\%>>>\%}
-\title{Compose functions}
+\title{Compose Functions}
 \usage{
 compose(...)
 
@@ -65,7 +65,7 @@ value, such as in
 \preformatted{%
   ... \%>>>\% f(x, .) \%>>>\% ...
   ... \%>>>\% f(x, y = .) \%>>>\% ...}
-the \code{f(x, .)}, resp. \code{f(x, y = .)}, is interpreted as the function
+the ‘\code{f(x, .)}’, resp. ‘\code{f(x, y = .)}’, is interpreted as the function
 \code{function(.) f(x, .)}, resp. \code{function(.) f(x, y = .)}. Otherwise, the
 call is implicitly “partialized,” e.g., in sequences such as
 \preformatted{%
@@ -82,7 +82,7 @@ the ‘\code{{f(.); g(.)}}’ is interpreted as the function
 \code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to
 circumvent the implicit-partialization rule for function calls.
 }
-\subsection{Exceptional function calls}{
+\subsection{Exceptional Function Calls}{
 Exceptions to the rule of implicit partialization of function calls are
 made in a few cases of convenience:
 \itemize{
@@ -98,12 +98,12 @@ the function \code{f} is named \code{"a_name"}.
 \code{`:::`}) and \link[base:Extract]{extractors} (\code{`$`}, \code{`[[`},
 \code{`[`}) are literally interpreted. This allows for list extractors
 to be applied to composite functions appearing in a \code{`\%>>>\%`}
-call (see ‘Operate on a composite function’).
+call (see ‘Operate on a Composite Function’).
 }
 }
 \subsection{Quasiquotation}{
-Tidyverse-style \link[rlang:quasiquotation]{unquoting} using \code{!!} is
-supported. Use it to:
+Tidyverse \link[rlang:quasiquotation]{unquoting} via \code{!!} is supported. Use
+it to:
 \itemize{
 \item Enforce immutability. For example, by unquoting \code{res} in
 \preformatted{%
@@ -124,7 +124,7 @@ equal the string \code{"point"}.
   ... \%>>>\% !!nm: f \%>>>\% ...}
 names the \code{f}-component of the resulting composite function
 \code{"a_name"}.
-\item Expend a computation upfront to spare a runtime cost. For
+\item Expend a computation upfront to spare a runtime expense. For
 example, presuming the value of the call \code{f()} is immutable and that
 \code{g} is a pure function, both
 \preformatted{%
@@ -137,11 +137,11 @@ depend on a pre-computed value of \code{f()}.
 }
 }
 
-\section{Operate on a composite function as if it were a list}{
+\section{Operate on a Composite Function as If It Were a List}{
 
 You can think of a composite function as embodying the (possibly nested)
 structure of its list of constituent functions. In fact, you can apply
-familiar index and assignment operations on a composite function, as if it
+familiar index and assignment operations to a composite function, as if it
 were this list, getting a function in return. This enables you to leverage
 composite functions as \emph{structured computations}.
 
@@ -169,7 +169,7 @@ function, namely \code{compose(abs)}
 function
 }
 }
-\subsection{Subset assignment}{
+\subsection{Subset Assignment}{
 Similarily, subset assignment works as it does for lists. For instance,
 you can replace the ‘\code{sum}’ with the identity function:
 \preformatted{%
@@ -187,7 +187,7 @@ Multiple constituent functions can be reassigned using
 all replace the second constituent function with \code{log}, so that \code{f}
 becomes \code{abs \%>>>\% log}.
 }
-\subsection{Other methods}{
+\subsection{Other Methods}{
 The generic methods \code{\link[=unlist]{unlist()}}, \code{\link[=length]{length()}}, \code{\link[=names]{names()}} also apply to
 composite functions. In conjunction with \code{compose()}, you can use
 \code{unlist()} to “flatten” compositions. For example
@@ -199,7 +199,7 @@ gives a function that is identical to
 }
 }
 
-\section{Composite functions are unsimplified, yet flattened when called}{
+\section{Composite Functions Are Unsimplified, yet Flattened When Called}{
 
 \code{compose()} and \code{`\%>>>\%`} are \strong{associative}, semantically and
 operationally. Thus, for instance,

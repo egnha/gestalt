@@ -3,7 +3,7 @@
 \name{partial}
 \alias{partial}
 \alias{departial}
-\title{Fix a number of arguments to a function}
+\title{Fix a Number of Arguments to a Function}
 \usage{
 partial(..f, ...)
 
@@ -36,8 +36,7 @@ function of the remaining arguments.
 \code{departial()} “inverts” the application of \code{partial()} by returning the
 original function.
 }
-\section{Technical Notes}{
-
+\details{
 Even while \code{partial()} truncates formals, it remains compatible with
 functions that use \code{\link[base:missing]{missing()}} to test whether a
 specified argument was supplied in a call. For example,
@@ -53,7 +52,6 @@ equivalent to \code{ls(all.names = TRUE)}, because \code{ls()} inspects the call
 environment to produce its value, whereas \code{partial(ls, all.names = TRUE)()}
 calls \code{ls(all.names = TRUE)} from an (ephemeral) execution environment.
 }
-
 \examples{
 # Arguments can be fixed by name
 draw3 <- partial(sample, size = 3)
