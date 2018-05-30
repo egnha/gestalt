@@ -3,7 +3,7 @@
 \name{fn}
 \alias{fn}
 \alias{fn_}
-\title{Low-cost anonymous functions}
+\title{Function Declarations with Quasiquotation}
 \usage{
 fn(..., ..env = parent.frame())
 
@@ -24,24 +24,30 @@ A function whose enclosing environment is \code{..env}.
 signature. Use it in place of the usual \code{\link[=function]{function()}} invocation whenever you
 want to:
 \itemize{
-\item Be concise:\preformatted{  fn(x, y = 1 ~ x + y)
+\item \strong{Be concise}: The function declarations\preformatted{  fn(x, y = 1 ~ x + y)
   function(x, y = 1) x + y
 }
 
 are equivalent.
-\item Guard against changes in lexical scope: by enabling tidyverse
+\item \strong{Enforce immutability}: By enabling tidyverse
 \link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to “burn in”
-values at the point of function creation (see ‘Pure functions via
-quasiquotation’).
+values at the point of function creation, to guard against changes in
+lexical scope (see ‘Pure Functions via Quasiquotation’).
 }
+
+\code{fn_()} is a variant of \code{fn()} that does \emph{not} comprehend quasiquotation. It
+is useful when you want unquoting (\code{`!!`}) or splicing (\code{`!!!`})
+operators in the function body to be literally interpreted, rather than
+immediately invoked. (See ‘Function Declarations’ for a complementary way to
+literally interpret unquoting and splicing operators in \code{fn()}.)
 }
-\section{Function declarations}{
- A \emph{function declaration} is an expression
+\section{Function Declarations}{
+ A \strong{function declaration} is an expression
 that specifies a function’s arguments and body, as a comma-separated
 expression of the form\preformatted{  arg1, arg2, ..., argN ~ body
 }
 
-or\preformatted{  arg1, arg2, ..., argN, ~ body
+or\preformatted{  arg1, arg2, ..., argN, ~body
 }
 
 (Note in the second form that the body is a one-sided formula. This
@@ -72,10 +78,16 @@ All parts of a function declaration support tidyverse
   fn(x, !!arg := 0 ~ x + !!as.name(arg))}
 \item To splice in a (formal) list of arguments, use \code{!!!}:
 \preformatted{%
+  # NB: Body is a one-sided formula
   fn(!!!alist(x, y = 0), ~ x + y)}
-(Note that the body, in this case, must be given as a one-sided
-formula.)
-\item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()}:
+Splicing allows you to treat a complete function declaration as a
+unit:
+\preformatted{%
+  soma <- alist(x, y = 0, ~ x + y)
+  fn(!!!soma)}
+\item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()},
+which read as “quoted unquoting,” “quoted unquote-splicing”, resp.
+(cf. \code{fn_()}):
 \preformatted{%
   library(dplyr)
 
@@ -86,12 +98,12 @@ formula.)
       summarise(a = mean(a))
   })}
 (Source:
-\emph{\href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr}})
+\href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
 }
 }
 }
 
-\section{Pure functions via quasiquotation}{
+\section{Pure Functions via Quasiquotation}{
  Functions in R are generally
 \href{https://en.wikipedia.org/wiki/Pure_function}{impure}, i.e., the return
 value of a function will \emph{not} in general be determined by the value of its
@@ -129,7 +141,8 @@ the point of creation:\preformatted{  a <- 1
   foo <- fn(x ~ x + !!a)
 }
 
-Now \code{foo()} is a pure function, unaffected by changes in its lexical scope:\preformatted{  foo(1)  #> [1] 2
+Now \code{foo()} is a pure function, unaffected by changes to \code{a} in the lexical
+scope:\preformatted{  foo(1)  #> [1] 2
   a <- 0
   foo(1)  #> [1] 2
 }
@@ -171,12 +184,22 @@ my_summarise <- fn(df, ... ~ {
 })
 my_summarise}
 
-# Lightweight metaprogramming
-enforce <- fn_(cond ~ fn(. ~ {stopifnot(!!substitute(cond)); .}))
-nonans <- enforce(!is.nan(.))
-log_strict <- fn(x ~ nonans(log(x)))
+# Use fn_() with fn() as a concise way to force ("pin down") bindings
+# For example, the 'x' is immutable in the function produced by call_upon():
+call_upon <- fn_(x ~ fn(f ~ f(!!x)))
+sapply(list(sin, cos), call_upon(0))  # [1] 0 1
+
+# Return-value checking, as a functional transformation
+enforce <- fn_(condition ~
+  fn(x ~ {
+    stopifnot(!!substitute(condition))
+    x
+  })
+)
+no_nan <- enforce(!is.nan(x))
 \donttest{
-log_strict(2)   # 0.6931472
-log_strict(-1)  # Error: !is.nan(.) is not TRUE}
+log_strict <- fn(x ~ no_nan(log(x)))
+log_strict(2)   # [1] 0.6931472
+log_strict(-1)  # Error: !is.nan(x) is not TRUE}
 
 }
