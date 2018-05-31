@@ -216,7 +216,7 @@ You gain power by treating (piped) values as (composite) functions:
 In conjunction with `%>>>%`, gestalt also provides:
 
   - `fn`, a more concise and flexible variation of `function`, which
-    supports tidyverse-style
+    supports tidyverse
     [quasiquotation](http://rlang.r-lib.org/reference/quasiquotation.html).
     
     ``` r
