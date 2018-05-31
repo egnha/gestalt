@@ -4,6 +4,7 @@
 [![Travis-CI Build
 Status](https://travis-ci.org/egnha/gestalt.svg?branch=master)](https://travis-ci.org/egnha/gestalt)
 [![codecov](https://codecov.io/gh/egnha/gestalt/branch/master/graph/badge.svg)](https://codecov.io/gh/egnha/gestalt)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/gestalt)](https://cran.r-project.org/package=gestalt)
 
 # gestalt
 
