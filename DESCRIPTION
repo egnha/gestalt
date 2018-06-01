@@ -1,6 +1,6 @@
 Package: gestalt
 Title: Tools for Making and Combining Functions
-Version: 0.1.1
+Version: 0.1.1.9000
 Authors@R: person("Eugene", "Ha", , "eha@posteo.de", c("aut", "cre"))
 Description: Provides a suite of function-building tools centered around a
   (forward) composition operator, %>>>%, which extends the semantics of the
