@@ -277,6 +277,14 @@ gestalt)`).
 
 ## Installation
 
+Install from [CRAN](https://cran.r-project.org/package=gestalt):
+
+``` r
+install.packages("gestalt")
+```
+
+Alternatively, install the development version from GitHub:
+
 ``` r
 # install.packages("devtools")
 devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
