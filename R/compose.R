@@ -420,14 +420,14 @@ fuse <- function(fs) {
 
 reduce_calls <- function(n, fmls) {
   nms <- as_protected_name(seq_len(n))
-  args <- signature(fmls)
+  args <- as_called(fmls)
   expr <- as.call(c(as.name(nms[[1L]]), args))
   for (nm in nms[-1L])
     expr <- call(nm, expr)
   list(expr = expr, nms = nms)
 }
 
-signature <- function(fmls) {
+as_called <- function(fmls) {
   nms <- names(fmls)
   i <- which(nms == "...")
   if (is_empty(i))
