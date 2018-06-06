@@ -370,6 +370,25 @@ test_that("unquoting operators can be literally expressed", {
   expect_equal(f(x), rlang::exprs(1, 2))
 })
 
+test_that("arguments matched by position/name before/after dots (#6)", {
+  f <- (function(x, ...) list(x = x, ...)) %>>>% identity
+  expect_identical(f(1), list(x = 1))
+  expect_identical(f(1, 2), list(x = 1, 2))
+
+  f <- (function(..., y = "y") list(..., y = y)) %>>>% identity
+  expect_identical(f(1), list(1, y = "y"))
+  expect_identical(f(y = "Y", 1), list(1, y = "Y"))
+
+  f <- (function(x, ..., y = "y") list(x = x, ..., y = y)) %>>>% identity
+  expect_identical(f(1), list(x = 1, y = "y"))
+  expect_identical(f(1, 2), list(x = 1, 2, y = "y"))
+  expect_identical(f(1, 2, y = "Y"), list(x = 1, 2, y = "Y"))
+
+  # "degenerate" case
+  f <- (function(...) list(...)) %>>>% identity
+  expect_identical(f(x = 1, 2), list(x = 1, 2))
+})
+
 context("Decomposing compositions")
 
 test_that("tree structure of composition preserved when converting to list", {
