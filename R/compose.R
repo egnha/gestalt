@@ -427,18 +427,15 @@ reduce_calls <- function(n, fmls) {
   list(expr = expr, nms = nms)
 }
 
-signature <- local({
-  dots <- quote(...)
-  as_names <- function(xs) lapply(xs, as.name)
-
-  function(fmls) {
-    nms <- names(fmls)
-    i <- which(nms == "...")
-    if (is_empty(i))
-      return(as_names(nms))
-    c(as_names(nms[seq_len(i - 1L)]), dots, eponymous(nms[-seq_len(i)]))
-  }
-})
+signature <- function(fmls) {
+  nms <- names(fmls)
+  i <- which(nms == "...")
+  if (is_empty(i))
+    return(lapply(nms, as.name))
+  sig <- eponymous(nms)
+  names(sig)[seq_len(i)] <- ""
+  sig
+}
 
 get_tree <- function(fs, env) {
   force(env)
