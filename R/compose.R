@@ -420,12 +420,25 @@ fuse <- function(fs) {
 
 reduce_calls <- function(n, fmls) {
   nms <- as_protected_name(seq_len(n))
-  args <- lapply(names(fmls), as.name)
+  args <- signature(fmls)
   expr <- as.call(c(as.name(nms[[1L]]), args))
   for (nm in nms[-1L])
     expr <- call(nm, expr)
   list(expr = expr, nms = nms)
 }
+
+signature <- local({
+  dots <- quote(...)
+  as_names <- function(xs) lapply(xs, as.name)
+
+  function(fmls) {
+    nms <- names(fmls)
+    i <- which(nms == "...")
+    if (is_empty(i))
+      return(as_names(nms))
+    c(as_names(nms[seq_len(i - 1L)]), dots, eponymous(nms[-seq_len(i)]))
+  }
+})
 
 get_tree <- function(fs, env) {
   force(env)
