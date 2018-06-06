@@ -18,7 +18,7 @@ functions by enabling you to:
   - Directly manipulate a composite function as a list-like object, so
     that you can
     [inspect](#inspect-or-modify-using-higher-order-functions),
-    [modify](#inspect-or-modify-using-higher-order-functions) or
+    [modify](#inspect-or-modify-using-higher-order-functions), or
     [repurpose](#repurpose-using-subset-assignment) any part of the
     chain of constituent functions
 
@@ -51,7 +51,7 @@ r2("cyl")
 ```
 
 gestalt leverages the ubiquity of the
-[magrittr](https://magrittr.tidyverse.org) `%>%`, by adopting its
+[magrittr](https://magrittr.tidyverse.org) `%>%` pipe operator, by adopting its
 semantics and augmenting it to enable you to:
 
   - **Clarify intent** by annotating constituent functions with
@@ -293,7 +293,7 @@ devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
 ## Acknowledgments
 
   - The core semantics of `%>>>%` conform to those of the
-    [magrittr](https://magrittr.tidyverse.org) `%>%` developed by
+    [magrittr](https://magrittr.tidyverse.org) `%>%` pipe operator developed by
     [Stefan Milton Bache](https://github.com/smbache).
 
   - The engine for quasiquotation and expression capture is powered by
