@@ -41,8 +41,8 @@ is equivalent to the function\preformatted{  function(..., sep = " ", collapse =
 \item Alternatively, use the infix notation \code{f \%>>>\% g \%>>>\% ...}, which
 comprehends the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-operator and, additionally, \link[rlang:quasiquotation]{quasiquotation}.
-Thus, assuming \code{sep} has the value \code{""},
+operator and \link[rlang:quasiquotation]{quasiquotation}. Thus, assuming \code{sep}
+has the value \code{""},
 \preformatted{%
   sample \%>>>\% paste(collapse = !!sep)}
 is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) {

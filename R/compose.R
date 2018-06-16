@@ -19,8 +19,8 @@
 #' - Alternatively, use the infix notation `f %>>>% g %>>>% ...`, which
 #'   comprehends the semantics of the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
-#'   operator and, additionally, [quasiquotation][rlang::quasiquotation].
-#'   Thus, assuming `sep` has the value `""`,
+#'   operator and [quasiquotation][rlang::quasiquotation]. Thus, assuming `sep`
+#'   has the value `""`,
 #'   \preformatted{%
 #'   sample \%>>>\% paste(collapse = !!sep)}
 #'   is equivalent to the function
