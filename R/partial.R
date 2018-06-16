@@ -291,7 +291,7 @@ departial.function <- local({
 print.PartialFunction <- function(x, ...) {
   cat("<Partially Applied Function>\n\n")
   expr_print(expr_partial_closure(x))
-  cat("\nRecover the inner function with 'departial()'.")
+  cat("\nRecover the inner function with 'departial()'.\n")
   invisible(x)
 }
 

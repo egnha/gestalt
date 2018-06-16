@@ -586,7 +586,7 @@ print.CompositeFunction <- function(x, ...) {
     pad <- rep("\ \ ", length(out))
     cat("\n", nms[[i]], "\n", paste0(pad, out, "\n"), sep = "")
   }
-  cat("\nRecover the list of functions with 'as.list()'.")
+  cat("\nRecover the list of functions with 'as.list()'.\n")
   invisible(x)
 }
 
