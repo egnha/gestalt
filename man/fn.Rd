@@ -58,47 +58,41 @@ below.)
 declaration, just as in \code{function(<arguments>)}: each of \code{arg1}, \code{arg2},
 \dots, \code{argN} is either a bare argument (e.g., \code{x} or \code{...}) or an
 argument with default value (e.g., \code{x = 1}).
-\item To the right of \code{~}, you write the function body,
-i.e., an expression of the arguments.
+\item To the right of \code{~}, you write the function body, i.e., an expression of
+the arguments.
 }
 
 \subsection{Quasiquotation}{
 All parts of a function declaration support tidyverse
 \link[rlang:quasiquotation]{quasiquotation}:
 \itemize{
-\item To unquote values (of arguments or parts of the body), use \code{!!}:
-\preformatted{%
-  z <- 0
+\item To unquote values (of arguments or parts of the body), use \code{!!}:\preformatted{  z <- 0
   fn(x, y = !!z ~ x + y)
-  fn(x ~ x > !!z)}
-\item To unquote argument names (with default value), use \code{:=}
-(definition operator):
-\preformatted{%
-  arg <- "y"
-  fn(x, !!arg := 0 ~ x + !!as.name(arg))}
-\item To splice in a (formal) list of arguments, use \code{!!!}:
-\preformatted{%
-  # NB: Body is a one-sided formula
-  fn(!!!alist(x, y = 0), ~ x + y)}
-Splicing allows you to treat a complete function declaration as a
-unit:
-\preformatted{%
-  soma <- alist(x, y = 0, ~ x + y)
-  fn(!!!soma)}
-\item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()},
-which read as “quoted unquoting,” “quoted unquote-splicing”, resp.
-(cf. \code{fn_()}):
-\preformatted{%
-  library(dplyr)
+  fn(x ~ x > !!z)
+}
+\item To unquote argument names (with default value), use \code{:=} (definition
+operator):\preformatted{  arg <- "y"
+  fn(x, !!arg := 0 ~ x + !!as.name(arg))
+}
+\item To splice in a (formal) list of arguments, use \code{!!!}:\preformatted{  # NB: Body is a one-sided formula
+  fn(!!!alist(x, y = 0), ~ x + y)
+}
+
+Splicing allows you to treat a complete function declaration as a unit:\preformatted{  soma <- alist(x, y = 0, ~ x + y)
+  fn(!!!soma)
+}
+\item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()}, which read
+as “quoted unquoting,” “quoted unquote-splicing”, resp. (cf. \code{fn_()}):\preformatted{  library(dplyr)
 
   my_summarise <- fn(df, ... ~ {
     group_by <- quos(...)
-    df \%>\%
-      group_by(QUQS(group_by)) \%>\%
+    df \\\%>\\\%
+      group_by(QUQS(group_by)) \\\%>\\\%
       summarise(a = mean(a))
-  })}
-(Source:
-\href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
+  })
+}
+
+(Source: \href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
 }
 }
 }
@@ -108,17 +102,16 @@ which read as “quoted unquoting,” “quoted unquote-splicing”, resp.
 \href{https://en.wikipedia.org/wiki/Pure_function}{impure}, i.e., the return
 value of a function will \emph{not} in general be determined by the value of its
 inputs alone. This is because a function may depend on mutable objects in
-its
-\href{http://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}.
+its \href{http://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}.
 Normally this isn’t an issue. But if you are working interactively and
 sourcing files into the global environment, say, or using a notebook
-interface
-(like \href{https://jupyter.org}{Jupyter} or
-\href{http://rmarkdown.rstudio.com/r_notebooks.html}{R Notebook}),
-it can be tricky to ensure that you haven’t unwittingly mutated an object
-that an earlier function depends upon.
+interface (like \href{https://jupyter.org}{Jupyter} or
+\href{http://rmarkdown.rstudio.com/r_notebooks.html}{R Notebook}), it can be
+tricky to ensure that you haven’t unwittingly mutated an object that an
+earlier function depends upon.
 
-\strong{Example} — Consider the following function:\preformatted{  a <- 1
+\subsection{Example}{
+Consider the following function:\preformatted{  a <- 1
   foo <- function(x) x + a
 }
 
@@ -135,8 +128,10 @@ only on the value of \code{x} but also on the \emph{externally mutable} value of
 \code{fn()} enables you to write \emph{pure} functions by using
 \href{http://rlang.tidyverse.org/reference/quasiquotation.html}{quasiquotation}
 to eliminate such indeterminacy.
+}
 
-\strong{Example} — With \code{fn()}, you can unquote \code{a} to “burn in” its value at
+\subsection{Example}{
+With \code{fn()}, you can unquote \code{a} to “burn in” its value at
 the point of creation:\preformatted{  a <- 1
   foo <- fn(x ~ x + !!a)
 }
@@ -145,6 +140,8 @@ Now \code{foo()} is a pure function, unaffected by changes to \code{a} in the le
 scope:\preformatted{  foo(1)  #> [1] 2
   a <- 0
   foo(1)  #> [1] 2
+}
+
 }
 }
 

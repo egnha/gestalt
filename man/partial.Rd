@@ -23,8 +23,7 @@ literal truncation of the formals of \code{..f()} (as a closure) by the fixed
 arguments. \code{partial(..f)} is identical to \code{..f}.
 
 In conformance with R’s calling convention, fixed argument values are lazy
-\link[base:delayedAssign]{promises}. Moreover, when forced, they are \link[rlang:eval_tidy]{tidily
-evaluated}. Lazy evaluation of fixed arguments can be
+\link[base:delayedAssign]{promises}. Moreover, when forced, they are \link[rlang:eval_tidy]{tidily evaluated}. Lazy evaluation of fixed arguments can be
 overridden via unquoting, see ‘Examples’.
 }
 \description{

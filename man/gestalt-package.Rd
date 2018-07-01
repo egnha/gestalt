@@ -7,12 +7,12 @@
 \title{gestalt: Tools for Making and Combining Functions}
 \description{
 Provides a suite of function-building tools centered around a
-(forward) composition operator, %>>>%, which extends the semantics of the
-'magrittr' %>% operator and supports 'tidyverse' quasiquotation. It enables
-you to construct composite functions that can be inspected and transformed as
-list-like objects. In conjunction with %>>>%, a compact function constructor,
-fn(), and a function that performs partial application, partial(), are also
-provided. Both support quasiquotation.
+  (forward) composition operator, %>>>%, which extends the semantics of the
+  'magrittr' %>% operator and supports 'tidyverse' quasiquotation. It enables
+  you to construct composite functions that can be inspected and transformed as
+  list-like objects. In conjunction with %>>>%, a compact function constructor,
+  fn(), and a function that performs partial application, partial(), are also
+  provided. Both support quasiquotation.
 }
 \seealso{
 Useful links:

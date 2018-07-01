@@ -29,8 +29,8 @@ constant by transforming it to a function that caches the value of its void
 call (i.e., \code{constant()}
 \href{https://en.wikipedia.org/wiki/Memoization}{memoizes} void functions).
 
-Combine \code{\link[=compose]{`\%>>>\%`}} with \code{constant()} for a \emph{lazy},
-\emph{structured} alternative to the
+Combine \code{\link[=compose]{\%>>>\%}} with \code{constant()} for a \emph{lazy}, \emph{structured}
+alternative to the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 (see ‘Examples’).
 }
@@ -89,5 +89,5 @@ val_var()
 
 }
 \seealso{
-\code{\link[=compose]{`\%>>>\%`}}
+\code{\link[=compose]{\%>>>\%}}
 }

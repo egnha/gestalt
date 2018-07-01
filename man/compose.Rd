@@ -42,9 +42,9 @@ is equivalent to the function\preformatted{  function(..., sep = " ", collapse =
 comprehends the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 operator and \link[rlang:quasiquotation]{quasiquotation}. Thus, assuming \code{sep}
-has the value \code{""},
-\preformatted{%
-  sample \%>>>\% paste(collapse = !!sep)}
+has the value \code{""},\preformatted{  sample \%>>>\% paste(collapse = !!sep)
+}
+
 is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) {
     paste(sample(x, size, replace, prob), collapse = "")
   }
@@ -54,85 +54,85 @@ is equivalent to the function\preformatted{  function(x, size, replace = FALSE, 
 Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions.
 }
 \section{Semantics of \code{`\%>>>\%`}}{
-
-\code{`\%>>>\%`} adopts the semantics of the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}:
+ \code{`\%>>>\%`} adopts the semantics of
+the \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}}
+\code{`\%>\%`}:
 \enumerate{
 \item Names are matched to functions.
 \item Function calls are implicitly “partialized” as a unary function of
 \code{.} (a point). The rule is that when the point matches an argument
-value, such as in
-\preformatted{%
-  ... \%>>>\% f(x, .) \%>>>\% ...
-  ... \%>>>\% f(x, y = .) \%>>>\% ...}
+value, such as in\preformatted{  ... \%>>>\% f(x, .) \%>>>\% ...
+  ... \%>>>\% f(x, y = .) \%>>>\% ...
+}
+
 the ‘\code{f(x, .)}’, resp. ‘\code{f(x, y = .)}’, is interpreted as the function
 \code{function(.) f(x, .)}, resp. \code{function(.) f(x, y = .)}. Otherwise, the
-call is implicitly “partialized,” e.g., in sequences such as
-\preformatted{%
-  ... \%>>>\% f(x, y) \%>>>\% ...
-  ... \%>>>\% f(x, y(.)) \%>>>\% ...}
+call is implicitly “partialized,” e.g., in sequences such as\preformatted{  ... \%>>>\% f(x, y) \%>>>\% ...
+  ... \%>>>\% f(x, y(.)) \%>>>\% ...
+}
+
 the ‘\code{f(x, y)}’, resp. ‘\code{f(x, y(.))}’, is interpreted as the function
 \code{function(.) f(., x, y)}, resp. \code{function(.) f(., x, y(.))}.
 \item Expressions in curly braces are interpreted as unary-function
 bodies (i.e., curly braces represent “lambda functions”). For example,
-in
-\preformatted{%
-  ... \%>>>\% {f(.); g(.)} \%>>>\% ...}
+in\preformatted{  ... \%>>>\% {f(.); g(.)} \%>>>\% ...
+}
+
 the ‘\code{{f(.); g(.)}}’ is interpreted as the function
 \code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to
 circumvent the implicit-partialization rule for function calls.
 }
+
 \subsection{Exceptional Function Calls}{
 Exceptions to the rule of implicit partialization of function calls are
 made in a few cases of convenience:
 \itemize{
 \item Parenthesis (\code{\link[base:Paren]{(}}) applies grouping. In particular,
 expressions within parentheses are literally interpreted.
-\item Colon (\code{\link[base:Colon]{:}}) applies naming, according to the
-syntax ‘\code{<name>: <function>}’, where ‘\code{<function>}’ is interpreted
-according to the semantics of \code{`\%>>>\%`}. For example, in
-\preformatted{%
-  ... \%>>>\% a_name: f \%>>>\% ...}
-the function \code{f} is named \code{"a_name"}.
+\item Colon (\code{\link[base:Colon]{:}}) applies naming, according to the syntax
+‘\code{<name>: <function>}’, where ‘\code{<function>}’ is interpreted according
+to the semantics of \code{`\%>>>\%`}. For example, in\preformatted{  ... \%>>>\% aName: f \%>>>\% ...
+}
+
+the function \code{f} is named \code{"aName"}.
 \item \code{\link[=fn]{fn()}}, \link[base:ns-dblcolon]{namespace operators} (\code{`::`},
 \code{`:::`}) and \link[base:Extract]{extractors} (\code{`$`}, \code{`[[`},
 \code{`[`}) are literally interpreted. This allows for list extractors
-to be applied to composite functions appearing in a \code{`\%>>>\%`}
-call (see ‘Operate on a Composite Function’).
+to be applied to composite functions appearing in a \code{`\%>>>\%`} call
+(see ‘Operate on a Composite Function’).
 }
 }
+
 \subsection{Quasiquotation}{
-Tidyverse \link[rlang:quasiquotation]{unquoting} via \code{!!} is supported. Use
-it to:
+Tidyverse \link[rlang:quasiquotation]{unquoting} via \code{!!} is supported. Use it
+to:
 \itemize{
-\item Enforce immutability. For example, by unquoting \code{res} in
-\preformatted{%
-  res <- "result"
-  get_result <- identity \%>>>\% lapply(`[[`, !!res)}
-you ensure that the function \code{get_result()} always extracts the
-component named \code{"result"}, even if the binding \code{res} mutates or
-is removed.
-\item Interpret ‘\code{.}’ in the lexical scope. For example,
-\preformatted{%
-  . <- "point"
-  is_point <- {.[!is.na(.)]} \%>>>\% {. == !!.}}
-determines those non-\code{NA} components of a (character) vector that
-equal the string \code{"point"}.
-\item Programmatically assign names. For example, unquoting \code{nm} in
-\preformatted{%
-  nm <- "a_name"
-  ... \%>>>\% !!nm: f \%>>>\% ...}
-names the \code{f}-component of the resulting composite function
-\code{"a_name"}.
-\item Expend a computation upfront to spare a runtime expense. For
-example, presuming the value of the call \code{f()} is immutable and that
-\code{g} is a pure function, both
-\preformatted{%
-  ... \%>>>\% g(f()) \%>>>\% ...
-  ... \%>>>\% g(!!f()) \%>>>\% ...}
-would be functions yielding the same values. But the first would
-compute \code{f()} anew with each call, whereas the second would simply
-depend on a pre-computed value of \code{f()}.
+\item Enforce immutability. For example, by unquoting \code{res} in\preformatted{  res <- "result"
+  get_result <- identity \%>>>\% lapply(`[[`, !!res)
+}
+
+you ensure that the function \code{get_result()} always extracts the component
+named \code{"result"}, even if the binding \code{res} mutates or is removed.
+\item Interpret ‘\code{.}’ in the lexical scope. For example,\preformatted{  . <- "point"
+  is_point <- {.[!is.na(.)]} \%>>>\% {. == !!.}
+}
+
+determines those non-\code{NA} components of a (character) vector that equal
+the string \code{"point"}.
+\item Programmatically assign names. For example, unquoting \code{nm} in\preformatted{  nm <- "aName"
+  ... \%>>>\% !!nm: f \%>>>\% ...
+}
+
+names the \code{f}-component of the resulting composite function \code{"aName"}.
+\item Expend a computation upfront to spare a runtime expense. For example,
+presuming the value of the call \code{f()} is immutable and that \code{g} is a pure
+function, both\preformatted{  ... \%>>>\% g(f()) \%>>>\% ...
+  ... \%>>>\% g(!!f()) \%>>>\% ...
+}
+
+would be functions yielding the same values. But the first would compute
+\code{f()} anew with each call, whereas the second would simply depend on a
+pre-computed value of \code{f()}.
 }
 }
 }
@@ -146,67 +146,67 @@ were this list, getting a function in return. This enables you to leverage
 composite functions as \emph{structured computations}.
 
 \subsection{Indexing}{
-For instance, the ‘\code{sum}’ in the following composite function
-\preformatted{%
-  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)}
-can be \link[base:Extract]{extracted} in the usual ways:
-\preformatted{%
-  f[[2]][[2]], f[[c(2, 2)]],
+For instance, the ‘\code{sum}’ in the following composite function\preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)
+}
+
+can be \link[base:Extract]{extracted} in the usual ways:\preformatted{  f[[2]][[2]], f[[c(2, 2)]],
   f$out$agg, f[["out"]][["agg"]], f[["out"]]$agg,
-  f$out[[2]], f[[list("out", 2)]], ...}
+  f$out[[2]], f[[list("out", 2)]], ...
+}
+
 The last form of indexing with a mixed list is handy when you need to
 create an index programmatically.
-\cr\cr
+
 Additionally, you can excise sub-composite functions with
 \code{\link[base:Extract]{[}}, \code{\link[=head]{head()}}, \code{\link[=tail]{tail()}}. For example:
 \itemize{
-\item Both \code{f[1]} and \code{head(f, 1)} get the ‘\code{abs}’ as a composite
-function, namely \code{compose(abs)}
-\item \code{f[2:1]} reverses the order of the top-level functions to yield
-\preformatted{%
-  out: (log \%>>>\% agg: sum) \%>>>\% abs}
-\item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named) composite
-function
+\item Both \code{f[1]} and \code{head(f, 1)} get the ‘\code{abs}’ as a composite function,
+namely \code{compose(abs)}
+\item \code{f[2:1]} reverses the order of the top-level functions to yield\preformatted{  out: (log \%>>>\% agg: sum) \%>>>\% abs
+}
+\item \code{f$out[c(FALSE, TRUE)]} gets the ‘\code{sum}’ as a (named) composite function
 }
 }
+
 \subsection{Subset Assignment}{
-Similarily, subset assignment works as it does for lists. For instance,
-you can replace the ‘\code{sum}’ with the identity function:
-\preformatted{%
-  f[[2]][[2]] <- identity
+Similarily, subset assignment works as it does for lists. For instance, you
+can replace the ‘\code{sum}’ with the identity function:\preformatted{  f[[2]][[2]] <- identity
   f$out$agg <- identity
   f[["out"]][["agg"]] <- identity
   f$out[[2]] <- identity
-  f[[list("out", 2)]] <- identity}
-Multiple constituent functions can be reassigned using
-\code{\link[base:Extract]{[<-}}. For example
-\preformatted{%
-  f[2] <- list(log)
-  f["out"] <- list(log)
-  f[c(FALSE, TRUE)] <- list(log)}
-all replace the second constituent function with \code{log}, so that \code{f}
-becomes \code{abs \%>>>\% log}.
+  f[[list("out", 2)]] <- identity
 }
+
+Multiple constituent functions can be reassigned using
+\code{\link[base:Extract]{[<-}}. For example\preformatted{  f[2] <- list(log)
+  f["out"] <- list(log)
+  f[c(FALSE, TRUE)] <- list(log)
+}
+
+all replace the second constituent function with \code{log}, so that \code{f} becomes
+\code{abs \%>>>\% log}.
+}
+
 \subsection{Other Methods}{
 The generic methods \code{\link[=unlist]{unlist()}}, \code{\link[=length]{length()}}, \code{\link[=names]{names()}} also apply to
 composite functions. In conjunction with \code{compose()}, you can use
-\code{unlist()} to “flatten” compositions. For example
-\preformatted{%
-  compose(unlist(f, use.names = FALSE))}
-gives a function that is identical to
-\preformatted{%
-  abs \%>>>\% log \%>>>\% sum}
+\code{unlist()} to “flatten” compositions. For example\preformatted{  compose(unlist(f, use.names = FALSE))
+}
+
+gives a function that is identical to\preformatted{  abs \%>>>\% log \%>>>\% sum
+}
+
 }
 }
 
 \section{Composite Functions Are Unsimplified, yet Flattened When Called}{
 
 \code{compose()} and \code{`\%>>>\%`} are \strong{associative}, semantically and
-operationally. Thus, for instance,
-\preformatted{%
-  compose(f, g, h), f \%>>>\% g \%>>>\% h
+operationally. Thus, for instance,\preformatted{  compose(f, g, h), f \%>>>\% g \%>>>\% h
   compose(f, compose(g, h)), f \%>>>\% (g \%>>>\% h)
-  compose(compose(f, g), h), (f \%>>>\% g) \%>>>\% h}
+  compose(compose(f, g), h), (f \%>>>\% g) \%>>>\% h
+}
+
 are implemented as the \emph{same function}—lists of functions are automatically
 “flattened out” when composed. In practical terms, this means the speed of
 a composite function made by \code{compose()} or \code{`\%>>>\%`}, regardless of
