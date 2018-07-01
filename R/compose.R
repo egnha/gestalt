@@ -38,7 +38,7 @@
 #'   of `:=`, and [splicing][rlang::quasiquotation], via `!!!`, are supported.
 #'
 #' @return Function of class `CompositeFunction`, whose
-#'   [formals][base::formals()] match those of the first function applied (as a
+#'   [formals][base::formals()] are those of the first function applied (as a
 #'   closure).
 #'
 #' @section Semantics of `` `%>>>%` ``:

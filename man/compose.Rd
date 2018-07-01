@@ -23,7 +23,7 @@ semantics are supported (see ‘Semantics of \code{`\%>>>\%`}’ and ‘Examples
 }
 \value{
 Function of class \code{CompositeFunction}, whose
-\link[base:formals]{formals} match those of the first function applied (as a
+\link[base:formals]{formals} are those of the first function applied (as a
 closure).
 }
 \description{
