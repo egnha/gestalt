@@ -1,15 +1,15 @@
 #' Compose Functions
 #'
 #' @description
-#' Compose functions in two ways:
+#' To compose functions,
 #'
-#' * Use
+#' * Use `compose()`:
 #'   ```
 #'     compose(f, g, h, ...)
 #'   ```
-#'   to make the function that applies `f` _first_, followed by `g`, then `h`,
-#'   etc. It has the [formals][base::formals()] of the first function applied,
-#'   namely `f`. Thus
+#'   This makes the function that applies `f`, _first_, then `g`, then `h`, etc.
+#'   It has the [formals][base::formals()] of the first function applied (namely
+#'   `f`). Thus
 #'   ```
 #'     compose(paste, toupper)
 #'   ```
@@ -20,7 +20,7 @@
 #'     }
 #'   ```
 #'
-#' * Use infix notation
+#' * Use `` `%>>>%` ``:
 #'   ```
 #'     f %>>>% g %>>>% h %>>>% ...
 #'   ```

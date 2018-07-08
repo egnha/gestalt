@@ -27,21 +27,21 @@ Function of class \code{CompositeFunction}, whose
 closure).
 }
 \description{
-Compose functions in two ways:
+To compose functions,
 \itemize{
-\item Use\preformatted{  compose(f, g, h, ...)
+\item Use \code{compose()}:\preformatted{  compose(f, g, h, ...)
 }
 
-to make the function that applies \code{f} \emph{first}, followed by \code{g}, then \code{h},
-etc. It has the \link[base:formals]{formals} of the first function applied,
-namely \code{f}. Thus\preformatted{  compose(paste, toupper)
+This makes the function that applies \code{f}, \emph{first}, then \code{g}, then \code{h}, etc.
+It has the \link[base:formals]{formals} of the first function applied (namely
+\code{f}). Thus\preformatted{  compose(paste, toupper)
 }
 
 is equivalent to the function\preformatted{  function(..., sep = " ", collapse = NULL) {
     toupper(paste(..., sep = sep, collapse = collapse))
   }
 }
-\item Use infix notation\preformatted{  f \%>>>\% g \%>>>\% h \%>>>\% ...
+\item Use \code{`\%>>>\%`}:\preformatted{  f \%>>>\% g \%>>>\% h \%>>>\% ...
 }
 
 It comprehends both the semantics of the
