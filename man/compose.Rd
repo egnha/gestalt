@@ -57,6 +57,7 @@ is equivalent to the function\preformatted{  function(x, size, replace = FALSE, 
 }
 
 Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions. For example, both\preformatted{  as.list(compose(paste, capitalize = toupper))
+
   as.list(paste \%>>>\% capitalize: toupper)
 }
 
@@ -76,20 +77,18 @@ value, such as in\preformatted{  ... \%>>>\% f(x, .) \%>>>\% ...
 
 the ‘\code{f(x, .)}’, resp. ‘\code{f(x, y = .)}’, is interpreted as the function
 \code{function(.) f(x, .)}, resp. \code{function(.) f(x, y = .)}. Otherwise, the
-call is implicitly “partialized,” e.g., in sequences such as\preformatted{  ... \%>>>\% f(x, y) \%>>>\% ...
+call is implicitly “partialized,” e.g., in compositions such as\preformatted{  ... \%>>>\% f(x, y) \%>>>\% ...
   ... \%>>>\% f(x, y(.)) \%>>>\% ...
 }
 
 the ‘\code{f(x, y)}’, resp. ‘\code{f(x, y(.))}’, is interpreted as the function
 \code{function(.) f(., x, y)}, resp. \code{function(.) f(., x, y(.))}.
-\item Expressions in curly braces are interpreted as unary-function
-bodies (i.e., curly braces represent “lambda functions”). For example,
-in\preformatted{  ... \%>>>\% {f(.); g(.)} \%>>>\% ...
+\item Expressions in curly braces are interpreted as an (anonymous) function
+of a point. For example, in\preformatted{  ... \%>>>\% {f(.); g(.)} \%>>>\% ...
 }
 
-the ‘\code{{f(.); g(.)}}’ is interpreted as the function
-\code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to
-circumvent the implicit-partialization rule for function calls.
+the ‘\code{{f(.); g(.)}}’ is interpreted as the function \code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to circumvent the
+implicit-partialization rule for function calls.
 }
 
 \subsection{Exceptional Function Calls}{
@@ -158,9 +157,15 @@ composite functions as \emph{structured computations}.
 For instance, the ‘\code{sum}’ in the following composite function\preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)
 }
 
-can be \link[base:Extract]{extracted} in the usual ways:\preformatted{  f[[2]][[2]], f[[c(2, 2)]],
-  f$out$agg, f[["out"]][["agg"]], f[["out"]]$agg,
-  f$out[[2]], f[[list("out", 2)]], ...
+can be \link[base:Extract]{extracted} in the usual ways:\preformatted{  f[[2]][[2]]
+  f[[c(2, 2)]]
+
+  f$out$agg
+  f[["out"]][["agg"]]
+  f[["out"]]$agg
+
+  f$out[[2]]
+  f[[list("out", 2)]]
 }
 
 The last form of indexing with a mixed list is handy when you need to
@@ -180,15 +185,19 @@ namely \code{compose(abs)}
 \subsection{Subset Assignment}{
 Similarily, subset assignment works as it does for lists. For instance, you
 can replace the ‘\code{sum}’ with the identity function:\preformatted{  f[[2]][[2]] <- identity
+
   f$out$agg <- identity
   f[["out"]][["agg"]] <- identity
+
   f$out[[2]] <- identity
   f[[list("out", 2)]] <- identity
 }
 
 Multiple constituent functions can be reassigned using
 \code{\link[base:Extract]{[<-}}. For example\preformatted{  f[2] <- list(log)
+
   f["out"] <- list(log)
+
   f[c(FALSE, TRUE)] <- list(log)
 }
 
@@ -211,9 +220,14 @@ gives a function that is identical to\preformatted{  abs \%>>>\% log \%>>>\% sum
 \section{Composite Functions Are Unsimplified, yet Flattened When Called}{
 
 \code{compose()} and \code{`\%>>>\%`} are \strong{associative}, semantically and
-operationally. Thus, for instance,\preformatted{  compose(f, g, h), f \%>>>\% g \%>>>\% h
-  compose(f, compose(g, h)), f \%>>>\% (g \%>>>\% h)
-  compose(compose(f, g), h), (f \%>>>\% g) \%>>>\% h
+operationally. Thus, for instance,\preformatted{  compose(f, g, h)
+  f \%>>>\% g \%>>>\% h
+
+  compose(f, compose(g, h))
+  f \%>>>\% (g \%>>>\% h)
+
+  compose(compose(f, g), h)
+  (f \%>>>\% g) \%>>>\% h
 }
 
 are implemented as the \emph{same function}—lists of functions are automatically

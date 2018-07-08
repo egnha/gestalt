@@ -41,6 +41,7 @@
 #' Use [as.list()] to recover the list of composite functions. For example, both
 #' ```
 #'   as.list(compose(paste, capitalize = toupper))
+#'
 #'   as.list(paste %>>>% capitalize: toupper)
 #' ```
 #' return the (named) list of functions `list(paste, capitalize = toupper)`.
@@ -61,31 +62,30 @@
 #'   1. Names are matched to functions.
 #'
 #'   2. Function calls are implicitly “partialized” as a unary function of
-#'       `.` (a point). The rule is that when the point matches an argument
-#'       value, such as in
-#'       ```
-#'         ... %>>>% f(x, .) %>>>% ...
-#'         ... %>>>% f(x, y = .) %>>>% ...
-#'       ```
-#'       the ‘`f(x, .)`’, resp. ‘`f(x, y = .)`’, is interpreted as the function
-#'       `function(.) f(x, .)`, resp. `function(.) f(x, y = .)`. Otherwise, the
-#'       call is implicitly “partialized,” e.g., in sequences such as
-#'       ```
-#'         ... %>>>% f(x, y) %>>>% ...
-#'         ... %>>>% f(x, y(.)) %>>>% ...
-#'       ```
-#'       the ‘`f(x, y)`’, resp. ‘`f(x, y(.))`’, is interpreted as the function
-#'       `function(.) f(., x, y)`, resp. `function(.) f(., x, y(.))`.
+#'      `.` (a point). The rule is that when the point matches an argument
+#'      value, such as in
+#'      ```
+#'        ... %>>>% f(x, .) %>>>% ...
+#'        ... %>>>% f(x, y = .) %>>>% ...
+#'      ```
+#'      the ‘`f(x, .)`’, resp. ‘`f(x, y = .)`’, is interpreted as the function
+#'      `function(.) f(x, .)`, resp. `function(.) f(x, y = .)`. Otherwise, the
+#'      call is implicitly “partialized,” e.g., in compositions such as
+#'      ```
+#'        ... %>>>% f(x, y) %>>>% ...
+#'        ... %>>>% f(x, y(.)) %>>>% ...
+#'      ```
+#'      the ‘`f(x, y)`’, resp. ‘`f(x, y(.))`’, is interpreted as the function
+#'      `function(.) f(., x, y)`, resp. `function(.) f(., x, y(.))`.
 #'
-#'   3. Expressions in curly braces are interpreted as unary-function
-#'       bodies (i.e., curly braces represent “lambda functions”). For example,
-#'       in
-#'       ```
-#'         ... %>>>% {f(.); g(.)} %>>>% ...
-#'       ```
-#'       the ‘`{f(.); g(.)}`’ is interpreted as the function
-#'       `function(.) {f(.); g(.)}`. Curly braces are useful when you want to
-#'       circumvent the implicit-partialization rule for function calls.
+#'   3. Expressions in curly braces are interpreted as an (anonymous) function
+#'      of a point. For example, in
+#'      ```
+#'        ... %>>>% {f(.); g(.)} %>>>% ...
+#'      ```
+#'      the ‘`{f(.); g(.)}`’ is interpreted as the function `function(.) {f(.);
+#'      g(.)}`. Curly braces are useful when you want to circumvent the
+#'      implicit-partialization rule for function calls.
 #'
 #'   \subsection{Exceptional Function Calls}{
 #'   Exceptions to the rule of implicit partialization of function calls are
@@ -162,9 +162,15 @@
 #'   ```
 #'   can be [extracted][base::Extract] in the usual ways:
 #'   ```
-#'     f[[2]][[2]], f[[c(2, 2)]],
-#'     f$out$agg, f[["out"]][["agg"]], f[["out"]]$agg,
-#'     f$out[[2]], f[[list("out", 2)]], ...
+#'     f[[2]][[2]]
+#'     f[[c(2, 2)]]
+#'
+#'     f$out$agg
+#'     f[["out"]][["agg"]]
+#'     f[["out"]]$agg
+#'
+#'     f$out[[2]]
+#'     f[[list("out", 2)]]
 #'   ```
 #'   The last form of indexing with a mixed list is handy when you need to
 #'   create an index programmatically.
@@ -188,8 +194,10 @@
 #'   can replace the ‘`sum`’ with the identity function:
 #'   ```
 #'     f[[2]][[2]] <- identity
+#'
 #'     f$out$agg <- identity
 #'     f[["out"]][["agg"]] <- identity
+#'
 #'     f$out[[2]] <- identity
 #'     f[[list("out", 2)]] <- identity
 #'   ```
@@ -197,7 +205,9 @@
 #'   [`[<-`][base::Extract]. For example
 #'   ```
 #'     f[2] <- list(log)
+#'
 #'     f["out"] <- list(log)
+#'
 #'     f[c(FALSE, TRUE)] <- list(log)
 #'   ```
 #'   all replace the second constituent function with `log`, so that `f` becomes
@@ -221,9 +231,14 @@
 #'   `compose()` and `` `%>>>%` `` are **associative**, semantically and
 #'   operationally. Thus, for instance,
 #'   ```
-#'     compose(f, g, h), f %>>>% g %>>>% h
-#'     compose(f, compose(g, h)), f %>>>% (g %>>>% h)
-#'     compose(compose(f, g), h), (f %>>>% g) %>>>% h
+#'     compose(f, g, h)
+#'     f %>>>% g %>>>% h
+#'
+#'     compose(f, compose(g, h))
+#'     f %>>>% (g %>>>% h)
+#'
+#'     compose(compose(f, g), h)
+#'     (f %>>>% g) %>>>% h
 #'   ```
 #'   are implemented as the _same function_—lists of functions are automatically
 #'   “flattened out” when composed. In practical terms, this means the speed of
