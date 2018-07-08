@@ -24,21 +24,23 @@ A function whose enclosing environment is \code{..env}.
 signature. Use it in place of the usual \code{\link[=function]{function()}} invocation whenever you
 want to:
 \itemize{
-\item \strong{Be concise}: The function declarations\preformatted{  fn(x, y = 1 ~ x + y)
+\item \strong{Be concise} — The function declarations\preformatted{  fn(x, y = 1 ~ x + y)
+
   function(x, y = 1) x + y
 }
 
 are equivalent.
-\item \strong{Enforce immutability}: By enabling tidyverse
+\item \strong{Enforce immutability} — By enabling Tidyverse
 \link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to “burn in”
-values at the point of function creation, to guard against changes in
-lexical scope (see ‘Pure Functions via Quasiquotation’).
+values at the point of function creation. This guards against changes in a
+function’s enclosing environment. (See ‘Pure Functions via
+Quasiquotation’).
 }
 
 \code{fn_()} is a variant of \code{fn()} that does \emph{not} comprehend quasiquotation. It
 is useful when you want unquoting (\code{`!!`}) or splicing (\code{`!!!`})
 operators in the function body to be literally interpreted, rather than
-immediately invoked. (See ‘Function Declarations’ for a complementary way to
+immediately invoked. (See ‘Quasiquotation’ for a complementary way to
 literally interpret unquoting and splicing operators in \code{fn()}.)
 }
 \section{Function Declarations}{
@@ -52,7 +54,7 @@ or\preformatted{  arg1, arg2, ..., argN, ~body
 
 (Note in the second form that the body is a one-sided formula. This
 distinction is relevant for argument \link[rlang:quasiquotation]{splicing}, see
-below.)
+‘Quasiquotation’.)
 \itemize{
 \item To the left of \code{~}, you write a conventional function-argument
 declaration, just as in \code{function(<arguments>)}: each of \code{arg1}, \code{arg2},
@@ -61,9 +63,11 @@ argument with default value (e.g., \code{x = 1}).
 \item To the right of \code{~}, you write the function body, i.e., an expression of
 the arguments.
 }
+}
 
-\subsection{Quasiquotation}{
-All parts of a function declaration support tidyverse
+\section{Quasiquotation}{
+
+All parts of a function declaration support Tidyverse
 \link[rlang:quasiquotation]{quasiquotation}:
 \itemize{
 \item To unquote values (of arguments or parts of the body), use \code{!!}:\preformatted{  z <- 0
@@ -86,14 +90,13 @@ as “quoted unquoting,” “quoted unquote-splicing”, resp. (cf. \code{fn_()
 
   my_summarise <- fn(df, ... ~ {
     group_by <- quos(...)
-    df \\\%>\\\%
-      group_by(QUQS(group_by)) \\\%>\\\%
+    df \%>\%
+      group_by(QUQS(group_by)) \%>\%
       summarise(a = mean(a))
   })
 }
 
 (Source: \href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
-}
 }
 }
 

@@ -83,17 +83,19 @@ literal_tidy <- function(...) {
 #' signature. Use it in place of the usual [function()] invocation whenever you
 #' want to:
 #'
-#' - **Be concise**: The function declarations
+#' - **Be concise** — The function declarations
 #'   ```
 #'     fn(x, y = 1 ~ x + y)
+#'
 #'     function(x, y = 1) x + y
 #'   ```
 #'   are equivalent.
 #'
-#' - **Enforce immutability**: By enabling tidyverse
+#' - **Enforce immutability** — By enabling Tidyverse
 #'   [quasiquotation][rlang::quasiquotation], `fn()` allows you to “burn in”
-#'   values at the point of function creation, to guard against changes in
-#'   lexical scope (see ‘Pure Functions via Quasiquotation’).
+#'   values at the point of function creation. This guards against changes in a
+#'   function’s enclosing environment. (See ‘Pure Functions via
+#'   Quasiquotation’).
 #'
 #' @param ... Function declaration, which supports
 #'   [quasiquotation][rlang::quasiquotation].
@@ -114,7 +116,7 @@ literal_tidy <- function(...) {
 #'   ```
 #'   (Note in the second form that the body is a one-sided formula. This
 #'   distinction is relevant for argument [splicing][rlang::quasiquotation], see
-#'   below.)
+#'   ‘Quasiquotation’.)
 #'
 #'   * To the left of `~`, you write a conventional function-argument
 #'     declaration, just as in `function(<arguments>)`: each of `arg1`, `arg2`,
@@ -124,8 +126,8 @@ literal_tidy <- function(...) {
 #'   * To the right of `~`, you write the function body, i.e., an expression of
 #'     the arguments.
 #'
-#'   \subsection{Quasiquotation}{
-#'   All parts of a function declaration support tidyverse
+#' @section Quasiquotation:
+#'   All parts of a function declaration support Tidyverse
 #'   [quasiquotation][rlang::quasiquotation]:
 #'
 #'   * To unquote values (of arguments or parts of the body), use `!!`:
@@ -160,14 +162,13 @@ literal_tidy <- function(...) {
 #'
 #'       my_summarise <- fn(df, ... ~ {
 #'         group_by <- quos(...)
-#'         df \%>\%
-#'           group_by(QUQS(group_by)) \%>\%
+#'         df %>%
+#'           group_by(QUQS(group_by)) %>%
 #'           summarise(a = mean(a))
 #'       })
 #'     ```
 #'     (Source: [Programming with
 #'     dplyr](http://dplyr.tidyverse.org/articles/programming.html))
-#'   }
 #'
 #' @section Use Unquoting to Make Robust Functions:
 #'   Functions in R are generally
@@ -272,7 +273,7 @@ literal <- function(...) {
 #'  `fn_()` is a variant of `fn()` that does _not_ comprehend quasiquotation. It
 #'  is useful when you want unquoting (`` `!!` ``) or splicing (`` `!!!` ``)
 #'  operators in the function body to be literally interpreted, rather than
-#'  immediately invoked. (See ‘Function Declarations’ for a complementary way to
+#'  immediately invoked. (See ‘Quasiquotation’ for a complementary way to
 #'  literally interpret unquoting and splicing operators in `fn()`.)
 #'
 #' @examples
