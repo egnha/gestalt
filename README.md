@@ -66,7 +66,7 @@ adopting its semantics and augmenting it to enable you to:
     [`!!`](http://rlang.r-lib.org/reference/quasiquotation.html)
     operator, to enforce immutability or spare a runtime computation
 
-## `%>>>%` is not a pipe
+## Ceci n’est pas une `%>%`
 
 Despite the syntactic similarity, the `%>>>%` operator is conceptually
 distinct from the magrittr `%>%` operator. Whereas `%>%` “pipes” a value
