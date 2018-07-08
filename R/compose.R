@@ -265,9 +265,11 @@
 #'   ```
 #'   }
 #'
-#' @section Composite Functions Are Unsimplified, yet Flattened When Called:
-#'   `compose()` and `` `%>>>%` `` are **associative**, semantically and
-#'   operationally. Thus, for instance,
+#' @section Composite Functions Perform as If They Were Flat:
+#'   The speed of a composite function made by `compose()` or `` `%>>>%` ``,
+#'   regardless of its nested depth, is on par with a manually constructed
+#'   _serial_ composition. This is because `compose()` and `` `%>>>%` `` are
+#'   **associative**, semantically and operationally. Thus, for instance,
 #'   ```
 #'     compose(f, g, h)
 #'     f %>>>% g %>>>% h
@@ -278,17 +280,15 @@
 #'     compose(compose(f, g), h)
 #'     (f %>>>% g) %>>>% h
 #'   ```
-#'   are implemented as the _same function_—lists of functions are automatically
-#'   “flattened out” when composed. In practical terms, this means the speed of
-#'   a composite function made by `compose()` or `` `%>>>%` ``, regardless of
-#'   its nested depth, is on par with a manually constructed _serial_
-#'   composition.
+#'   are all implemented as the _same function_—lists of functions are
+#'   automatically “flattened out” when composed.
 #'
-#'   Nonetheless, the original nested structure of constituent functions is
+#'   Nevertheless, the original nested structure of constituent functions is
 #'   faithfully recovered by [as.list()]. In particular, `as.list()` and
 #'   `compose()` are **mutually invertible**: `as.list(compose(fs))` is the same
-#'   as `fs`, when `fs` is a (nested) list of functions. (Though the names of
-#'   `as.list()` are always strings, possibly empty.)
+#'   as `fs`, when `fs` is a (nested) list of functions. (But note that the
+#'   names of the list of composite functions is always a character vector; it
+#'   is never `NULL`.)
 #'
 #' @seealso [constant()]; combined with `` `%>>>%` ``, this provides a lazy,
 #'   structured alternative to the

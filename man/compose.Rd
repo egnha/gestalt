@@ -253,10 +253,12 @@ gives a function that is identical to\preformatted{  abs \%>>>\% log \%>>>\% sum
 }
 }
 
-\section{Composite Functions Are Unsimplified, yet Flattened When Called}{
+\section{Composite Functions Perform as If They Were Flat}{
 
-\code{compose()} and \code{`\%>>>\%`} are \strong{associative}, semantically and
-operationally. Thus, for instance,\preformatted{  compose(f, g, h)
+The speed of a composite function made by \code{compose()} or \code{`\%>>>\%`},
+regardless of its nested depth, is on par with a manually constructed
+\emph{serial} composition. This is because \code{compose()} and \code{`\%>>>\%`} are
+\strong{associative}, semantically and operationally. Thus, for instance,\preformatted{  compose(f, g, h)
   f \%>>>\% g \%>>>\% h
 
   compose(f, compose(g, h))
@@ -266,17 +268,15 @@ operationally. Thus, for instance,\preformatted{  compose(f, g, h)
   (f \%>>>\% g) \%>>>\% h
 }
 
-are implemented as the \emph{same function}—lists of functions are automatically
-“flattened out” when composed. In practical terms, this means the speed of
-a composite function made by \code{compose()} or \code{`\%>>>\%`}, regardless of
-its nested depth, is on par with a manually constructed \emph{serial}
-composition.
+are all implemented as the \emph{same function}—lists of functions are
+automatically “flattened out” when composed.
 
-Nonetheless, the original nested structure of constituent functions is
+Nevertheless, the original nested structure of constituent functions is
 faithfully recovered by \code{\link[=as.list]{as.list()}}. In particular, \code{as.list()} and
 \code{compose()} are \strong{mutually invertible}: \code{as.list(compose(fs))} is the same
-as \code{fs}, when \code{fs} is a (nested) list of functions. (Though the names of
-\code{as.list()} are always strings, possibly empty.)
+as \code{fs}, when \code{fs} is a (nested) list of functions. (But note that the
+names of the list of composite functions is always a character vector; it
+is never \code{NULL}.)
 }
 
 \examples{
