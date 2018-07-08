@@ -29,7 +29,10 @@ closure).
 \description{
 Compose functions in two ways:
 \itemize{
-\item Use \code{compose(f, g, ...)} to make the function that applies \code{f}, then \code{g},
+\item Use\preformatted{  compose(f, g, h, ...)
+}
+
+to make the function that applies \code{f} \emph{first}, followed by \code{g}, then \code{h},
 etc. It has the \link[base:formals]{formals} of the first function applied,
 namely \code{f}. Thus\preformatted{  compose(paste, toupper)
 }
@@ -38,8 +41,10 @@ is equivalent to the function\preformatted{  function(..., sep = " ", collapse =
     toupper(paste(..., sep = sep, collapse = collapse))
   }
 }
-\item Alternatively, use the infix notation \code{f \%>>>\% g \%>>>\% ...}, which
-comprehends the semantics of the
+\item Use infix notation\preformatted{  f \%>>>\% g \%>>>\% h \%>>>\% ...
+}
+
+It comprehends both the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 operator and \link[rlang:quasiquotation]{quasiquotation}. Thus, assuming \code{sep}
 has the value \code{""},\preformatted{  sample \%>>>\% paste(collapse = !!sep)
@@ -51,7 +56,11 @@ is equivalent to the function\preformatted{  function(x, size, replace = FALSE, 
 }
 }
 
-Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions.
+Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions. For example, both\preformatted{  as.list(compose(paste, capitalize = toupper))
+  as.list(paste \%>>>\% capitalize: toupper)
+}
+
+return the (named) list of functions \code{list(paste, capitalize = toupper)}.
 }
 \section{Semantics of \code{`\%>>>\%`}}{
  \code{`\%>>>\%`} adopts the semantics of

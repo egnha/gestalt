@@ -3,7 +3,11 @@
 #' @description
 #' Compose functions in two ways:
 #'
-#' * Use `compose(f, g, ...)` to make the function that applies `f`, then `g`,
+#' * Use
+#'   ```
+#'     compose(f, g, h, ...)
+#'   ```
+#'   to make the function that applies `f` _first_, followed by `g`, then `h`,
 #'   etc. It has the [formals][base::formals()] of the first function applied,
 #'   namely `f`. Thus
 #'   ```
@@ -16,8 +20,11 @@
 #'     }
 #'   ```
 #'
-#' * Alternatively, use the infix notation `f %>>>% g %>>>% ...`, which
-#'   comprehends the semantics of the
+#' * Use infix notation
+#'   ```
+#'     f %>>>% g %>>>% h %>>>% ...
+#'   ```
+#'   It comprehends both the semantics of the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
 #'   operator and [quasiquotation][rlang::quasiquotation]. Thus, assuming `sep`
 #'   has the value `""`,
@@ -31,7 +38,12 @@
 #'     }
 #'   ```
 #'
-#' Use [as.list()] to recover the list of composite functions.
+#' Use [as.list()] to recover the list of composite functions. For example, both
+#' ```
+#'   as.list(compose(paste, capitalize = toupper))
+#'   as.list(paste %>>>% capitalize: toupper)
+#' ```
+#' return the (named) list of functions `list(paste, capitalize = toupper)`.
 #'
 #' @param ... Functions or lists thereof to compose, in order of application.
 #'   Lists of functions are automatically spliced in.
