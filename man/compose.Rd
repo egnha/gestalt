@@ -63,51 +63,80 @@ Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions
 
 return the (named) list of functions \code{list(paste, capitalize = toupper)}.
 }
-\section{Semantics of \code{`\%>>>\%`}}{
- \code{`\%>>>\%`} adopts the semantics of
-the \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}}
-\code{`\%>\%`}:
+\section{Semantics of the Composition Operator}{
+
+The operator \code{`\%>>>\%`} adopts the semantics of the
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}:
 \enumerate{
-\item Names are matched to functions.
-\item Function calls are implicitly “partialized” as a unary function of
-\code{.} (a point). The rule is that when the point matches an argument
-value, such as in\preformatted{  ... \%>>>\% f(x, .) \%>>>\% ...
-  ... \%>>>\% f(x, y = .) \%>>>\% ...
+\item \strong{Bare names are matched to functions} — For example, in a composition
+like\preformatted{  ... \%>>>\% foo \%>>>\% ...
 }
 
-the ‘\code{f(x, .)}’, resp. ‘\code{f(x, y = .)}’, is interpreted as the function
-\code{function(.) f(x, .)}, resp. \code{function(.) f(x, y = .)}. Otherwise, the
-call is implicitly “partialized,” e.g., in compositions such as\preformatted{  ... \%>>>\% f(x, y) \%>>>\% ...
-  ... \%>>>\% f(x, y(.)) \%>>>\% ...
-}
-
-the ‘\code{f(x, y)}’, resp. ‘\code{f(x, y(.))}’, is interpreted as the function
-\code{function(.) f(., x, y)}, resp. \code{function(.) f(., x, y(.))}.
-\item Expressions in curly braces are interpreted as an (anonymous) function
-of a point. For example, in\preformatted{  ... \%>>>\% {f(.); g(.)} \%>>>\% ...
-}
-
-the ‘\code{{f(.); g(.)}}’ is interpreted as the function \code{function(.) {f(.); g(.)}}. Curly braces are useful when you want to circumvent the
-implicit-partialization rule for function calls.
-}
-
-\subsection{Exceptional Function Calls}{
-Exceptions to the rule of implicit partialization of function calls are
-made in a few cases of convenience:
+the ‘\code{foo}’ is matched to the function of that name.
+\item \strong{Function calls are interpreted as a unary function of a point (\code{.})}
+— A \emph{call} is interpreted as a \emph{function} (of a point) in one of two
+ways:
 \itemize{
-\item Parenthesis (\code{\link[base:Paren]{(}}) applies grouping. In particular,
-expressions within parentheses are literally interpreted.
-\item Colon (\code{\link[base:Colon]{:}}) applies naming, according to the syntax
+\item If the point matches an argument value, the call is literally
+interpreted as the body of the function. For example, in the
+compositions\preformatted{  ... \%>>>\% foo(x, .) \%>>>\% ...
+
+  ... \%>>>\% foo(x, y = .) \%>>>\% ...
+}
+
+the ‘\code{foo(x, .)}’, resp. ‘\code{foo(x, y = .)}’, is interpreted as the
+function \code{function(.) foo(x, .)}, resp. \code{function(.) foo(x, y = .)}.
+\item Otherwise, the call is regarded as implicitly having the point as its
+first argument before being interpreted as the body of the function.
+For example, in the compositions\preformatted{  ... \%>>>\% foo(x) \%>>>\% ...
+
+  ... \%>>>\% foo(x, y(.)) \%>>>\% ...
+}
+
+the ‘\code{foo(x)}’, resp. ‘\code{foo(x, y(.))}’, is interpreted as the function
+\code{function(.) foo(., x)}, resp. \code{function(.) foo(., x, y(.))}.
+}
+\item \strong{Expressions \code{{...}} are interpreted as a function of a point (\code{.})} —
+For example, in a composition\preformatted{  ... \%>>>\% {
+    foo(.)
+    bar(.)
+  } \%>>>\% ...
+}
+
+the ‘\code{{foo(.); bar(.)}}’ is interpreted as the function \code{function(.) {foo(.); bar(.)}}.
+
+Curly braces are useful when you need to circumvent \code{`\%>>>\%`}’s
+usual interpretation of function calls. For example, in a composition\preformatted{  ... \%>>>\% {foo(x, y(.))} \%>>>\% ...
+}
+
+the ‘\code{{foo(x, y(.))}}’ is interpreted as the function \code{function(.) foo(x, y(.))}—there is no point as first argument to \code{foo}.
+}
+
+\subsection{Exceptions to the Interpretation of Calls as Functions}{
+As a matter of convenience, some exceptions are made to the above
+interpretation of calls as functions:
+\itemize{
+\item \strong{Parenthesis} (\code{\link[base:Paren]{(}}) applies grouping. (In R, \code{`(`}
+is indeed a function.) In particular, expressions within parentheses are
+literally interpreted.
+\item \strong{Colon} (\code{\link[base:Colon]{:}}) applies \emph{naming}, according to the syntax
 ‘\code{<name>: <function>}’, where ‘\code{<function>}’ is interpreted according
 to the semantics of \code{`\%>>>\%`}. For example, in\preformatted{  ... \%>>>\% aName: f \%>>>\% ...
 }
 
 the function \code{f} is named \code{"aName"}.
-\item \code{\link[=fn]{fn()}}, \link[base:ns-dblcolon]{namespace operators} (\code{`::`},
-\code{`:::`}) and \link[base:Extract]{extractors} (\code{`$`}, \code{`[[`},
-\code{`[`}) are literally interpreted. This allows for list extractors
-to be applied to composite functions appearing in a \code{`\%>>>\%`} call
-(see ‘Operate on a Composite Function’).
+\item \strong{\code{\link[=fn]{fn()}}}, \strong{\link[base:ns-dblcolon]{namespace operators}} (\code{`::`},
+\code{`:::`}) and \strong{\link[base:Extract]{extractors}} (\code{`$`}, \code{`[[`},
+\code{`[`}) are literally interpreted. This allows for list extractors to
+be applied to composite functions appearing in a \code{`\%>>>\%`} call (see
+‘Operate on a Composite Function’). For example, the compositions\preformatted{  paste \%>>>\% tolower
+
+  paste \%>>>\% base::tolower
+
+  (paste \%>>>\% toupper)[[1]] \%>>>\% tolower
+}
+
+are equivalent functions.
 }
 }
 

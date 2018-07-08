@@ -55,46 +55,71 @@
 #'   [formals][base::formals()] are those of the first function applied (as a
 #'   closure).
 #'
-#' @section Semantics of `` `%>>>%` ``: `` `%>>>%` `` adopts the semantics of
-#'   the [\pkg{magrittr}](https://cran.r-project.org/package=magrittr)
-#'   `` `%>%` ``:
+#' @section Semantics of the Composition Operator:
+#'   The operator `` `%>>>%` `` adopts the semantics of the
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``:
 #'
-#'   1. Names are matched to functions.
+#'   1. **Bare names are matched to functions** — For example, in a composition
+#'      like
+#'      ```
+#'        ... %>>>% foo %>>>% ...
+#'      ```
+#'      the ‘`foo`’ is matched to the function of that name.
 #'
-#'   2. Function calls are implicitly “partialized” as a unary function of
-#'      `.` (a point). The rule is that when the point matches an argument
-#'      value, such as in
-#'      ```
-#'        ... %>>>% f(x, .) %>>>% ...
-#'        ... %>>>% f(x, y = .) %>>>% ...
-#'      ```
-#'      the ‘`f(x, .)`’, resp. ‘`f(x, y = .)`’, is interpreted as the function
-#'      `function(.) f(x, .)`, resp. `function(.) f(x, y = .)`. Otherwise, the
-#'      call is implicitly “partialized,” e.g., in compositions such as
-#'      ```
-#'        ... %>>>% f(x, y) %>>>% ...
-#'        ... %>>>% f(x, y(.)) %>>>% ...
-#'      ```
-#'      the ‘`f(x, y)`’, resp. ‘`f(x, y(.))`’, is interpreted as the function
-#'      `function(.) f(., x, y)`, resp. `function(.) f(., x, y(.))`.
+#'   2. **Function calls are interpreted as a unary function of a point (`.`)**
+#'      — A _call_ is interpreted as a _function_ (of a point) in one of two
+#'      ways:
 #'
-#'   3. Expressions in curly braces are interpreted as an (anonymous) function
-#'      of a point. For example, in
+#'      * If the point matches an argument value, the call is literally
+#'        interpreted as the body of the function. For example, in the
+#'        compositions
+#'        ```
+#'          ... %>>>% foo(x, .) %>>>% ...
+#'
+#'          ... %>>>% foo(x, y = .) %>>>% ...
+#'        ```
+#'        the ‘`foo(x, .)`’, resp. ‘`foo(x, y = .)`’, is interpreted as the
+#'        function `function(.) foo(x, .)`, resp. `function(.) foo(x, y = .)`.
+#'
+#'      * Otherwise, the call is regarded as implicitly having the point as its
+#'        first argument before being interpreted as the body of the function.
+#'        For example, in the compositions
+#'        ```
+#'          ... %>>>% foo(x) %>>>% ...
+#'
+#'          ... %>>>% foo(x, y(.)) %>>>% ...
+#'        ```
+#'        the ‘`foo(x)`’, resp. ‘`foo(x, y(.))`’, is interpreted as the function
+#'        `function(.) foo(., x)`, resp. `function(.) foo(., x, y(.))`.
+#'
+#'   3. **Expressions `{...}` are interpreted as a function of a point (`.`)** —
+#'      For example, in a composition
 #'      ```
-#'        ... %>>>% {f(.); g(.)} %>>>% ...
+#'        ... %>>>% {
+#'          foo(.)
+#'          bar(.)
+#'        } %>>>% ...
 #'      ```
-#'      the ‘`{f(.); g(.)}`’ is interpreted as the function `function(.) {f(.);
-#'      g(.)}`. Curly braces are useful when you want to circumvent the
-#'      implicit-partialization rule for function calls.
+#'      the ‘`{foo(.); bar(.)}`’ is interpreted as the function `function(.)
+#'      {foo(.); bar(.)}`.
 #'
-#'   \subsection{Exceptional Function Calls}{
-#'   Exceptions to the rule of implicit partialization of function calls are
-#'   made in a few cases of convenience:
+#'      Curly braces are useful when you need to circumvent `` `%>>>%` ``’s
+#'      usual interpretation of function calls. For example, in a composition
+#'      ```
+#'        ... %>>>% {foo(x, y(.))} %>>>% ...
+#'      ```
+#'      the ‘`{foo(x, y(.))}`’ is interpreted as the function `function(.)
+#'      foo(x, y(.))`—there is no point as first argument to `foo`.
 #'
-#'   * Parenthesis ([`(`][base::Paren]) applies grouping. In particular,
-#'     expressions within parentheses are literally interpreted.
+#'   \subsection{Exceptions to the Interpretation of Calls as Functions}{
+#'   As a matter of convenience, some exceptions are made to the above
+#'   interpretation of calls as functions:
 #'
-#'   * Colon ([`:`][base::Colon]) applies naming, according to the syntax
+#'   - **Parenthesis** ([`(`][base::Paren]) applies grouping. (In R, `` `(` ``
+#'     is indeed a function.) In particular, expressions within parentheses are
+#'     literally interpreted.
+#'
+#'   - **Colon** ([`:`][base::Colon]) applies _naming_, according to the syntax
 #'     ‘`<name>: <function>`’, where ‘`<function>`’ is interpreted according
 #'     to the semantics of `` `%>>>%` ``. For example, in
 #'     ```
@@ -102,11 +127,19 @@
 #'     ```
 #'     the function `f` is named `"aName"`.
 #'
-#'   * [fn()], [namespace operators][base::ns-dblcolon] (`` `::`  ``,
-#'     `` `:::` ``) and [extractors][base::Extract] (`` `$` ``, `` `[[` ``,
-#'     `` `[` ``) are literally interpreted. This allows for list extractors
-#'     to be applied to composite functions appearing in a `` `%>>>%` `` call
-#'     (see ‘Operate on a Composite Function’).
+#'   - **[fn()]**, **[namespace operators][base::ns-dblcolon]** (`` `::`  ``,
+#'     `` `:::` ``) and **[extractors][base::Extract]** (`` `$` ``, `` `[[` ``,
+#'     `` `[` ``) are literally interpreted. This allows for list extractors to
+#'     be applied to composite functions appearing in a `` `%>>>%` `` call (see
+#'     ‘Operate on a Composite Function’). For example, the compositions
+#'     ```
+#'       paste %>>>% tolower
+#'
+#'       paste %>>>% base::tolower
+#'
+#'       (paste %>>>% toupper)[[1]] %>>>% tolower
+#'     ```
+#'     are equivalent functions.
 #'   }
 #'
 #'   \subsection{Quasiquotation}{
