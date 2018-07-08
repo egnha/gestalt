@@ -139,38 +139,45 @@ be applied to composite functions appearing in a \code{`\%>>>\%`} call (see
 are equivalent functions.
 }
 }
+}
 
-\subsection{Quasiquotation}{
-Tidyverse \link[rlang:quasiquotation]{unquoting} via \code{!!} is supported. Use it
-to:
+\section{Quasiquotation}{
+
+The operator \code{`\%>>>\%`} supports Tidyverse
+\link[rlang:quasiquotation]{unquoting} (via \code{!!}). Use it to:
 \itemize{
-\item Enforce immutability. For example, by unquoting \code{res} in\preformatted{  res <- "result"
+\item \strong{Enforce immutability} — For example, by unquoting \code{res} in\preformatted{  res <- "result"
   get_result <- identity \%>>>\% lapply(`[[`, !!res)
 }
 
 you ensure that the function \code{get_result()} always extracts the component
-named \code{"result"}, even if the binding \code{res} mutates or is removed.
-\item Interpret ‘\code{.}’ in the lexical scope. For example,\preformatted{  . <- "point"
-  is_point <- {.[!is.na(.)]} \%>>>\% {. == !!.}
+named \code{"result"}, even if the binding \code{res} changes its value or is
+removed altogether.
+\item \strong{Interpret the point (\code{.}) in the lexical scope} — Even though
+\code{`\%>>>\%`} interprets ‘\code{.}’ as a function argument, you can still
+reference an object of that name via unquoting. For example,\preformatted{  . <- "point"
+  is_point <- identity \%>>>\% {. == !!.}
 }
 
-determines those non-\code{NA} components of a (character) vector that equal
-the string \code{"point"}.
-\item Programmatically assign names. For example, unquoting \code{nm} in\preformatted{  nm <- "aName"
-  ... \%>>>\% !!nm: f \%>>>\% ...
+determines a function that checks for equality with the string \code{"point"}.
+\item \strong{Name composite functions, programmatically} — For example, unquoting
+\code{nm} in\preformatted{  nm <- "aName"
+  ... \%>>>\% !!nm: foo \%>>>\% ...
 }
 
-names the \code{f}-component of the resulting composite function \code{"aName"}.
-\item Expend a computation upfront to spare a runtime expense. For example,
-presuming the value of the call \code{f()} is immutable and that \code{g} is a pure
-function, both\preformatted{  ... \%>>>\% g(f()) \%>>>\% ...
+names the ‘\code{foo}’-component of the resulting composite function
+\code{"aName"}.
+\item \strong{Accelerate functions by fixing constant dependencies} — For example,
+presuming the value of the call \code{f()} is \emph{constant} and that \code{g} is a
+\emph{pure} function (meaning that its return value depends only on its
+input), both\preformatted{  ... \%>>>\% g(f()) \%>>>\% ...
+
   ... \%>>>\% g(!!f()) \%>>>\% ...
 }
 
 would be functions yielding the same values. But the first would compute
 \code{f()} anew with each call, whereas the second would simply depend on a
-pre-computed value of \code{f()}.
-}
+fixed, pre-computed value of \code{f()}.
 }
 }
 

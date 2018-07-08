@@ -142,44 +142,49 @@
 #'     are equivalent functions.
 #'   }
 #'
-#'   \subsection{Quasiquotation}{
-#'   Tidyverse [unquoting][rlang::quasiquotation] via `!!` is supported. Use it
-#'   to:
+#' @section Quasiquotation:
+#'   The operator `` `%>>>%` `` supports Tidyverse
+#'   [unquoting][rlang::quasiquotation] (via `!!`). Use it to:
 #'
-#'   * Enforce immutability. For example, by unquoting `res` in
+#'   - **Enforce immutability** — For example, by unquoting `res` in
 #'     ```
 #'       res <- "result"
 #'       get_result <- identity %>>>% lapply(`[[`, !!res)
 #'     ```
 #'     you ensure that the function `get_result()` always extracts the component
-#'     named `"result"`, even if the binding `res` mutates or is removed.
+#'     named `"result"`, even if the binding `res` changes its value or is
+#'     removed altogether.
 #'
-#'   * Interpret ‘`.`’ in the lexical scope. For example,
+#'   - **Interpret the point (`.`) in the lexical scope** — Even though
+#'     `` `%>>>%` `` interprets ‘`.`’ as a function argument, you can still
+#'     reference an object of that name via unquoting. For example,
 #'     ```
 #'       . <- "point"
-#'       is_point <- {.[!is.na(.)]} %>>>% {. == !!.}
+#'       is_point <- identity %>>>% {. == !!.}
 #'     ```
-#'     determines those non-`NA` components of a (character) vector that equal
-#'     the string `"point"`.
+#'     determines a function that checks for equality with the string `"point"`.
 #'
-#'   * Programmatically assign names. For example, unquoting `nm` in
+#'   - **Name composite functions, programmatically** — For example, unquoting
+#'     `nm` in
 #'     ```
 #'       nm <- "aName"
-#'       ... %>>>% !!nm: f %>>>% ...
+#'       ... %>>>% !!nm: foo %>>>% ...
 #'     ```
-#'     names the `f`-component of the resulting composite function `"aName"`.
+#'     names the ‘`foo`’-component of the resulting composite function
+#'     `"aName"`.
 #'
-#'   * Expend a computation upfront to spare a runtime expense. For example,
-#'     presuming the value of the call `f()` is immutable and that `g` is a pure
-#'     function, both
+#'   - **Accelerate functions by fixing constant dependencies** — For example,
+#'     presuming the value of the call `f()` is _constant_ and that `g` is a
+#'     _pure_ function (meaning that its return value depends only on its
+#'     input), both
 #'     ```
 #'       ... %>>>% g(f()) %>>>% ...
+#'
 #'       ... %>>>% g(!!f()) %>>>% ...
 #'     ```
 #'     would be functions yielding the same values. But the first would compute
 #'     `f()` anew with each call, whereas the second would simply depend on a
-#'     pre-computed value of `f()`.
-#'   }
+#'     fixed, pre-computed value of `f()`.
 #'
 #' @section Operate on a Composite Function as If It Were a List:
 #'   You can think of a composite function as embodying the (possibly nested)
