@@ -252,7 +252,7 @@
 #'   `abs %>>>% log`.
 #'   }
 #'
-#'   \subsection{Other Methods}{
+#'   \subsection{Other List Methods}{
 #'   The generic methods [unlist()], [length()], [names()] also apply to
 #'   composite functions. In conjunction with `compose()`, you can use
 #'   `unlist()` to “flatten” compositions. For example

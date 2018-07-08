@@ -241,7 +241,7 @@ all replace the second constituent function with \code{log}, so that \code{f} be
 \code{abs \%>>>\% log}.
 }
 
-\subsection{Other Methods}{
+\subsection{Other List Methods}{
 The generic methods \code{\link[=unlist]{unlist()}}, \code{\link[=length]{length()}}, \code{\link[=names]{names()}} also apply to
 composite functions. In conjunction with \code{compose()}, you can use
 \code{unlist()} to “flatten” compositions. For example\preformatted{  compose(unlist(f, use.names = FALSE))
