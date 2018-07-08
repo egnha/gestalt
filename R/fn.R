@@ -169,17 +169,24 @@ literal_tidy <- function(...) {
 #'     dplyr](http://dplyr.tidyverse.org/articles/programming.html))
 #'   }
 #'
-#' @section Pure Functions via Quasiquotation: Functions in R are generally
+#' @section Use Unquoting to Make Robust Functions:
+#'   Functions in R are generally
 #'   [impure](https://en.wikipedia.org/wiki/Pure_function), i.e., the return
 #'   value of a function will _not_ in general be determined by the value of its
-#'   inputs alone. This is because a function may depend on mutable objects in
-#'   its [lexical scope](http://adv-r.hadley.nz/functions.html#lexical-scoping).
-#'   Normally this isn’t an issue. But if you are working interactively and
-#'   sourcing files into the global environment, say, or using a notebook
-#'   interface (like [Jupyter](https://jupyter.org) or
-#'   [R Notebook](http://rmarkdown.rstudio.com/r_notebooks.html)), it can be
+#'   inputs alone. This is because, by design, a function may depend on objects
+#'   in its
+#'   [lexical scope](http://adv-r.hadley.nz/functions.html#lexical-scoping), and
+#'   these objects may mutate between function calls. Normally this isn’t a
+#'   hazard.
+#'
+#'   However, if you are working interactively and sourcing files into the
+#'   global environment, or using a notebook interface like
+#'   [Jupyter](https://jupyter.org) or
+#'   [R Notebook](http://rmarkdown.rstudio.com/r_notebooks.html), it can be
 #'   tricky to ensure that you haven’t unwittingly mutated an object that an
 #'   earlier function depends upon.
+#'
+#'   You can use unquoting to guard against such mutations.
 #'
 #'   \subsection{Example}{
 #'   Consider the following function:
@@ -192,20 +199,16 @@ literal_tidy <- function(...) {
 #'   of `foo(1)`:
 #'   ```
 #'     foo(1)  #> [1] 2
+#'
 #'     a <- 0
+#'
 #'     foo(1)  #> [1] 1
 #'   ```
 #'   In other words, `foo()` is impure because the value of `foo(x)` depends not
 #'   only on the value of `x` but also on the _externally mutable_ value of `a`.
 #'
-#'   `fn()` enables you to write _pure_ functions by using
-#'   [quasiquotation](http://rlang.tidyverse.org/reference/quasiquotation.html)
-#'   to eliminate such indeterminacy.
-#'   }
-#'
-#'   \subsection{Example}{
-#'   With `fn()`, you can unquote `a` to “burn in” its value at
-#'   the point of creation:
+#'   With `fn()`, you can unquote `a` to “burn in” its value at the point of
+#'   creation:
 #'   ```
 #'     a <- 1
 #'     foo <- fn(x ~ x + !!a)
@@ -214,7 +217,9 @@ literal_tidy <- function(...) {
 #'   scope:
 #'   ```
 #'     foo(1)  #> [1] 2
+#'
 #'     a <- 0
+#'
 #'     foo(1)  #> [1] 2
 #'   ```
 #'   }

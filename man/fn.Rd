@@ -97,18 +97,25 @@ as “quoted unquoting,” “quoted unquote-splicing”, resp. (cf. \code{fn_()
 }
 }
 
-\section{Pure Functions via Quasiquotation}{
- Functions in R are generally
+\section{Use Unquoting to Make Robust Functions}{
+
+Functions in R are generally
 \href{https://en.wikipedia.org/wiki/Pure_function}{impure}, i.e., the return
 value of a function will \emph{not} in general be determined by the value of its
-inputs alone. This is because a function may depend on mutable objects in
-its \href{http://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}.
-Normally this isn’t an issue. But if you are working interactively and
-sourcing files into the global environment, say, or using a notebook
-interface (like \href{https://jupyter.org}{Jupyter} or
-\href{http://rmarkdown.rstudio.com/r_notebooks.html}{R Notebook}), it can be
+inputs alone. This is because, by design, a function may depend on objects
+in its
+\href{http://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}, and
+these objects may mutate between function calls. Normally this isn’t a
+hazard.
+
+However, if you are working interactively and sourcing files into the
+global environment, or using a notebook interface like
+\href{https://jupyter.org}{Jupyter} or
+\href{http://rmarkdown.rstudio.com/r_notebooks.html}{R Notebook}, it can be
 tricky to ensure that you haven’t unwittingly mutated an object that an
 earlier function depends upon.
+
+You can use unquoting to guard against such mutations.
 
 \subsection{Example}{
 Consider the following function:\preformatted{  a <- 1
@@ -118,27 +125,25 @@ Consider the following function:\preformatted{  a <- 1
 What is the value of \code{foo(1)}? It is not necessarily \code{2}, because the value
 of \code{a} may have changed between the \emph{creation} of \code{foo()} and the \emph{calling}
 of \code{foo(1)}:\preformatted{  foo(1)  #> [1] 2
+
   a <- 0
+
   foo(1)  #> [1] 1
 }
 
 In other words, \code{foo()} is impure because the value of \code{foo(x)} depends not
 only on the value of \code{x} but also on the \emph{externally mutable} value of \code{a}.
 
-\code{fn()} enables you to write \emph{pure} functions by using
-\href{http://rlang.tidyverse.org/reference/quasiquotation.html}{quasiquotation}
-to eliminate such indeterminacy.
-}
-
-\subsection{Example}{
-With \code{fn()}, you can unquote \code{a} to “burn in” its value at
-the point of creation:\preformatted{  a <- 1
+With \code{fn()}, you can unquote \code{a} to “burn in” its value at the point of
+creation:\preformatted{  a <- 1
   foo <- fn(x ~ x + !!a)
 }
 
 Now \code{foo()} is a pure function, unaffected by changes to \code{a} in the lexical
 scope:\preformatted{  foo(1)  #> [1] 2
+
   a <- 0
+
   foo(1)  #> [1] 2
 }
 
