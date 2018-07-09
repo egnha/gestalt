@@ -24,7 +24,7 @@ you to:
    
  - Directly manipulate a composite function as a list-like object, so that you
    can [inspect](#inspect-or-modify-using-higher-order-functions),
-   [modify](#inspect-or-modify-using-higher-order-functions) or
+   [modify](#inspect-or-modify-using-higher-order-functions), or
    [repurpose](#repurpose-using-subset-assignment) any part of the chain of
    constituent functions
 
@@ -54,7 +54,7 @@ r2("cyl")
 ```
 
 gestalt leverages the ubiquity of the [magrittr](https://magrittr.tidyverse.org)
-`%>%`, by adopting its semantics and augmenting it to enable you to:
+`%>%` operator, by adopting its semantics and augmenting it to enable you to:
 
  - **Clarify intent** by annotating constituent functions with descriptive names,
    which also serve as
@@ -190,7 +190,7 @@ You gain power by treating (piped) values as (composite) functions:
 In conjunction with `%>>>%`, gestalt also provides:
 
  - `fn`, a more concise and flexible variation of `function`, which supports
-   tidyverse-style
+   tidyverse
    [quasiquotation](http://rlang.r-lib.org/reference/quasiquotation.html).
     ```{r}
     size <- 5L
@@ -228,7 +228,7 @@ See the package documentation for more details (`help(package = gestalt)`).
 ## Acknowledgments
 
  - The core semantics of `%>>>%` conform to those of the 
-   [magrittr](https://magrittr.tidyverse.org) `%>%` developed by
+   [magrittr](https://magrittr.tidyverse.org) `%>%` operator developed by
    [Stefan Milton Bache](https://github.com/smbache).
    
  - The engine for quasiquotation and expression capture is powered by the
