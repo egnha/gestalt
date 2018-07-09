@@ -32,7 +32,7 @@ call (i.e., \code{constant()}
 Combine \code{\link[=compose]{\%>>>\%}} with \code{constant()} for a \emph{lazy}, \emph{structured}
 alternative to the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-(see ‘Examples’).
+operator (see ‘Examples’).
 }
 \examples{
 # Function with a constant return value
@@ -66,7 +66,7 @@ summ()
 
 \dontrun{
 # Think of `\%>>>\%` combined with `constant()` as a lazy, structured
-# alternative to the magrittr `\%>\%`.
+# alternative to the magrittr `\%>\%` operator.
 library(magrittr)
 
 val2 <- mtcars \%>\%

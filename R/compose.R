@@ -56,8 +56,9 @@
 #'   closure).
 #'
 #' @section Semantics of the Composition Operator:
-#'   The operator `` `%>>>%` `` adopts the semantics of the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``:
+#'   The `` `%>>>%` `` operator adopts the semantics of the
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
+#'   operator:
 #'
 #'   1. **Bare names are matched to functions** — For example, in a composition
 #'      like
@@ -123,9 +124,9 @@
 #'     ‘`<name>: <function>`’, where ‘`<function>`’ is interpreted according
 #'     to the semantics of `` `%>>>%` ``. For example, in
 #'     ```
-#'       ... %>>>% aName: f %>>>% ...
+#'       ... %>>>% aName: foo %>>>% ...
 #'     ```
-#'     the function `f` is named `"aName"`.
+#'     the function `foo` is named `"aName"`.
 #'
 #'   - **[fn()]**, **[namespace operators][base::ns-dblcolon]** (`` `::`  ``,
 #'     `` `:::` ``) and **[extractors][base::Extract]** (`` `$` ``, `` `[[` ``,
@@ -144,7 +145,7 @@
 #'   }
 #'
 #' @section Quasiquotation:
-#'   The operator `` `%>>>%` `` supports Tidyverse
+#'   The `` `%>>>%` `` operator supports Tidyverse
 #'   [unquoting][rlang::quasiquotation] (via `!!`). Use it to:
 #'
 #'   - **Enforce immutability** — For example, by unquoting `res` in
@@ -294,7 +295,8 @@
 #'
 #' @seealso [constant()]; combined with `` `%>>>%` ``, this provides a lazy,
 #'   structured alternative to the
-#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``.
+#'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
+#'   operator.
 #'
 #' @examples
 #' # Functions are applied in the order in which they are listed
@@ -342,7 +344,7 @@
 #'   as.list(compose(fs)), fs,
 #' ))
 #'
-#' # `%>>>%` supports names, magrittr `%>%` semantics, quasiquotation
+#' # `%>>>%` supports names, magrittr `%>%` semantics, and quasiquotation
 #' sep <- ""
 #' scramble <- shuffle: sample %>>>% paste(collapse = !!sep)
 #' nonsense <- scramble(letters)

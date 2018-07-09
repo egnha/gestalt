@@ -67,8 +67,9 @@ return the (named) list of functions \code{list(paste, capitalize = toupper)}.
 }
 \section{Semantics of the Composition Operator}{
 
-The operator \code{`\%>>>\%`} adopts the semantics of the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}:
+The \code{`\%>>>\%`} operator adopts the semantics of the
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
+operator:
 \enumerate{
 \item \strong{Bare names are matched to functions} — For example, in a composition
 like\preformatted{  ... \%>>>\% foo \%>>>\% ...
@@ -123,10 +124,10 @@ is indeed a function.) In particular, expressions within parentheses are
 literally interpreted.
 \item \strong{Colon} (\code{\link[base:Colon]{:}}) applies \emph{naming}, according to the syntax
 ‘\code{<name>: <function>}’, where ‘\code{<function>}’ is interpreted according
-to the semantics of \code{`\%>>>\%`}. For example, in\preformatted{  ... \%>>>\% aName: f \%>>>\% ...
+to the semantics of \code{`\%>>>\%`}. For example, in\preformatted{  ... \%>>>\% aName: foo \%>>>\% ...
 }
 
-the function \code{f} is named \code{"aName"}.
+the function \code{foo} is named \code{"aName"}.
 \item \strong{\code{\link[=fn]{fn()}}}, \strong{\link[base:ns-dblcolon]{namespace operators}} (\code{`::`},
 \code{`:::`}) and \strong{\link[base:Extract]{extractors}} (\code{`$`}, \code{`[[`},
 \code{`[`}) are literally interpreted. This allows for list extractors to
@@ -146,7 +147,7 @@ are equivalent functions.
 
 \section{Quasiquotation}{
 
-The operator \code{`\%>>>\%`} supports Tidyverse
+The \code{`\%>>>\%`} operator supports Tidyverse
 \link[rlang:quasiquotation]{unquoting} (via \code{!!}). Use it to:
 \itemize{
 \item \strong{Enforce immutability} — For example, by unquoting \code{res} in\preformatted{  res <- "result"
@@ -328,7 +329,7 @@ stopifnot(all.equal(check.attributes = FALSE,
   as.list(compose(fs)), fs,
 ))
 
-# `\%>>>\%` supports names, magrittr `\%>\%` semantics, quasiquotation
+# `\%>>>\%` supports names, magrittr `\%>\%` semantics, and quasiquotation
 sep <- ""
 scramble <- shuffle: sample \%>>>\% paste(collapse = !!sep)
 nonsense <- scramble(letters)
@@ -342,5 +343,6 @@ stopifnot(
 \seealso{
 \code{\link[=constant]{constant()}}; combined with \code{`\%>>>\%`}, this provides a lazy,
 structured alternative to the
-\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}.
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
+operator.
 }
