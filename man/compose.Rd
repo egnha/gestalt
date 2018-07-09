@@ -15,11 +15,13 @@ Lists of functions are automatically spliced in.
 \link[rlang:quasiquotation]{Unquoting} of names, via \code{!!} on the left-hand side
 of \code{:=}, and \link[rlang:quasiquotation]{splicing}, via \code{!!!}, are supported.}
 
-\item{fst, snd}{Functions. These may be optionally named using \code{:}, e.g.,
-\code{f \%>>>\% nm: g} names the \code{g}-component.
+\item{fst, snd}{Functions. These may be optionally named using a colon (\code{:}),
+e.g., \code{f \%>>>\% nm: g} names the \code{g}-component \code{"nm"} (see ‘Exceptions to
+the Interpretation of Calls as Functions’).
 \link[rlang:quasiquotation]{Quasiquotation} and the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-semantics are supported (see ‘Semantics of \code{`\%>>>\%`}’ and ‘Examples’).}
+semantics are supported (see ‘Semantics of the Composition Operator’,
+‘Quasiquotation’ and ‘Examples’).}
 }
 \value{
 Function of class \code{CompositeFunction}, whose
@@ -129,7 +131,8 @@ the function \code{f} is named \code{"aName"}.
 \code{`:::`}) and \strong{\link[base:Extract]{extractors}} (\code{`$`}, \code{`[[`},
 \code{`[`}) are literally interpreted. This allows for list extractors to
 be applied to composite functions appearing in a \code{`\%>>>\%`} call (see
-‘Operate on a Composite Function’). For example, the compositions\preformatted{  paste \%>>>\% tolower
+‘Operate on Composite Functions as List-Like Objects’). For example, the
+compositions\preformatted{  paste \%>>>\% tolower
 
   paste \%>>>\% base::tolower
 

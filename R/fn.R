@@ -94,8 +94,8 @@ literal_tidy <- function(...) {
 #' - **Enforce immutability** — By enabling Tidyverse
 #'   [quasiquotation][rlang::quasiquotation], `fn()` allows you to “burn in”
 #'   values at the point of function creation. This guards against changes in a
-#'   function’s enclosing environment. (See ‘Pure Functions via
-#'   Quasiquotation’).
+#'   function’s enclosing environment. (See ‘Use Unquoting to Make Robust
+#'   Functions’.)
 #'
 #' @param ... Function declaration, which supports
 #'   [quasiquotation][rlang::quasiquotation].

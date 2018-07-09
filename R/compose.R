@@ -131,7 +131,8 @@
 #'     `` `:::` ``) and **[extractors][base::Extract]** (`` `$` ``, `` `[[` ``,
 #'     `` `[` ``) are literally interpreted. This allows for list extractors to
 #'     be applied to composite functions appearing in a `` `%>>>%` `` call (see
-#'     ‘Operate on a Composite Function’). For example, the compositions
+#'     ‘Operate on Composite Functions as List-Like Objects’). For example, the
+#'     compositions
 #'     ```
 #'       paste %>>>% tolower
 #'
@@ -361,11 +362,13 @@ compose <- function(...) {
   cmp
 }
 
-#' @param fst,snd Functions. These may be optionally named using `:`, e.g.,
-#'   `f %>>>% nm: g` names the `g`-component.
+#' @param fst,snd Functions. These may be optionally named using a colon (`:`),
+#'   e.g., `f %>>>% nm: g` names the `g`-component `"nm"` (see ‘Exceptions to
+#'   the Interpretation of Calls as Functions’).
 #'   [Quasiquotation][rlang::quasiquotation] and the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
-#'   semantics are supported (see ‘Semantics of `` `%>>>%` ``’ and ‘Examples’).
+#'   semantics are supported (see ‘Semantics of the Composition Operator’,
+#'   ‘Quasiquotation’ and ‘Examples’).
 #'
 #' @rdname compose
 #' @export
