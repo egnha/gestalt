@@ -181,7 +181,7 @@ fixed, pre-computed value of \code{f()}.
 }
 }
 
-\section{Operate on a Composite Function as If It Were a List}{
+\section{Operate on Composite Functions as List-Like Objects}{
 
 You can think of a composite function as embodying the (possibly nested)
 structure of its list of constituent functions. In fact, you can apply
@@ -253,12 +253,12 @@ gives a function that is identical to\preformatted{  abs \%>>>\% log \%>>>\% sum
 }
 }
 
-\section{Composite Functions Perform as If They Were Flat}{
+\section{Composite Functions Balance Speed and Complexity}{
 
-The speed of a composite function made by \code{compose()} or \code{`\%>>>\%`},
-regardless of its nested depth, is on par with a manually constructed
+The speed of a composite function made by \code{compose()} or \code{`\%>>>\%`}—regardless of its nested depth—is on par with a manually constructed
 \emph{serial} composition. This is because \code{compose()} and \code{`\%>>>\%`} are
-\strong{associative}, semantically and operationally. Thus, for instance,\preformatted{  compose(f, g, h)
+\strong{associative}, semantically and operationally. For instance, triple
+compositions,\preformatted{  compose(f, g, h)
   f \%>>>\% g \%>>>\% h
 
   compose(f, compose(g, h))
@@ -269,7 +269,7 @@ regardless of its nested depth, is on par with a manually constructed
 }
 
 are all implemented as the \emph{same function}—lists of functions are
-automatically “flattened out” when composed.
+automatically “flattened” when composed.
 
 Nevertheless, the original nested structure of constituent functions is
 faithfully recovered by \code{\link[=as.list]{as.list()}}. In particular, \code{as.list()} and

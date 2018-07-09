@@ -186,7 +186,7 @@
 #'     `f()` anew with each call, whereas the second would simply depend on a
 #'     fixed, pre-computed value of `f()`.
 #'
-#' @section Operate on a Composite Function as If It Were a List:
+#' @section Operate on Composite Functions as List-Like Objects:
 #'   You can think of a composite function as embodying the (possibly nested)
 #'   structure of its list of constituent functions. In fact, you can apply
 #'   familiar index and assignment operations to a composite function, as if it
@@ -265,11 +265,12 @@
 #'   ```
 #'   }
 #'
-#' @section Composite Functions Perform as If They Were Flat:
-#'   The speed of a composite function made by `compose()` or `` `%>>>%` ``,
-#'   regardless of its nested depth, is on par with a manually constructed
+#' @section Composite Functions Balance Speed and Complexity:
+#'   The speed of a composite function made by `compose()` or `` `%>>>%`
+#'   ``—regardless of its nested depth—is on par with a manually constructed
 #'   _serial_ composition. This is because `compose()` and `` `%>>>%` `` are
-#'   **associative**, semantically and operationally. Thus, for instance,
+#'   **associative**, semantically and operationally. For instance, triple
+#'   compositions,
 #'   ```
 #'     compose(f, g, h)
 #'     f %>>>% g %>>>% h
@@ -281,7 +282,7 @@
 #'     (f %>>>% g) %>>>% h
 #'   ```
 #'   are all implemented as the _same function_—lists of functions are
-#'   automatically “flattened out” when composed.
+#'   automatically “flattened” when composed.
 #'
 #'   Nevertheless, the original nested structure of constituent functions is
 #'   faithfully recovered by [as.list()]. In particular, `as.list()` and
