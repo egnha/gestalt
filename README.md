@@ -51,8 +51,8 @@ r2("cyl")
 ```
 
 gestalt leverages the ubiquity of the
-[magrittr](https://magrittr.tidyverse.org) `%>%` pipe operator, by
-adopting its semantics and augmenting it to enable you to:
+[magrittr](https://magrittr.tidyverse.org) `%>%` operator, by adopting
+its semantics and augmenting it to enable you to:
 
   - **Clarify intent** by annotating constituent functions with
     descriptive names, which also serve as [subsetting
@@ -293,8 +293,8 @@ devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
 ## Acknowledgments
 
   - The core semantics of `%>>>%` conform to those of the
-    [magrittr](https://magrittr.tidyverse.org) `%>%` pipe operator
-    developed by [Stefan Milton Bache](https://github.com/smbache).
+    [magrittr](https://magrittr.tidyverse.org) `%>%` operator developed
+    by [Stefan Milton Bache](https://github.com/smbache).
 
   - The engine for quasiquotation and expression capture is powered by
     the [rlang](https://rlang.r-lib.org) package by [Lionel
