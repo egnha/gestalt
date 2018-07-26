@@ -347,6 +347,15 @@ test_that("fn() is literally interpreted", {
   expect_equal(g(vals), log(vals) ^ 2)
 })
 
+test_that("partial() is literally interpreted", {
+  f <- partial(log, base = 2) %>>>% identity
+  g <- identity %>>>% partial(log, base = 2)
+
+  vals <- {set.seed(1); runif(10, 1, 2)}
+  expect_equal(f(vals), log(vals, base = 2))
+  expect_equal(g(vals), log(vals, base = 2))
+})
+
 test_that("functions in composition can be named", {
   f0 <- function(x) log(abs(x) + 1)
 

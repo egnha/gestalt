@@ -422,7 +422,8 @@ is_literal <- function(expr) {
   !is.call(expr)        ||
     is_op_compose(expr) ||
     is_subsetter(expr)  ||
-    is_fn_lambda(expr)  ||
+    is_fn(expr)         ||
+    is_partial(expr)    ||
     is_op_namespace(expr)
 }
 
@@ -435,7 +436,8 @@ is_dollar  <- check_head("$")
 is_sqr_sqr <- check_head("[[")
 is_sqr     <- check_head("[")
 
-is_fn_lambda <- check_head("fn")
+is_fn      <- check_head("fn")
+is_partial <- check_head("partial")
 
 is_op_namespace <- function(expr) {
   is_op_public(expr) || is_op_private(expr)

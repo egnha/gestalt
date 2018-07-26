@@ -6,6 +6,10 @@
     function may now assume any name (#10). This is useful when you want to call
     the argument assumed by the point by its original name, e.g., in a
     `do.call()` or `lapply()` invocation.
+    
+  * `partial()` is now literally interpreted by `%>>>%` (#11). For instance, you
+     you can succinctly write `abs %>>>% partial(log, base = 2)` instead of
+     `abs %>>>% !!partial(log, base = 2)`.
 
 ## 0.1.2
 
