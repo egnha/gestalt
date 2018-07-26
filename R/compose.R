@@ -457,7 +457,7 @@ lambda_named <- function(expr, env) {
 is_lambda <- check_head("{")
 
 lambda <- function(body, env) {
-  new_fn(alist(. = ), body, env)
+  new_fn(alist(... = , . = ..1), body, env)
 }
 
 lambda_partial <- local({
