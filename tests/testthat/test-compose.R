@@ -127,7 +127,7 @@ test_that("compositions are called as flattened pipeline", {
   expect_length(unlist(as.list(baz)), 6)
   expect_identical(
     body(baz),
-    quote(`__6__`(`__5__`(`__4__`(`__3__`(`__2__`(`__1__`(.)))))))
+    quote(`__6__`(`__5__`(`__4__`(`__3__`(`__2__`(`__1__`(..., . = .)))))))
   )
 })
 
@@ -234,6 +234,34 @@ test_that("composition operator obeys magrittr semantics (#39)", {
   f1 <- {list(result = .)} %>>>% {paste(.$result, collapse = "")}
   expect_identical(f0(letters), paste(letters, collapse = ""))
   expect_identical(f1(letters), f0(letters))
+})
+
+test_that("when calling a composition, the point may assume any name (#10)", {
+  f0 <- function(x, y, z = 2) c(x, y, z)
+  fs <- list(
+    f0(1)          %>>>% identity,
+    f0(., 1)       %>>>% identity,
+    f0(1, x = .)   %>>>% identity,
+    {f0(., 1)}     %>>>% identity,
+    {f0(1, x = .)} %>>>% identity
+  )
+
+  out <- f0(0, 1, 2)
+
+  for (f in fs) {
+    # The first argument will always match the point
+    expect_identical(out, f(0))
+    expect_identical(out, f(. = 0))
+
+    # The original name can match the point
+    expect_identical(out, f(x = 0))
+
+    # In fact, any other name can match the point
+    expect_identical(out, f(blah = 0))
+
+    # Even other formal argument names can match the point (but don't do this!)
+    expect_identical(out, f(z = 0))
+  }
 })
 
 test_that("composition operator operands can be unquoted", {
