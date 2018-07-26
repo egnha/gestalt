@@ -3,14 +3,9 @@
 ## 0.1.2.9000
 
   * When calling a composite function, the point (`.`) in an implicitly curried
-    function may assume any name (#10). For example, when invoking a composite
-    function with `do.call()`, it may be desirable to use a specific name for
-    the first argument, typically the original one:
-    
-    ```
-    scramble <- sample(size = 5) %>>>% paste(collapse = "")
-    do.call(scramble, list(x = letters))  # Argument need not be `. = letters`
-    ```
+    function may now assume any name (#10). This is useful when you want to call
+    the argument assumed by the point by its original name, e.g., in a
+    `do.call()` or `lapply()` invocation.
 
 ## 0.1.2
 
