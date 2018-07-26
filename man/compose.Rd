@@ -88,7 +88,8 @@ compositions\preformatted{  ... \%>>>\% foo(x, .) \%>>>\% ...
 }
 
 the ‘\code{foo(x, .)}’, resp. ‘\code{foo(x, y = .)}’, is interpreted as the
-function \code{function(.) foo(x, .)}, resp. \code{function(.) foo(x, y = .)}.
+function \code{function(..., . = ..1) foo(x, .)}, resp.
+\code{function(..., . = ..1) foo(x, y = .)}.
 \item Otherwise, the call is regarded as implicitly having the point as its
 first argument before being interpreted as the body of the function.
 For example, in the compositions\preformatted{  ... \%>>>\% foo(x) \%>>>\% ...
@@ -97,7 +98,8 @@ For example, in the compositions\preformatted{  ... \%>>>\% foo(x) \%>>>\% ...
 }
 
 the ‘\code{foo(x)}’, resp. ‘\code{foo(x, y(.))}’, is interpreted as the function
-\code{function(.) foo(., x)}, resp. \code{function(.) foo(., x, y(.))}.
+\code{function(..., . = ..1) foo(., x)}, resp.
+\code{function(..., . = ..1) foo(., x, y(.))}.
 }
 \item \strong{Expressions \code{{...}} are interpreted as a function of a point (\code{.})} —
 For example, in a composition\preformatted{  ... \%>>>\% {
@@ -106,13 +108,16 @@ For example, in a composition\preformatted{  ... \%>>>\% {
   } \%>>>\% ...
 }
 
-the ‘\code{{foo(.); bar(.)}}’ is interpreted as the function \code{function(.) {foo(.); bar(.)}}.
+the ‘\code{{foo(.); bar(.)}}’ is interpreted as the function
+\code{function(..., . = ..1) {foo(.); bar(.)}}.
 
 Curly braces are useful when you need to circumvent \code{`\%>>>\%`}’s
 usual interpretation of function calls. For example, in a composition\preformatted{  ... \%>>>\% {foo(x, y(.))} \%>>>\% ...
 }
 
-the ‘\code{{foo(x, y(.))}}’ is interpreted as the function \code{function(.) foo(x, y(.))}—there is no point as first argument to \code{foo}.
+the ‘\code{{foo(x, y(.))}}’ is interpreted as the function
+\code{function(..., . = ..1) foo(x, y(.))}—there is no point as first
+argument to \code{foo}.
 }
 
 \subsection{Exceptions to the Interpretation of Calls as Functions}{

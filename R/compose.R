@@ -80,7 +80,8 @@
 #'          ... %>>>% foo(x, y = .) %>>>% ...
 #'        ```
 #'        the ‘`foo(x, .)`’, resp. ‘`foo(x, y = .)`’, is interpreted as the
-#'        function `function(.) foo(x, .)`, resp. `function(.) foo(x, y = .)`.
+#'        function `function(..., . = ..1) foo(x, .)`, resp.
+#'        `function(..., . = ..1) foo(x, y = .)`.
 #'
 #'      * Otherwise, the call is regarded as implicitly having the point as its
 #'        first argument before being interpreted as the body of the function.
@@ -91,7 +92,8 @@
 #'          ... %>>>% foo(x, y(.)) %>>>% ...
 #'        ```
 #'        the ‘`foo(x)`’, resp. ‘`foo(x, y(.))`’, is interpreted as the function
-#'        `function(.) foo(., x)`, resp. `function(.) foo(., x, y(.))`.
+#'        `function(..., . = ..1) foo(., x)`, resp.
+#'        `function(..., . = ..1) foo(., x, y(.))`.
 #'
 #'   3. **Expressions `{...}` are interpreted as a function of a point (`.`)** —
 #'      For example, in a composition
@@ -101,16 +103,17 @@
 #'          bar(.)
 #'        } %>>>% ...
 #'      ```
-#'      the ‘`{foo(.); bar(.)}`’ is interpreted as the function `function(.)
-#'      {foo(.); bar(.)}`.
+#'      the ‘`{foo(.); bar(.)}`’ is interpreted as the function
+#'      `function(..., . = ..1) {foo(.); bar(.)}`.
 #'
 #'      Curly braces are useful when you need to circumvent `` `%>>>%` ``’s
 #'      usual interpretation of function calls. For example, in a composition
 #'      ```
 #'        ... %>>>% {foo(x, y(.))} %>>>% ...
 #'      ```
-#'      the ‘`{foo(x, y(.))}`’ is interpreted as the function `function(.)
-#'      foo(x, y(.))`—there is no point as first argument to `foo`.
+#'      the ‘`{foo(x, y(.))}`’ is interpreted as the function
+#'      `function(..., . = ..1) foo(x, y(.))`—there is no point as first
+#'      argument to `foo`.
 #'
 #'   \subsection{Exceptions to the Interpretation of Calls as Functions}{
 #'   As a matter of convenience, some exceptions are made to the above
