@@ -30,9 +30,15 @@ wrt <- function(..., ..env = parent.frame()) {
 }
 
 as_ordered_promises <- function(data, env) {
+  uniquely_named(data) %because% "Promises must be uniquely named"
   for (i in seq_along(data))
     env <- bind_as_promise(data[i], env)
   env
+}
+
+uniquely_named <- function(xs) {
+  nms <- names(xs)
+  all(nzchar(nms)) && !anyDuplicated(nms)
 }
 
 bind_as_promise <- function(expr, parent) {
