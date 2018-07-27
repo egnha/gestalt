@@ -7,7 +7,7 @@
 \usage{
 run(..data = parent.frame(), ..expr, ...)
 
-wrt(..., ..env = parent.frame())
+wrt(..env = parent.frame(), ...)
 }
 \arguments{
 \item{..data}{List or environment of bindings.}

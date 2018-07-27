@@ -12,7 +12,7 @@
 run <- function(..data = parent.frame(), ..expr, ...) {
   if (!is.environment(..data))
     ..data <- evalq(environment(), ..data, parent.frame())
-  eval(enexpr(..expr), wrt(..., ..env = ..data))
+  eval(enexpr(..expr), wrt(..data, ...))
 }
 
 #' @rdname run
@@ -25,20 +25,15 @@ run <- function(..data = parent.frame(), ..expr, ...) {
 #'   as the common ancestor.
 #'
 #' @export
-wrt <- function(..., ..env = parent.frame()) {
+wrt <- function(..env = parent.frame(), ...) {
   as_ordered_promises(exprs(...), ..env)
 }
 
 as_ordered_promises <- function(data, env) {
-  uniquely_named(data) %because% "Expressions must be uniquely named"
+  all(nzchar(names(data))) %because% "Expressions must be uniquely named"
   for (i in seq_along(data))
     env <- bind_as_promise(data[i], env)
   env
-}
-
-uniquely_named <- function(xs) {
-  nms <- names(xs)  # Assume non-NULL
-  all(nzchar(nms)) && !anyDuplicated.default(nms)
 }
 
 bind_as_promise <- function(expr, parent) {
