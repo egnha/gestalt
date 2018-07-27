@@ -37,8 +37,8 @@ as_ordered_promises <- function(data, env) {
 }
 
 uniquely_named <- function(xs) {
-  nms <- names(xs)
-  all(nzchar(nms)) && !anyDuplicated(nms)
+  nms <- names(xs)  # Assume non-NULL
+  all(nzchar(nms)) && !anyDuplicated.default(nms)
 }
 
 bind_as_promise <- function(expr, parent) {
