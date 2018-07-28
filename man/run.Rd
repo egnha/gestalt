@@ -3,31 +3,32 @@
 \name{run}
 \alias{run}
 \alias{wrt}
-\title{Run an Expression in an Ordered Context}
+\title{Run an Expression in an Ordered Environment}
 \usage{
 run(..data = parent.frame(), ..expr, ...)
 
 wrt(..env = parent.frame(), ...)
 }
 \arguments{
-\item{..data}{List or environment of bindings.}
+\item{..data}{Environment, list or data frame of bindings (cf. \code{envir}
+argument of \code{\link[=eval]{eval()}}).}
 
-\item{..expr}{Expression to evaluate (“run”). Unquoting is supported.}
+\item{..expr}{Expression to evaluate (“run”).
+\link[rlang:quasiquotation]{Quasiquotation} is supported.}
 
 \item{...}{Named expressions. An expression may depend on the preceding ones.
-Unquoting is supported. For \code{run()}, these override those in \code{..data}.}
+For \code{run()}, these override those in \code{..data}. Quasiquotation is supported.}
 
 \item{..env}{Environment in which the expressions of \code{...} are resolved.}
 }
 \value{
-\code{run()} evaluates \code{..expr} in the combined context defined by
-\code{..data} and \code{...}.
+\code{run()} returns the evaluation of \code{..expr} in the combined
+environment of \code{..data} and \code{...}.
 
-\code{wrt()} returns an environment which binds the last expression as a
-\link[base:delayedAssign]{promise}. The parent of this environment binds the
-penultimate expression as a promise, and so forth, until \code{..env} is reached
-as the common ancestor.
+\code{wrt()} returns an environment where the bindings in \code{...} are in
+scope, as \link[=delayedAssign]{promises}, as if they were assigned from left
+to right in the environment \code{..env}.
 }
 \description{
-Run an Expression in an Ordered Context
+Run an Expression in an Ordered Environment
 }

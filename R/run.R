@@ -1,12 +1,14 @@
-#' Run an Expression in an Ordered Context
+#' Run an Expression in an Ordered Environment
 #'
-#' @param ..data List or environment of bindings.
-#' @param ..expr Expression to evaluate (“run”). Unquoting is supported.
+#' @param ..data Environment, list or data frame of bindings (cf. `envir`
+#'   argument of [eval()]).
+#' @param ..expr Expression to evaluate (“run”).
+#'   [Quasiquotation][rlang::quasiquotation] is supported.
 #' @param ... Named expressions. An expression may depend on the preceding ones.
-#'   Unquoting is supported. For `run()`, these override those in `..data`.
+#'   For `run()`, these override those in `..data`. Quasiquotation is supported.
 #'
-#' @return `run()` evaluates `..expr` in the combined context defined by
-#'   `..data` and `...`.
+#' @return `run()` returns the evaluation of `..expr` in the combined
+#'   environment of `..data` and `...`.
 #'
 #' @export
 run <- function(..data = parent.frame(), ..expr, ...) {
@@ -19,10 +21,9 @@ run <- function(..data = parent.frame(), ..expr, ...) {
 #'
 #' @param ..env Environment in which the expressions of `...` are resolved.
 #'
-#' @return `wrt()` returns an environment which binds the last expression as a
-#'   [promise][base::delayedAssign()]. The parent of this environment binds the
-#'   penultimate expression as a promise, and so forth, until `..env` is reached
-#'   as the common ancestor.
+#' @return `wrt()` returns an environment where the bindings in `...` are in
+#'   scope, as [promises][delayedAssign()], as if they were assigned from left
+#'   to right in the environment `..env`.
 #'
 #' @export
 wrt <- function(..env = parent.frame(), ...) {
