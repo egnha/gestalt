@@ -30,7 +30,7 @@ wrt <- function(..env = parent.frame(), ...) {
 }
 
 as_ordered_promises <- function(data, env) {
-  all(nzchar(names(data))) %because% "Expressions must be uniquely named"
+  all(nzchar(names(data))) %because% "Expressions must be named"
   for (i in seq_along(data))
     env <- bind_as_promise(data[i], env)
   env
