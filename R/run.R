@@ -13,7 +13,7 @@
 #'
 #' @export
 run <- function(..data = parent.frame(), ..expr, ...) {
-  eval(enexpr(..expr), wrt(..data, ...))
+  eval(enexpr(..expr), let(..data, ...))
 }
 
 #' @rdname run
@@ -23,7 +23,7 @@ run <- function(..data = parent.frame(), ..expr, ...) {
 #'   to right in the environment defined by `..data`.
 #'
 #' @export
-wrt <- function(..data = parent.frame(), ...) {
+let <- function(..data = parent.frame(), ...) {
   if (!is.environment(..data))
     ..data <- evalq(environment(), ..data, parent.frame())
   as_ordered_promises(..data, ...)

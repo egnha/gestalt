@@ -2,12 +2,12 @@
 % Please edit documentation in R/run.R
 \name{run}
 \alias{run}
-\alias{wrt}
+\alias{let}
 \title{Run an Expression in an Ordered Environment}
 \usage{
 run(..data = parent.frame(), ..expr, ...)
 
-wrt(..data = parent.frame(), ...)
+let(..data = parent.frame(), ...)
 }
 \arguments{
 \item{..data}{Environment, list or data frame; if a list or data frame, it is
