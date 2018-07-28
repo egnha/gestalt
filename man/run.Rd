@@ -7,7 +7,7 @@
 \usage{
 run(..data = parent.frame(), ..expr, ...)
 
-wrt(..env = parent.frame(), ...)
+wrt(..data = parent.frame(), ...)
 }
 \arguments{
 \item{..data}{Environment, list or data frame of bindings (cf. \code{envir}
@@ -18,8 +18,6 @@ argument of \code{\link[=eval]{eval()}}).}
 
 \item{...}{Named expressions. An expression may depend on the preceding ones.
 For \code{run()}, these override those in \code{..data}. Quasiquotation is supported.}
-
-\item{..env}{Environment in which the expressions of \code{...} are resolved.}
 }
 \value{
 \code{run()} returns the evaluation of \code{..expr} in the combined

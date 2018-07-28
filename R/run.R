@@ -12,22 +12,20 @@
 #'
 #' @export
 run <- function(..data = parent.frame(), ..expr, ...) {
-  if (!is.environment(..data))
-    ..data <- evalq(environment(), ..data, parent.frame())
   eval(enexpr(..expr), wrt(..data, ...))
 }
 
 #' @rdname run
-#'
-#' @param ..env Environment in which the expressions of `...` are resolved.
 #'
 #' @return `wrt()` returns an environment where the bindings in `...` are in
 #'   scope, as [promises][delayedAssign()], as if they were assigned from left
 #'   to right in the environment `..env`.
 #'
 #' @export
-wrt <- function(..env = parent.frame(), ...) {
-  as_ordered_promises(exprs(...), ..env)
+wrt <- function(..data = parent.frame(), ...) {
+  if (!is.environment(..data))
+    ..data <- evalq(environment(), ..data, parent.frame())
+  as_ordered_promises(exprs(...), ..data)
 }
 
 as_ordered_promises <- function(data, env) {
