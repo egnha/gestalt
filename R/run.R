@@ -25,10 +25,11 @@ run <- function(..data = parent.frame(), ..expr, ...) {
 wrt <- function(..data = parent.frame(), ...) {
   if (!is.environment(..data))
     ..data <- evalq(environment(), ..data, parent.frame())
-  as_ordered_promises(exprs(...), ..data)
+  as_ordered_promises(..data, ...)
 }
 
-as_ordered_promises <- function(exprs, env) {
+as_ordered_promises <- function(env, ...) {
+  exprs <- exprs(...)
   all(nzchar(names(exprs))) %because% "Expressions must be named"
   for (i in seq_along(exprs))
     env <- bind_as_promise(exprs[i], env)
