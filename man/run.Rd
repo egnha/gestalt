@@ -25,7 +25,7 @@ environment of \code{..data} and \code{...}.
 
 \code{wrt()} returns an environment where the bindings in \code{...} are in
 scope, as \link[=delayedAssign]{promises}, as if they were assigned from left
-to right in the environment \code{..env}.
+to right in the environment defined by \code{..data}.
 }
 \description{
 Run an Expression in an Ordered Environment

@@ -19,7 +19,7 @@ run <- function(..data = parent.frame(), ..expr, ...) {
 #'
 #' @return `wrt()` returns an environment where the bindings in `...` are in
 #'   scope, as [promises][delayedAssign()], as if they were assigned from left
-#'   to right in the environment `..env`.
+#'   to right in the environment defined by `..data`.
 #'
 #' @export
 wrt <- function(..data = parent.frame(), ...) {
