@@ -28,10 +28,10 @@ wrt <- function(..data = parent.frame(), ...) {
   as_ordered_promises(exprs(...), ..data)
 }
 
-as_ordered_promises <- function(data, env) {
-  all(nzchar(names(data))) %because% "Expressions must be named"
-  for (i in seq_along(data))
-    env <- bind_as_promise(data[i], env)
+as_ordered_promises <- function(exprs, env) {
+  all(nzchar(names(exprs))) %because% "Expressions must be named"
+  for (i in seq_along(exprs))
+    env <- bind_as_promise(exprs[i], env)
   env
 }
 
