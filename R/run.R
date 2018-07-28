@@ -1,11 +1,12 @@
 #' Run an Expression in an Ordered Environment
 #'
-#' @param ..data Environment, list or data frame of bindings (cf. `envir`
-#'   argument of [eval()]).
+#' @param ..data Environment, list or data frame; if a list or data frame, it is
+#'   interpreted as an environment (like the `envir` argument of [eval()]).
 #' @param ..expr Expression to evaluate (“run”).
 #'   [Quasiquotation][rlang::quasiquotation] is supported.
-#' @param ... Named expressions. An expression may depend on the preceding ones.
-#'   For `run()`, these override those in `..data`. Quasiquotation is supported.
+#' @param ... Named expressions. An expression depends on the preceding ones,
+#'   and its name takes precedence over those in `..data`. Quasiquotation is
+#'   supported.
 #'
 #' @return `run()` returns the evaluation of `..expr` in the combined
 #'   environment of `..data` and `...`.

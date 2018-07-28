@@ -10,14 +10,15 @@ run(..data = parent.frame(), ..expr, ...)
 wrt(..data = parent.frame(), ...)
 }
 \arguments{
-\item{..data}{Environment, list or data frame of bindings (cf. \code{envir}
-argument of \code{\link[=eval]{eval()}}).}
+\item{..data}{Environment, list or data frame; if a list or data frame, it is
+interpreted as an environment (like the \code{envir} argument of \code{\link[=eval]{eval()}}).}
 
 \item{..expr}{Expression to evaluate (“run”).
 \link[rlang:quasiquotation]{Quasiquotation} is supported.}
 
-\item{...}{Named expressions. An expression may depend on the preceding ones.
-For \code{run()}, these override those in \code{..data}. Quasiquotation is supported.}
+\item{...}{Named expressions. An expression depends on the preceding ones,
+and its name takes precedence over those in \code{..data}. Quasiquotation is
+supported.}
 }
 \value{
 \code{run()} returns the evaluation of \code{..expr} in the combined
