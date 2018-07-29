@@ -71,7 +71,9 @@ is equivalent to calling\preformatted{  local({
 }
 
 except \code{run()}, like \code{let()}, binds \code{y} and \code{z} \emph{lazily} and comprehends
-quasiquotation.
+quasiquotation. (This is unlike \code{\link[=with]{with()}}, which neither comprehends
+quasiquotation nor allows you to bind additional overriding names, lazy
+or not.)
 }
 }
 \examples{
