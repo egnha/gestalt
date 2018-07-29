@@ -3,7 +3,7 @@
 \name{run}
 \alias{run}
 \alias{let}
-\title{Run an Expression in an Ordered Environment}
+\title{Run an Action in an Ordered Context}
 \usage{
 let(`_data` = parent.frame(), ...)
 
@@ -30,5 +30,47 @@ environment of \code{`_data`} and \code{...}.
 the environment defined by \code{`_data`}.
 }
 \description{
-Run an Expression in an Ordered Environment
+Using R typically involves:
+\enumerate{
+\item Making a context—assigning a set of values.
+\item Performing an action—evaluating an expression relative to a context.
+}
+
+\code{let()} and \code{run()} enable you to treat these procedures as reusable,
+\emph{composable} components.
+\itemize{
+\item \code{let()} makes a \strong{context}: it binds a sequence of \emph{ordered} named
+expressions to a given environment (by default, the current one).
+
+For instance, in an environment \code{env} where \code{z} is in scope,\preformatted{  let(x = 1, y = x + 2, z = x * y * z, `_data` = env)
+}
+
+is equivalent to calling\preformatted{  local({
+    x <- 1
+    y <- x + 2
+    z <- x * y * z
+    environment()
+  })
+}
+
+except \code{let()} binds the named expressions \emph{lazily}, as
+\link[=delayedAssign]{promises}, and comprehends tidyverse
+\link[rlang:quasiquotation]{quasiquotation}.
+\item \code{run()} performs an \strong{action}: it evaluates an expression relative to an
+environment (by default, the current one) and, optionally, a sequence of
+ordered named expressions.
+
+For instance, in an environment \code{env} where \code{x} is in scope,\preformatted{  run(x + y + z, y = x + 2, z = x * y * z, `_data` = env)
+}
+
+is equivalent to calling\preformatted{  local({
+    y <- x + 2
+    z <- x * y * z
+    x + y + z
+  })
+}
+
+except \code{run()}, like \code{let()}, binds \code{y} and \code{z} \emph{lazily} and comprehends
+quasiquotation.
+}
 }
