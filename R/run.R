@@ -1,32 +1,33 @@
 #' Run an Expression in an Ordered Environment
 #'
-#' @param ..data Environment, list or data frame; if a list or data frame, it is
-#'   interpreted as an environment (like the `envir` argument of [eval()]).
-#' @param ..expr Expression to evaluate (“run”).
-#'   [Quasiquotation][rlang::quasiquotation] is supported.
+#' @param `_data` Context of named values, namely an environment, list or data
+#'   frame; if a list or data frame, it is interpreted as an environment (like
+#'   the `envir` argument of [eval()]).
+#' @param `_expr` Expression to evaluate (“run”). Quasiquotation is supported.
 #' @param ... Named expressions. An expression depends on the preceding ones,
-#'   and its name takes precedence over those in `..data`. Quasiquotation is
-#'   supported.
+#'   and its name takes precedence over those in `` `_data` ``.
+#'   [Quasiquotation][rlang::quasiquotation] of names and expressions is
+#'   supported (see ‘Examples’).
 #'
-#' @return `run()` returns the evaluation of `..expr` in the combined
-#'   environment of `..data` and `...`.
+#' @return `run()` returns the evaluation of `` `_expr` `` in the combined
+#'   environment of `` `_data` `` and `...`.
 #'
-#' @export
-run <- function(..data = parent.frame(), ..expr, ...) {
-  eval(enexpr(..expr), let(..data, ...))
-}
+#'   `let()` returns an environment where the bindings in `...` are in scope, as
+#'   [promises][delayedAssign()], as if they were assigned from left to right in
+#'   the environment defined by `` `_data` ``.
+#'
+#'
+#'
+#'
+#' @name run
+NULL
 
 #' @rdname run
-#'
-#' @return `wrt()` returns an environment where the bindings in `...` are in
-#'   scope, as [promises][delayedAssign()], as if they were assigned from left
-#'   to right in the environment defined by `..data`.
-#'
 #' @export
-let <- function(..data = parent.frame(), ...) {
-  if (!is.environment(..data))
-    ..data <- evalq(environment(), ..data, parent.frame())
-  as_ordered_promises(..data, ...)
+let <- function(`_data` = parent.frame(), ...) {
+  if (!is.environment(`_data`))
+    `_data` <- evalq(environment(), `_data`, parent.frame())
+  as_ordered_promises(`_data`, ...)
 }
 
 as_ordered_promises <- function(env, ...) {
@@ -41,4 +42,10 @@ bind_as_promise <- function(expr, parent) {
   env <- new.env(parent = parent)
   do.call(delayedAssign, list(names(expr), expr[[1L]], parent, env))
   env
+}
+
+#' @rdname run
+#' @export
+run <- function(`_data` = parent.frame(), `_expr`, ...) {
+  eval(enexpr(`_expr`), let(`_data`, ...))
 }

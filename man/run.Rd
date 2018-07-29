@@ -5,28 +5,29 @@
 \alias{let}
 \title{Run an Expression in an Ordered Environment}
 \usage{
-run(..data = parent.frame(), ..expr, ...)
+let(`_data` = parent.frame(), ...)
 
-let(..data = parent.frame(), ...)
+run(`_data` = parent.frame(), `_expr`, ...)
 }
 \arguments{
-\item{..data}{Environment, list or data frame; if a list or data frame, it is
-interpreted as an environment (like the \code{envir} argument of \code{\link[=eval]{eval()}}).}
-
-\item{..expr}{Expression to evaluate (“run”).
-\link[rlang:quasiquotation]{Quasiquotation} is supported.}
-
 \item{...}{Named expressions. An expression depends on the preceding ones,
-and its name takes precedence over those in \code{..data}. Quasiquotation is
-supported.}
+and its name takes precedence over those in \code{`_data`}.
+\link[rlang:quasiquotation]{Quasiquotation} of names and expressions is
+supported (see ‘Examples’).}
+
+\item{`_data`}{Context of named values, namely an environment, list or data
+frame; if a list or data frame, it is interpreted as an environment (like
+the \code{envir} argument of \code{\link[=eval]{eval()}}).}
+
+\item{`_expr`}{Expression to evaluate (“run”). Quasiquotation is supported.}
 }
 \value{
-\code{run()} returns the evaluation of \code{..expr} in the combined
-environment of \code{..data} and \code{...}.
+\code{run()} returns the evaluation of \code{`_expr`} in the combined
+environment of \code{`_data`} and \code{...}.
 
-\code{wrt()} returns an environment where the bindings in \code{...} are in
-scope, as \link[=delayedAssign]{promises}, as if they were assigned from left
-to right in the environment defined by \code{..data}.
+\code{let()} returns an environment where the bindings in \code{...} are in scope, as
+\link[=delayedAssign]{promises}, as if they were assigned from left to right in
+the environment defined by \code{`_data`}.
 }
 \description{
 Run an Expression in an Ordered Environment
