@@ -10,14 +10,14 @@ let(`_data` = parent.frame(), ...)
 run(`_data` = parent.frame(), `_expr`, ...)
 }
 \arguments{
+\item{_data}{Context of named values, namely an environment, list or data
+frame; if a list or data frame, it is interpreted as an environment (like
+the \code{envir} argument of \code{\link[=eval]{eval()}}).}
+
 \item{...}{Named expressions. An expression depends on the preceding ones,
 and its name takes precedence over those in \code{`_data`}.
 \link[rlang:quasiquotation]{Quasiquotation} of names and expressions is
 supported (see ‘Examples’).}
-
-\item{`_data`}{Context of named values, namely an environment, list or data
-frame; if a list or data frame, it is interpreted as an environment (like
-the \code{envir} argument of \code{\link[=eval]{eval()}}).}
 
 \item{`_expr`}{Expression to evaluate (“run”). Quasiquotation is supported.}
 }

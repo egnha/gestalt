@@ -49,7 +49,7 @@
 #'     except `run()`, like `let()`, binds `y` and `z` _lazily_ and comprehends
 #'     quasiquotation.
 #'
-#' @param `_data` Context of named values, namely an environment, list or data
+#' @param _data Context of named values, namely an environment, list or data
 #'   frame; if a list or data frame, it is interpreted as an environment (like
 #'   the `envir` argument of [eval()]).
 #' @param `_expr` Expression to evaluate (“run”). Quasiquotation is supported.
