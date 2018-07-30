@@ -1,10 +1,11 @@
-fn_constructor <- function(get_exprs) {
+fn_constructor <- function(get_exprs, make_fn) {
   force(get_exprs)
+  force(make_fn)
 
   function(..., ..env = parent.frame()) {
     is.environment(..env) %because% "'..env' must be an environment"
     fun <- fn_parts(get_exprs(...))
-    make_function(fun$args, fun$body, ..env)
+    make_fn(fun$args, fun$body, ..env)
   }
 }
 
@@ -262,7 +263,7 @@ literal_tidy <- function(...) {
 #' my_summarise}
 #'
 #' @export
-fn <- fn_constructor(literal_tidy)
+fn <- fn_constructor(literal_tidy, make_function)
 
 literal <- function(...) {
   exprs <- as.list(substitute(...()))
@@ -297,4 +298,4 @@ literal <- function(...) {
 #'
 #' @rdname fn
 #' @export
-fn_ <- fn_constructor(literal)
+fn_ <- fn_constructor(literal, make_function)
