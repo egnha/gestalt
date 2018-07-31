@@ -10,7 +10,8 @@ wrt(..., ..env = parent.frame())
 \item{...}{Function declaration whose body evaluates to a function.
 Quasiquotation is supported. The syntax is same as that of \code{\link[=fn]{fn()}}.}
 
-\item{..env}{Environment in which to create the function.}
+\item{..env}{Environment in which to create the function. Usually, you should
+not need to set this.}
 }
 \value{
 Function.

@@ -5,7 +5,8 @@
 #'
 #' @param ... Function declaration whose body evaluates to a function.
 #'   Quasiquotation is supported. The syntax is same as that of [fn()].
-#' @param ..env Environment in which to create the function.
+#' @param ..env Environment in which to create the function. Usually, you should
+#'   not need to set this.
 #'
 #' @return Function.
 #'
