@@ -2,13 +2,13 @@
 % Please edit documentation in R/wrt.R
 \name{wrt}
 \alias{wrt}
-\title{Create a Function with Dependencies}
+\title{External Dependencies as Function Arguments}
 \usage{
 wrt(..., ..env = parent.frame())
 }
 \arguments{
 \item{...}{Function declaration whose body evaluates to a function.
-Quasiquotation is supported.}
+Quasiquotation is supported. The syntax is same as that of \code{\link[=fn]{fn()}}.}
 
 \item{..env}{Environment in which to create the function.}
 }
@@ -16,7 +16,8 @@ Quasiquotation is supported.}
 Function.
 }
 \description{
-Create a Function with Dependencies
+\code{wrt()} allows you to reference external dependencies of a function (i.e.,
+unbound names in its body) as function arguments, which are \emph{locally scoped}.
 }
 \examples{
 # A composition with functional dependencies ('b', 'n'):

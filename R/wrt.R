@@ -1,7 +1,10 @@
-#' Create a Function with Dependencies
+#' External Dependencies as Function Arguments
+#'
+#' `wrt()` allows you to reference external dependencies of a function (i.e.,
+#' unbound names in its body) as function arguments, which are _locally scoped_.
 #'
 #' @param ... Function declaration whose body evaluates to a function.
-#'   Quasiquotation is supported.
+#'   Quasiquotation is supported. The syntax is same as that of [fn()].
 #' @param ..env Environment in which to create the function.
 #'
 #' @return Function.
