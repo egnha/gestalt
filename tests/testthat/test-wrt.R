@@ -1,8 +1,8 @@
 context("Dynamic scoping of lexical variables")
 
-test_that("dots precede lexically variables in formals", {
-  f <- wrt(a ~ function(x) x + a)
-  expect_identical(formals(f)[1L], alist(... = ))
+test_that("dots precede lexical variables in formals", {
+  f <- wrt(a, b = value ~ identity)
+  expect_identical(formals(f), formals(function(..., a, b = value) NULL))
 })
 
 test_that("lexical variables can be referenced, dynamically, as arguments", {
@@ -18,36 +18,32 @@ test_that("lexical variables are referenced lazily", {
 })
 
 test_that("enclosing environment can be set", {
+  # By default, the enclosing environment is the calling environment
+  b <- 1
+  g <- wrt(a ~ function(x) 2^x * 3^a * 5^b)
+  expect_equal(g(1, a = 2), 2 * 3^2 * 5)
+
   env <- local({
-    b <- 1L
+    b <- 2
     environment()
   })
-  f <- wrt(a ~ function(x) 2^x * 3^a * 5^b, ..env = env)
-  expect_equal(f(1, a = 2), 2 * 3^2 * 5)
-
-  # By default, the enclosing environment is the calling environment
-  b <- 2L
-  f <- wrt(a ~ function(x) 2^x * 3^a * 5^b)
-  expect_equal(f(1, a = 2), 2 * 3^2 * 5^2)
+  g <- wrt(a ~ function(x) 2^x * 3^a * 5^b, ..env = env)
+  expect_equal(g(1, a = 2), 2 * 3^2 * 5^2)
 })
 
 test_that("quasiquotation is supported", {
-  f <- wrt(a = !!"A", b ~ function(x) paste(x, a, b))
-  expect_equal(f("x", b = "b"), "x A b")
-
-  f <- wrt(!!!list(a = "A"), b ~ function(x) paste(x, a, b))
-  expect_equal(f("x", b = "b"), "x A b")
-
-  f <- wrt(!!"a" := "A", b ~ function(x) paste(x, a, b))
-  expect_equal(f("x", b = "b"), "x A b")
-
-  body <- quote(function(x) paste(x, a, b))
-  f <- wrt(a = "A", b ~ !!body)
-  expect_equal(f("x", b = "b"), "x A b")
+  fs <- list(
+    unquote_value = wrt(a = !!"A", b ~ function(x) paste(x, a, b)),
+    unquote_body  = wrt(a = "A", b ~ !!quote(function(x) paste(x, a, b))),
+    unquote_name  = wrt(!!"a" := "A", b ~ function(x) paste(x, a, b)),
+    splice_args   = wrt(!!!list(a = "A"), b ~ function(x) paste(x, a, b))
+  )
+  for (f in fs)
+    expect_equal(f("x", b = "b"), "x A b")
 })
 
-test_that("error signaled if body doesn't evaluate to a function", {
-  expect_error(wrt(a ~ function(x) x + a), NA)
-  expect_error(wrt(a ~ NULL), "Body must evaluate to a function")
+test_that("error signaled if body is not a function", {
+  expect_error(wrt(a ~ function() NULL), NA)
+  expect_error(wrt(a ~ NULL), "Body must be a function")
   expect_error(wrt(a ~ log(x)), "Body cannot be evaluated")
 })
