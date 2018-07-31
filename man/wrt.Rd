@@ -27,12 +27,12 @@ foo <- wrt(b = 2, n ~ {
 })
 
 set.seed(1)
-foo(1:10, size = 2, n = 3)
-#> [1] 1.584963 2.000000 1.584963 2.000000 1.584963 2.000000
+foo(2 ^ (1:10), size = 2, n = 3)
+#> [1] 3 4 3 4 3 4
 
 set.seed(1)
-rep(log(sample(1:10, size = 2), base = 2), 3)
-#> [1] 1.584963 2.000000 1.584963 2.000000 1.584963 2.000000
+rep(log(sample(2 ^ (1:10), size = 2), base = 2), 3)
+#> [1] 3 4 3 4 3 4
 
 # Because 'wrt()' does the composition upfront, it is faster
 # than the equivalent function defined using the magrittr pipe:
@@ -44,7 +44,7 @@ foo_pipe <- function(..., b = 2, n) {
 }
 
 set.seed(1)
-foo_pipe(1:10, size = 2, n = 3)
-#> [1] 1.584963 2.000000 1.584963 2.000000 1.584963 2.000000
+foo_pipe(2 ^ (1:10), size = 2, n = 3)
+#> [1] 3 4 3 4 3 4
 
 }
