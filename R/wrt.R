@@ -42,7 +42,7 @@ NULL
 
 make_dependent_function <- local({
   `%wrt%` <- function(call, nms) {
-    as.call(c(group, clean_up(nms), lapply(nms, bind_actively), call))
+    as.call(c(group, clean_up(nms), lapply(nms, bind_promises), call))
   }
   group <- as.name("{")
   clean_up <- function(nms) {
@@ -51,10 +51,10 @@ make_dependent_function <- local({
       list(NMS = nms)
     )
   }
-  bind_actively <- function(nm) {
+  bind_promises <- function(nm) {
     substitute(
-      makeActiveBinding(quote(SYM), function() SYM, `__lex__`),
-      list(SYM = as.name(nm))
+      delayedAssign(NM, SYM, assign.env = `__lex__`),
+      list(NM = nm, SYM = as.name(nm))
     )
   }
 
