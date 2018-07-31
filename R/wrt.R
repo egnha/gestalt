@@ -64,7 +64,7 @@ make_dependent_function <- local({
     env <- new.env(parent = parent)
     env$`__env__` <- env
     env$`__fun__` <- eval(body, env) %unless% "Body cannot be evaluated: %s"
-    is.function(env$`__fun__`) %because% "Body must evaluate to a function"
+    is.function(env$`__fun__`) %because% "Body must be a function"
     new_fn(c(dots, args), call_fun %wrt% names(args), env)
   }
 })
