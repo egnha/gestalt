@@ -1,11 +1,11 @@
 context("Dynamic scoping of lexical variables")
 
-test_that("in formals, dots precede lexically scoped names", {
+test_that("dots precede lexically variables in formals", {
   f <- wrt(a ~ function(x) x + a)
   expect_identical(formals(f)[1L], alist(... = ))
 })
 
-test_that("unbound lexically scoped names can be referenced as arguments", {
+test_that("lexical variables can be referenced, dynamically, as arguments", {
   f <- wrt(a, b = 1 ~ function(x, y) 2^x * 3^y * 5^a * 7^b)
   expect_equal(f(1, 2, a = 3), 2 * 3^2 * 5^3 * 7)
   expect_equal(f(1, 2, a = 3, b = 4), 2 * 3^2 * 5^3 * 7^4)
