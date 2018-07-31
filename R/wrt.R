@@ -46,14 +46,14 @@ make_dependent_function <- local({
   group <- as.name("{")
   clean_up <- function(nms) {
     substitute(
-      on.exit(rm(list = NMS, envir = `__env__`)),
+      on.exit(rm(list = NMS, envir = `__lex__`)),
       list(NMS = nms)
     )
   }
   bind_actively <- function(nm) {
     substitute(
-      makeActiveBinding(NM, function() SYM, `__env__`),
-      list(NM = nm, SYM = as.name(nm))
+      makeActiveBinding(quote(SYM), function() SYM, `__lex__`),
+      list(SYM = as.name(nm))
     )
   }
 
@@ -62,7 +62,7 @@ make_dependent_function <- local({
 
   function(args, body, parent) {
     env <- new.env(parent = parent)
-    env$`__env__` <- env
+    env$`__lex__` <- env
     env$`__fun__` <- eval(body, env) %unless% "Body cannot be evaluated: %s"
     is.function(env$`__fun__`) %because% "Body must be a function"
     new_fn(c(dots, args), call_fun %wrt% names(args), env)
