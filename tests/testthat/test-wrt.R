@@ -11,6 +11,12 @@ test_that("lexical variables can be referenced, dynamically, as arguments", {
   expect_equal(f(1, 2, a = 3, b = 4), 2 * 3^2 * 5^3 * 7^4)
 })
 
+test_that("lexical variables are referenced lazily", {
+  f <- wrt(a, b = stop("!"), c ~ function(x) x + a)
+  expect_equal(f(1, a = 2), 3)
+  expect_equal(f(1, a = 2, c = stop("!")), 3)
+})
+
 test_that("enclosing environment can be set", {
   env <- local({
     b <- 1L
