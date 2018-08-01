@@ -686,8 +686,7 @@ print.CompositeFunction <- function(x, ...) {
   pipeline <- unlist(fs)
   for (i in seq_along(pipeline)) {
     out <- trim_capture(pipeline[[i]])
-    pad <- rep("\ \ ", length(out))
-    cat("\n", nms[[i]], "\n", paste0(pad, out, "\n"), sep = "")
+    cat("\n", nms[[i]], "\n", paste0("\ \ ", out, "\n"), sep = "")
   }
   cat("\nRecover the list of functions with 'as.list()'.\n")
   invisible(x)
