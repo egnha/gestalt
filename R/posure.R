@@ -60,11 +60,11 @@ make_posure <- local({
       return(expr)
     Recall(expr[[2L]])
   }
-  group <- as.name("{")
 
   `%wrt%` <- function(call, nms) {
     as.call(c(group, clean_up(nms), lapply(nms, bind_promises), call))
   }
+  group <- as.name("{")
   clean_up <- function(nms) {
     substitute(
       on.exit(rm(list = NMS, envir = `__lex__`)),
