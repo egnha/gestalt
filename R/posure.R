@@ -1,10 +1,11 @@
 #' External Dependencies as Function Arguments
 #'
-#' `wrt()` allows you to reference external dependencies of a function (i.e.,
+#' `posure()` allows you to reference external dependencies of a function (i.e.,
 #' unbound names in its body) as function arguments, which are _locally scoped_.
 #'
-#' @param ... Function declaration whose body evaluates to a function.
-#'   Quasiquotation is supported. The syntax is same as that of [fn()].
+#' @param ... Function declaration whose body evaluates to a _composite
+#'   function_, as declared using [compose()] or [`%>>>%`]. Quasiquotation is
+#'   supported. The syntax is same as that of [fn()].
 #' @param ..env Environment in which to create the function. Usually, you should
 #'   not need to set this.
 #'
@@ -12,7 +13,7 @@
 #'
 #' @examples
 #' # A composition with functional dependencies ('b', 'n'):
-#' foo <- wrt(b = 2, n ~ {
+#' foo <- posure(b = 2, n ~ {
 #'   sample %>>>% log(base = b) %>>>% rep(n)
 #' })
 #'
@@ -24,7 +25,7 @@
 #' rep(log(sample(2 ^ (1:10), size = 2), base = 2), 3)
 #' #> [1] 3 4 3 4 3 4
 #'
-#' # Because 'wrt()' does the composition upfront, it is faster
+#' # Because 'posure()' does the composition upfront, it is faster
 #' # than the equivalent function defined using the magrittr pipe:
 #'
 #' library(magrittr)  # Provides the pipe %>%
@@ -37,10 +38,10 @@
 #' foo_pipe(2 ^ (1:10), size = 2, n = 3)
 #' #> [1] 3 4 3 4 3 4
 #'
-#' @name wrt
+#' @name posure
 NULL
 
-make_dependent_function <- local({
+make_posure <- local({
   `%wrt%` <- function(call, nms) {
     as.call(c(group, clean_up(nms), lapply(nms, bind_promises), call))
   }
@@ -65,11 +66,14 @@ make_dependent_function <- local({
     env <- new.env(parent = parent)
     env$`__lex__` <- env
     env$`__fun__` <- eval(body, env) %unless% "Body cannot be evaluated: %s"
-    is.function(env$`__fun__`) %because% "Body must be a function"
-    new_fn(c(dots, args), call_fun %wrt% names(args), env)
+    inherits(env$`__fun__`, "CompositeFunction") %because%
+      "Body must be a composite function"
+    p <- new_fn(c(dots, args), call_fun %wrt% names(args), env)
+    class(p) <- c("Posure", "function")
+    p
   }
 })
 
-#' @rdname wrt
+#' @rdname posure
 #' @export
-wrt <- fn_constructor(exprs, make_dependent_function)
+posure <- fn_constructor(exprs, make_posure)
