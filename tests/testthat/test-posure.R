@@ -36,7 +36,9 @@ test_that("quasiquotation is supported", {
     posure(a = !!"A", b ~ paste(a, b) %>>>% NULL),
     posure(a = "A", b ~ !!quote(paste(a, b) %>>>% NULL)),
     posure(!!"a" := "A", b ~ paste(a, b) %>>>% NULL),
-    posure(!!!list(a = "A"), b ~ paste(a, b) %>>>% NULL)
+    posure(!!!list(a = "A"), b ~ paste(a, b) %>>>% NULL),
+    posure(!!!list(a = "A", b ~ paste(a, b) %>>>% NULL)),
+    posure(a = "A", !!(b ~ paste(a, b) %>>>% NULL))
   )
   for (f in fs)
     expect_equal(f("x", b = "b"), "x A b")
