@@ -113,7 +113,7 @@ with_posure_body <- local({
   function(x) {
     composite <- call("(", get_expr_posure(x))
     call_composite <- as.call(c(composite, quote(...)))
-    body(x) <- as.call(c(as.name("{"), call_composite))
+    body(x) <- call("{", call_composite)
     x
   }
 })
