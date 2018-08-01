@@ -81,6 +81,8 @@ make_posure <- local({
   dots <- list(... = quote(expr = ))
   call_fun <- quote(`__fun__`(...))
 
+  assign_setter("expr_posure")
+
   function(args, body, parent) {
     is_posure(body) %because%
       "Posure body must be a composite function expressed using '%>>>%'"
@@ -89,6 +91,7 @@ make_posure <- local({
     env$`__fun__` <- eval(body, env) %unless% "Body cannot be evaluated: %s"
     p <- new_fn(c(dots, args), call_fun %wrt% names(args), env)
     class(p) <- c("Posure", "function")
+    expr_posure(p) <- unpack_grouping(body)
     p
   }
 })
@@ -96,3 +99,18 @@ make_posure <- local({
 #' @rdname posure
 #' @export
 posure <- fn_constructor(exprs, make_posure)
+
+#' @export
+print.Posure <- local({
+  get_expr_posure <- assign_getter("expr_posure")
+  group <- as.name("{")
+
+  function(x, ...) {
+    cat("<Posure>\n\n")
+    composite <- call("(", get_expr_posure(x))
+    call_composite <- as.call(c(composite, quote(...)))
+    body <- as.call(c(group, call_composite))
+    print(call("function", formals(x), body))
+    invisible(x)
+  }
+})
