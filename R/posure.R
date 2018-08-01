@@ -12,10 +12,12 @@
 #' @return Function.
 #'
 #' @examples
-#' # A composition with functional dependencies ('b', 'n'):
+#' # A posure is a composition with (dynamically scoped) dependencies:
+#'
 #' foo <- posure(b = 2, n ~ {
 #'   sample %>>>% log(base = b) %>>>% rep(n)
 #' })
+#' foo
 #'
 #' set.seed(1)
 #' foo(2 ^ (1:10), size = 2, n = 3)
