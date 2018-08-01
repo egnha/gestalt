@@ -103,16 +103,17 @@ posure <- fn_constructor(exprs, make_posure)
 #' @export
 print.Posure <- function(x, ...) {
   cat("<Posure>\n\n")
-  print(call("function", formals(x), posure_body(x)))
+  print(with_posure_body(x))
   invisible(x)
 }
 
-posure_body <- local({
+with_posure_body <- local({
   get_expr_posure <- assign_getter("expr_posure")
 
-  function(expr) {
-    composite <- call("(", get_expr_posure(expr))
+  function(x) {
+    composite <- call("(", get_expr_posure(x))
     call_composite <- as.call(c(composite, quote(...)))
-    body <- as.call(c(as.name("{"), call_composite))
+    body(x) <- as.call(c(as.name("{"), call_composite))
+    x
   }
 })
