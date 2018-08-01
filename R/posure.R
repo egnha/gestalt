@@ -108,10 +108,10 @@ print.Posure <- function(x, ...) {
 }
 
 with_posure_body <- local({
-  get_expr_posure <- assign_getter("expr_posure")
+  assign_getter("expr_posure")
 
   function(x) {
-    composite <- call("(", get_expr_posure(x))
+    composite <- call("(", expr_posure(x))
     call_composite <- as.call(c(composite, quote(...)))
     body(x) <- call("{", call_composite)
     x
