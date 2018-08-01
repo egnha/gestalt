@@ -52,10 +52,10 @@ NULL
 
 make_posure <- local({
   is_posure <- function(expr) {
-    expr_inner <- unpack_grouping(expr)
-    is.call(expr_inner) && is_op_compose(expr_inner)
+    expr <- unpack(expr)
+    is.call(expr) && is_op_compose(expr)
   }
-  unpack_grouping <- function(expr) {
+  unpack <- function(expr) {
     if (!(is.call(expr) && is_lambda(expr)))
       return(expr)
     Recall(expr[[2L]])
@@ -91,7 +91,7 @@ make_posure <- local({
     env$`__fun__` <- eval(body, env) %unless% "Body cannot be evaluated: %s"
     p <- new_fn(c(dots, args), call_fun %wrt% names(args), env)
     class(p) <- c("Posure", "function")
-    expr_posure(p) <- unpack_grouping(body)
+    expr_posure(p) <- unpack(body)
     p
   }
 })
