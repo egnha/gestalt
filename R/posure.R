@@ -52,14 +52,19 @@ NULL
 
 make_posure <- local({
   is_posure <- function(expr) {
-    is.call(expr) &&
-      (is_op_compose(expr) || is_lambda(expr) && is_op_compose(expr[[2L]]))
+    expr_inner <- unpack_grouping(expr)
+    is.call(expr_inner) && is_op_compose(expr_inner)
   }
+  unpack_grouping <- function(expr) {
+    if (!(is.call(expr) && is_lambda(expr)))
+      return(expr)
+    Recall(expr[[2L]])
+  }
+  group <- as.name("{")
 
   `%wrt%` <- function(call, nms) {
     as.call(c(group, clean_up(nms), lapply(nms, bind_promises), call))
   }
-  group <- as.name("{")
   clean_up <- function(nms) {
     substitute(
       on.exit(rm(list = NMS, envir = `__lex__`)),
