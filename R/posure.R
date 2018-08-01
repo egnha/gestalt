@@ -42,6 +42,11 @@
 NULL
 
 make_posure <- local({
+  is_posure <- function(expr) {
+    is.call(expr) &&
+      (is_op_compose(expr) || is_lambda(expr) && is_op_compose(expr[[2L]]))
+  }
+
   `%wrt%` <- function(call, nms) {
     as.call(c(group, clean_up(nms), lapply(nms, bind_promises), call))
   }
@@ -63,11 +68,11 @@ make_posure <- local({
   call_fun <- quote(`__fun__`(...))
 
   function(args, body, parent) {
+    is_posure(body) %because%
+      "Posure body must be a composite function expressed using '%>>>%'"
     env <- new.env(parent = parent)
     env$`__lex__` <- env
     env$`__fun__` <- eval(body, env) %unless% "Body cannot be evaluated: %s"
-    inherits(env$`__fun__`, "CompositeFunction") %because%
-      "Body must be a composite function"
     p <- new_fn(c(dots, args), call_fun %wrt% names(args), env)
     class(p) <- c("Posure", "function")
     p

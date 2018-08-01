@@ -44,9 +44,13 @@ test_that("quasiquotation is supported", {
     expect_equal(f("x", b = "b"), "x A b")
 })
 
-test_that("error signaled if body is not a composite function", {
+test_that("error signaled if body is not a '%>>>%'-composite function", {
   expect_error(posure(a ~ identity %>>>% NULL), NA)
-  expect_error(posure(a ~ log(x)), "Body cannot be evaluated")
-  expect_error(posure(a ~ NULL), "Body must be a composite function")
-  expect_error(posure(a ~ function(...) NULL), "Body must be a composite function")
+
+  msg <- "Posure body must be a composite function expressed using '%>>>%'"
+  expect_error(posure(a ~ NULL),               msg)
+  expect_error(posure(a ~ log),                msg)
+  expect_error(posure(a ~ log(x, a)),          msg)
+  expect_error(posure(a ~ function(...) NULL), msg)
+  expect_error(posure(a ~ compose(identity)),  msg)
 })
