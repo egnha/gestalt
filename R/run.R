@@ -104,15 +104,15 @@ NULL
 let <- function(`_data` = parent.frame(), ...) {
   if (!is.environment(`_data`))
     `_data` <- evalq(environment(), `_data`, parent.frame())
-  as_ordered_promises(`_data`, ...)
+  as_ordered_promises(`_env` = `_data`, ...)
 }
 
-as_ordered_promises <- function(env, ...) {
+as_ordered_promises <- function(`_env`, ...) {
   exprs <- exprs(...)
   all(nzchar(names(exprs))) %because% "Expressions must be named"
   for (i in seq_along(exprs))
-    env <- bind_as_promise(exprs[i], env)
-  env
+    `_env` <- bind_as_promise(exprs[i], `_env`)
+  `_env`
 }
 
 bind_as_promise <- function(expr, parent) {
@@ -124,5 +124,5 @@ bind_as_promise <- function(expr, parent) {
 #' @rdname run
 #' @export
 run <- function(`_data` = parent.frame(), `_expr`, ...) {
-  eval(enexpr(`_expr`), let(`_data`, ...))
+  eval(enexpr(`_expr`), let(`_data` = `_data`, ...))
 }
