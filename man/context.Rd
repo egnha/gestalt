@@ -28,7 +28,7 @@ environment of \code{`_data`} and \code{...}.
 
 \code{let()} returns an environment where the bindings in \code{...} are in scope, as
 \link[=delayedAssign]{promises}, as if they were assigned from left to right in
-the environment defined by \code{`_data`}.
+a child of the environment defined by \code{`_data`}.
 }
 \description{
 Programming in R typically involves:
@@ -41,7 +41,8 @@ Programming in R typically involves:
 \emph{composable} components.
 \itemize{
 \item \code{let()} makes a \strong{context}: it binds a sequence of \emph{ordered} named
-expressions to a given environment (by default, the current one).
+expressions to a child of a given environment (by default, the current
+one).
 
 For instance, in an environment \code{env} where \code{z} is in scope,\preformatted{  let(env, x = 1, y = x + 2, z = x * y * z)
 }
@@ -78,7 +79,8 @@ quasiquotation.
 \section{Composing Contexts}{
 
 \strong{Contexts}, as made by \code{let()}, have an advantage over ordinary local
-assignments because contexts are both lazy and composable.
+assignments because contexts are both lazy and composable. Moreover, like
+assignments, the order of named expressions in a context is significant.
 
 For example, you can string together contexts to make larger ones:\preformatted{  foo <-
     let(a = ., b = a + 2) \%>>>\%
@@ -98,8 +100,8 @@ Earlier bindings can be overriden by later ones:\preformatted{  bar <-
   #> [1] 7
 }
 
-Bindings are \link[=delayedAssign]{promises}—they are only evaluated on demand:\preformatted{  run(let(x = a_big_expense(), y = "low cost"), y)
-  #> [1] "low cost"
+Bindings are \link[=delayedAssign]{promises}—they are only evaluated on demand:\preformatted{  run(let(x = a_big_expense(), y = "avoid a big expense"), y)
+  #> [1] "avoid a big expense"
 }
 }
 
@@ -139,6 +141,6 @@ run(let(a = 2), a + !!a)               #> [1] 3
 
 }
 \seealso{
-\code{\link[=with]{with()}} is like \code{run()}, but doesn't comprehend quasiquotation or
-provide a means to override previous bindings.
+\code{\link[=with]{with()}} is like \code{run()}, but more limited because it doesn't
+support quasiquotation or provide a means to override local bindings.
 }

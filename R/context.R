@@ -11,7 +11,8 @@
 #' _composable_ components.
 #'
 #'   - `let()` makes a **context**: it binds a sequence of _ordered_ named
-#'     expressions to a given environment (by default, the current one).
+#'     expressions to a child of a given environment (by default, the current
+#'     one).
 #'
 #'     For instance, in an environment `env` where `z` is in scope,
 #'     ```
@@ -63,11 +64,12 @@
 #'
 #'   `let()` returns an environment where the bindings in `...` are in scope, as
 #'   [promises][delayedAssign()], as if they were assigned from left to right in
-#'   the environment defined by `` `_data` ``.
+#'   a child of the environment defined by `` `_data` ``.
 #'
 #' @section Composing Contexts:
 #'   **Contexts**, as made by `let()`, have an advantage over ordinary local
-#'   assignments because contexts are both lazy and composable.
+#'   assignments because contexts are both lazy and composable. Moreover, like
+#'   assignments, the order of named expressions in a context is significant.
 #'
 #'   For example, you can string together contexts to make larger ones:
 #'   ```
@@ -79,7 +81,7 @@
 #'     foo(1)
 #'     #> [1] 8
 #'   ```
-#'   Previous bindings can be overriden by later ones:
+#'   Earlier bindings can be overriden by later ones:
 #'   ```
 #'     bar <-
 #'       foo[1:2] %>>>%   # Collect the contexts of 'foo()'
@@ -91,13 +93,12 @@
 #'   ```
 #'   Bindings are [promises][delayedAssign()]—they are only evaluated on demand:
 #'   ```
-#'     run(let(x = a_big_expense(), y = "low cost"), y)
-#'     #> [1] "low cost"
+#'     run(let(x = a_big_expense(), y = "avoid a big expense"), y)
+#'     #> [1] "avoid a big expense"
 #'   ```
 #'
-#'
-#' @seealso [with()] is like `run()`, but doesn't comprehend quasiquotation or
-#'   provide a means to override previous bindings.
+#' @seealso [with()] is like `run()`, but more limited because it doesn't
+#'   support quasiquotation or provide a means to override local bindings.
 #'
 #' @examples
 #' # Miles-per-gallon of big cars
