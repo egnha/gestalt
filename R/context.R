@@ -71,7 +71,8 @@
 #'
 #'   For example, you can string together contexts to make larger ones:
 #'   ```
-#'     foo <- let(a = ., b = a + 2) %>>>%
+#'     foo <-
+#'       let(a = ., b = a + 2) %>>>%
 #'       let(c = a + b) %>>>%
 #'       run(a + b + c)
 #'
@@ -80,8 +81,9 @@
 #'   ```
 #'   Previous bindings can be overriden by later ones:
 #'   ```
-#'     bar <- foo[1:2] %>>>%   # Collect the contexts of 'foo()'
-#'       let(c = c - 1) %>>>%  # Override previous 'c'
+#'     bar <-
+#'       foo[1:2] %>>>%   # Collect the contexts of 'foo()'
+#'       let(c = c - 1) %>>>%  # Override 'c'
 #'       run(a + b + c)
 #'
 #'     bar(1)

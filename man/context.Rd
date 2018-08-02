@@ -80,7 +80,8 @@ quasiquotation.
 \strong{Contexts}, as made by \code{let()}, have an advantage over ordinary local
 assignments because contexts are both lazy and composable.
 
-For example, you can string together contexts to make larger ones:\preformatted{  foo <- let(a = ., b = a + 2) \%>>>\%
+For example, you can string together contexts to make larger ones:\preformatted{  foo <-
+    let(a = ., b = a + 2) \%>>>\%
     let(c = a + b) \%>>>\%
     run(a + b + c)
 
@@ -88,8 +89,9 @@ For example, you can string together contexts to make larger ones:\preformatted{
   #> [1] 8
 }
 
-Previous bindings can be overriden by later ones:\preformatted{  bar <- foo[1:2] \%>>>\%   # Collect the contexts of 'foo()'
-    let(c = c - 1) \%>>>\%  # Override previous 'c'
+Earlier bindings can be overriden by later ones:\preformatted{  bar <-
+    foo[1:2] \%>>>\%   # Collect the contexts of 'foo()'
+    let(c = c - 1) \%>>>\%  # Override 'c'
     run(a + b + c)
 
   bar(1)
