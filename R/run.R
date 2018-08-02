@@ -1,9 +1,9 @@
 #' Run an Action in an Ordered Context
 #'
 #' @description
-#' Using R typically involves:
+#' Programming in R typically involves:
 #'
-#'   1. Making a context—assigning a set of values.
+#'   1. Making a context—assigning values to names.
 #'
 #'   2. Performing an action—evaluating an expression relative to a context.
 #'
@@ -15,7 +15,7 @@
 #'
 #'     For instance, in an environment `env` where `z` is in scope,
 #'     ```
-#'       let(x = 1, y = x + 2, z = x * y * z, `_data` = env)
+#'       let(env, x = 1, y = x + 2, z = x * y * z)
 #'     ```
 #'     is equivalent to calling
 #'     ```
@@ -36,7 +36,7 @@
 #'
 #'     For instance, in an environment `env` where `x` is in scope,
 #'     ```
-#'       run(x + y + z, y = x + 2, z = x * y * z, `_data` = env)
+#'       run(env, x + y + z, y = x + 2, z = x * y * z)
 #'     ```
 #'     is equivalent to calling
 #'     ```
@@ -47,16 +47,14 @@
 #'       })
 #'     ```
 #'     except `run()`, like `let()`, binds `y` and `z` _lazily_ and comprehends
-#'     quasiquotation. (This is unlike [with()], which neither comprehends
-#'     quasiquotation nor allows you to bind additional overriding names, lazy
-#'     or not.)
+#'     quasiquotation.
 #'
 #' @param _data Context of named values, namely an environment, list or data
 #'   frame; if a list or data frame, it is interpreted as an environment (like
 #'   the `envir` argument of [eval()]).
 #' @param `_expr` Expression to evaluate (“run”). Quasiquotation is supported.
-#' @param ... Named expressions. An expression depends on the preceding ones,
-#'   and its name takes precedence over those in `` `_data` ``.
+#' @param ... Named expressions. An expression looks up values to the left of
+#'   it, and its name takes precedence over those in `` `_data` ``.
 #'   [Quasiquotation][rlang::quasiquotation] of names and expressions is
 #'   supported (see ‘Examples’).
 #'
@@ -66,6 +64,9 @@
 #'   `let()` returns an environment where the bindings in `...` are in scope, as
 #'   [promises][delayedAssign()], as if they were assigned from left to right in
 #'   the environment defined by `` `_data` ``.
+#'
+#' @seealso [with()] is similar to `run()`, but doesn't comprehend
+#'   quasiquotation, nor a means to override bindings.
 #'
 #' @examples
 #' # Miles-per-gallon of big cars
@@ -96,10 +97,10 @@
 #' let(x = stop("!"))    # Environment binding 'x'
 #' \donttest{let(x = stop("!"))$x  # Error: !}
 #'
-#' @name run
+#' @name contexts
 NULL
 
-#' @rdname run
+#' @rdname contexts
 #' @export
 let <- local({
   assign_setter("env_top")
