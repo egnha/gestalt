@@ -1,19 +1,72 @@
-#' External Dependencies as Function Arguments
+#' Variable Composite Functions
 #'
-#' `posure()` allows you to reference external dependencies of a function (i.e.,
-#' unbound names in its body) as function arguments, which are _locally scoped_.
+#' @description
+#' `posure()` enables you to create _efficient_ variable (i.e., parameterized)
+#' [composite functions][compose()].
 #'
-#' @param ... Function declaration whose body evaluates to a _composite
-#'   function_, as declared using [compose()] or [`%>>>%`]. Quasiquotation is
-#'   supported. The syntax is same as that of [fn()].
-#' @param ..env Environment in which to create the function. Usually, you should
-#'   not need to set this.
+#' For instance, say you have a composite function such as
+#' ```
+#'   function(..., b = 2, n) {
+#'     (sample %>>>% log(base = b) %>>>% rep(n))(...)
+#'   }
 #'
-#' @return Function.
+#'   # Alternatively, expressed with the magrittr %>%:
+#'   function(..., b = 2, n) {
+#'     sample(...) %>% log(base = b) %>% rep(n)
+#'   }
+#' ```
+#' which varies according to the values of `b` and `n`.  You can express this
+#' more succinctly with `posure()`, by dropping the placeholder argument
+#' (‘`...`’):
+#' ```
+#'   posure(b = 2, n ~ {
+#'     sample %>>>% log(base = b) %>>>% rep(n)
+#'   })
+#' ```
+#'
+#' This creates a function with same [formals][formals()] and return values.
+#'
+#' But the `posure()` version is more efficient because it creates the composite
+#' function just _once_, rather than anew with each function call. Morever, it
+#' is robuster than the functionally equivalent construction with the
+#' [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
+#' because `posure()` validates the constituent functions (see ‘Examples’).
+#'
+#' @details
+#' `posure()` [curries](https://en.wikipedia.org/wiki/Currying) composite
+#' functions. However, the main significance of `posure()` is its efficiency,
+#' which is achieved via non-standard scoping semantics (transparent to the
+#' caller). `posure()` creates the given composite function once. When the
+#' resulting variable composite function is called, its dependencies are
+#' dynamically bound to its localized _lexical_ scope, for fast lookup, then
+#' removed when the function exits. Thus a **posure** is a (parameterized)
+#' [closure][function()] that is _partially dynamically scoped_. (This
+#' portmanteau is due to [Henry Stanley](https://github.com/henryaj).)
+#'
+#' @param ... Function declaration whose body must be a function composition
+#'   expressed using [`%>>>%`]. [Quasiquotation][rlang::quasiquotation] is
+#'   supported. The syntax is that of [fn()]—see ‘Function Declarations’—except
+#'   that declaring ‘`...`’ among `...` is ambiguous.
+#' @param ..env Environment in which to create the function. (You should rarely
+#'   need to set this.)
+#'
+#' @return Function with [formals][formals()]
+#'   `function (..., <composite_function_dependencies>)`, where
+#'   `<composite_function_dependencies>` stands for the formals captured by the
+#'   dots of `posure()`. In particular, a call of the form
+#'   ```
+#'     posure(a, b = value ~ f(a, b) %>>>% g(a, b))
+#'   ```
+#'   produces a function with the same formals and return values as
+#'   ```
+#'     function(..., a, b = value) {
+#'       (f(a, b) %>>>% g(a, b))(...)
+#'     }
+#'   ```
+#'
+#' @seealso [`%>>>%`], [fn()], [partial()].
 #'
 #' @examples
-#' # A posure is a composition with (dynamically scoped) dependencies:
-#'
 #' foo <- posure(b = 2, n ~ {
 #'   sample %>>>% log(base = b) %>>>% rep(n)
 #' })

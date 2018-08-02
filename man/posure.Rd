@@ -2,28 +2,72 @@
 % Please edit documentation in R/posure.R
 \name{posure}
 \alias{posure}
-\title{External Dependencies as Function Arguments}
+\title{Variable Composite Functions}
 \usage{
 posure(..., ..env = parent.frame())
 }
 \arguments{
-\item{...}{Function declaration whose body evaluates to a \emph{composite
-function}, as declared using \code{\link[=compose]{compose()}} or \code{\link{\%>>>\%}}. Quasiquotation is
-supported. The syntax is same as that of \code{\link[=fn]{fn()}}.}
+\item{...}{Function declaration whose body must be a function composition
+expressed using \code{\link{\%>>>\%}}. \link[rlang:quasiquotation]{Quasiquotation} is
+supported. The syntax is that of \code{\link[=fn]{fn()}}—see ‘Function Declarations’—except
+that declaring ‘\code{...}’ among \code{...} is ambiguous.}
 
-\item{..env}{Environment in which to create the function. Usually, you should
-not need to set this.}
+\item{..env}{Environment in which to create the function. (You should rarely
+need to set this.)}
 }
 \value{
-Function.
+Function with \link[=formals]{formals}
+\code{function (..., <composite_function_dependencies>)}, where
+\code{<composite_function_dependencies>} stands for the formals captured by the
+dots of \code{posure()}. In particular, a call of the form\preformatted{  posure(a, b = value ~ f(a, b) \%>>>\% g(a, b))
+}
+
+produces a function with the same formals and return values as\preformatted{  function(..., a, b = value) {
+    (f(a, b) \%>>>\% g(a, b))(...)
+  }
+}
 }
 \description{
-\code{posure()} allows you to reference external dependencies of a function (i.e.,
-unbound names in its body) as function arguments, which are \emph{locally scoped}.
+\code{posure()} enables you to create \emph{efficient} variable (i.e., parameterized)
+\link[=compose]{composite functions}.
+
+For instance, say you have a composite function such as\preformatted{  function(..., b = 2, n) {
+    (sample \%>>>\% log(base = b) \%>>>\% rep(n))(...)
+  }
+
+  # Alternatively, expressed with the magrittr \%>\%:
+  function(..., b = 2, n) {
+    sample(...) \%>\% log(base = b) \%>\% rep(n)
+  }
+}
+
+which varies according to the values of \code{b} and \code{n}.  You can express this
+more succinctly with \code{posure()}, by dropping the placeholder argument
+(‘\code{...}’):\preformatted{  posure(b = 2, n ~ {
+    sample \%>>>\% log(base = b) \%>>>\% rep(n)
+  })
+}
+
+This creates a function with same \link[=formals]{formals} and return values.
+
+But the \code{posure()} version is more efficient because it creates the composite
+function just \emph{once}, rather than anew with each function call. Morever, it
+is robuster than the functionally equivalent construction with the
+\href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
+because \code{posure()} validates the constituent functions (see ‘Examples’).
+}
+\details{
+\code{posure()} \href{https://en.wikipedia.org/wiki/Currying}{curries} composite
+functions. However, the main significance of \code{posure()} is its efficiency,
+which is achieved via non-standard scoping semantics (transparent to the
+caller). \code{posure()} creates the given composite function once. When the
+resulting variable composite function is called, its dependencies are
+dynamically bound to its localized \emph{lexical} scope, for fast lookup, then
+removed when the function exits. Thus a \strong{posure} is a (parameterized)
+\link[=function]{closure} that is \emph{partially dynamically scoped}. (This
+portmanteau is due to \href{https://github.com/henryaj}{Henry Stanley}.)
 }
 \examples{
-# A posure is a composition with (dynamically scoped) dependencies:
-
 foo <- posure(b = 2, n ~ {
   sample \%>>>\% log(base = b) \%>>>\% rep(n)
 })
@@ -61,4 +105,7 @@ posure(b = 2, n ~ log(Base = b) \%>>>\% rep(n))
 posure(b = 2 ~ my_sample \%>>>\% log(base = b))
 # Error: object 'my_sample' not found}
 
+}
+\seealso{
+\code{\link{\%>>>\%}}, \code{\link[=fn]{fn()}}, \code{\link[=partial]{partial()}}.
 }
