@@ -16,7 +16,7 @@ frame; if a list or data frame, it is interpreted as an environment (like
 the \code{envir} argument of \code{\link[=eval]{eval()}}).}
 
 \item{...}{Named expressions. An expression looks up values to the left of
-it, and its name takes precedence over those in \code{`_data`}.
+it, and takes precedence over those in \code{`_data`}.
 \link[rlang:quasiquotation]{Quasiquotation} of names and expressions is
 supported (see ‘Examples’).}
 
@@ -113,5 +113,5 @@ run(let(a = 2), a + !!a)               #> [1] 3
 }
 \seealso{
 \code{\link[=with]{with()}} is similar to \code{run()}, but doesn't comprehend
-quasiquotation, nor a means to override bindings.
+quasiquotation nor provide a means to override previous bindings.
 }

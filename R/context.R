@@ -54,7 +54,7 @@
 #'   the `envir` argument of [eval()]).
 #' @param `_expr` Expression to evaluate (“run”). Quasiquotation is supported.
 #' @param ... Named expressions. An expression looks up values to the left of
-#'   it, and its name takes precedence over those in `` `_data` ``.
+#'   it, and takes precedence over those in `` `_data` ``.
 #'   [Quasiquotation][rlang::quasiquotation] of names and expressions is
 #'   supported (see ‘Examples’).
 #'
@@ -66,7 +66,7 @@
 #'   the environment defined by `` `_data` ``.
 #'
 #' @seealso [with()] is similar to `run()`, but doesn't comprehend
-#'   quasiquotation, nor a means to override bindings.
+#'   quasiquotation nor provide a means to override previous bindings.
 #'
 #' @examples
 #' # Miles-per-gallon of big cars
