@@ -75,6 +75,31 @@ except \code{run()}, like \code{let()}, binds \code{y} and \code{z} \emph{lazily
 quasiquotation.
 }
 }
+\section{Composing Contexts}{
+
+\strong{Contexts}, as made by \code{let()}, have an advantage over ordinary local
+assignments because contexts are both lazy and composable.
+
+For example, you can string together contexts to make larger ones:\preformatted{  foo <- let(a = ., b = a + 2) \%>>>\%
+    let(c = a + b) \%>>>\%
+    run(a + b + c)
+
+  foo(1)
+  #> [1] 8
+}
+
+Previous bindings can be overriden by later ones:\preformatted{  bar <- foo[1:2] \%>>>\%   # Collect the contexts of 'foo()'
+    let(c = c - 1) \%>>>\%  # Override previous 'c'
+    run(a + b + c)
+
+  bar(1)
+  #> [1] 7
+}
+
+Bindings are \link[=delayedAssign]{promises}—they are only evaluated on demand:\preformatted{  run(let(x = a_big_expense(), y = "low cost"), y)
+  #> [1] "low cost"
+}
+}
 
 \examples{
 # Miles-per-gallon of big cars
