@@ -97,6 +97,10 @@
 #'     #> [1] "avoid a big expense"
 #'   ```
 #'
+#' @section Remark:
+#'   “Contexts” as described here should not be confused with “contexts” in
+#'   [R’s internal mechanism](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Contexts).
+#'
 #' @seealso [with()] is like `run()`, but more limited because it doesn't
 #'   support quasiquotation or provide a means to override local bindings.
 #'

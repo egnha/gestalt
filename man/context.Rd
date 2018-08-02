@@ -105,6 +105,12 @@ Bindings are \link[=delayedAssign]{promises}—they are only evaluated on demand
 }
 }
 
+\section{Remark}{
+
+“Contexts” as described here should not be confused with “contexts” in
+\href{https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Contexts}{R’s internal mechanism}.
+}
+
 \examples{
 # Miles-per-gallon of big cars
 mtcars$mpg[mtcars$cyl == 8 & mtcars$disp > 350]
