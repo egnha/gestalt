@@ -34,3 +34,25 @@ test_that("named bound by run() override names in the given context", {
   expect_equal(run(cxt, a), "a")
   expect_equal(run(cxt, a, a = "new a"), "new a")
 })
+
+test_that("let() comprehends quasiquotation", {
+  cxt <- let(a = !!"a")
+  expect_equal(run(cxt, a), "a")
+
+  # 'NULL' context resolves to calling environment
+  cxt <- let(NULL, !!"a" := "a")
+  expect_equal(run(cxt, a), "a")
+
+  cxt <- let(NULL, !!!alist(a = "a", b = "b"))
+  expect_equal(run(cxt, c(a, b)), c("a", "b"))
+
+  b <- "b"
+  cxt <- let(NULL, a = !!b, b = "new b")
+  expect_equal(run(cxt, c(a, b)), c("b", "new b"))
+})
+
+test_that("run() comprehends quasiquotation", {
+  one <- 1
+  expect_equal(run(NULL, a + !!one, a = 2, one = stop("!")), 3)
+  expect_equal(run(NULL, c(a, !!!c(2, 3)), a = 1), c(1, 2, 3))
+})
