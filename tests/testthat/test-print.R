@@ -97,3 +97,21 @@ test_that("posure shows composite-function expression", {
     out_f <- out_f[-length(out_f)]
   expect_identical(out_f, out)
 })
+
+test_that("let shows top environment and ordered bindings", {
+  env <- new.env()
+  out_env <- capture.output(print(env))
+  cxt <- let(let(env, a = foo), b = bar)
+  out <- c(
+    "<Ordered Context>",
+    "",
+    "* Topmost environment:",
+    paste0("\ \ ", out_env),
+    "",
+    "* Named expressions (resolved from the bottom up):",
+    "  a: foo",
+    "  b: bar"
+  )
+  out_cxt <- capture.output(print(cxt))
+  expect_identical(out_cxt, out)
+})

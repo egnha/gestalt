@@ -101,18 +101,30 @@ NULL
 
 #' @rdname run
 #' @export
-let <- function(`_data` = parent.frame(), ...) {
-  if (!is.environment(`_data`))
-    `_data` <- evalq(environment(), `_data`, parent.frame())
-  as_ordered_promises(`_env` = `_data`, ...)
-}
+let <- local({
+  assign_setter("env_top")
+  assign_setter("expr_promises")
 
-as_ordered_promises <- function(`_env`, ...) {
-  exprs <- exprs(...)
+  function(`_data` = parent.frame(), ...) {
+    if (!is.environment(`_data`))
+      `_data` <- evalq(environment(), `_data`, parent.frame())
+    exprs <- exprs(...)
+    cxt <- as_ordered_promises(`_data`, exprs)
+    env_top(cxt) <- env_top(`_data`) %||% `_data`
+    expr_promises(cxt) <- c(expr_promises(`_data`), exprs)
+    class(cxt) <- c("Context", "environment")
+    cxt
+  }
+})
+
+assign_getter("env_top")
+assign_getter("expr_promises")
+
+as_ordered_promises <- function(env, exprs) {
   all(nzchar(names(exprs))) %because% "Expressions must be named"
   for (i in seq_along(exprs))
-    `_env` <- bind_as_promise(exprs[i], `_env`)
-  `_env`
+    env <- bind_as_promise(exprs[i], env)
+  env
 }
 
 bind_as_promise <- function(expr, parent) {
@@ -121,7 +133,24 @@ bind_as_promise <- function(expr, parent) {
   env
 }
 
-#' @rdname run
+#' @importFrom utils capture.output
+#' @export
+print.Context <- function(x, ...) {
+  cat("<Ordered Context>\n")
+  cat("\n* Topmost environment:\n")
+  top <- capture.output(print(env_top(x)))
+  cat("\ \ ", top, "\n", sep = "")
+  cat("\n* Named expressions (resolved from the bottom up):")
+  exprs <- expr_promises(x)
+  nms <- names(exprs)
+  for (i in seq_along(exprs)) {
+    expr <- paste(capture.output(print(exprs[[i]])), collapse = "\n")
+    cat("\n\ \ ", nms[[i]], ": ", expr, sep = "")
+  }
+  invisible(x)
+}
+
+#' @rdname contexts
 #' @export
 run <- function(`_data` = parent.frame(), `_expr`, ...) {
   eval(enexpr(`_expr`), let(`_data` = `_data`, ...))
