@@ -137,6 +137,6 @@ run(let(a = 2), a + !!a)               #> [1] 3
 
 }
 \seealso{
-\code{\link[=with]{with()}} is similar to \code{run()}, but doesn't comprehend
-quasiquotation nor provide a means to override previous bindings.
+\code{\link[=with]{with()}} is like \code{run()}, but doesn't comprehend quasiquotation or
+provide a means to override previous bindings.
 }

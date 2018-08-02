@@ -94,8 +94,8 @@
 #'   ```
 #'
 #'
-#' @seealso [with()] is similar to `run()`, but doesn't comprehend
-#'   quasiquotation nor provide a means to override previous bindings.
+#' @seealso [with()] is like `run()`, but doesn't comprehend quasiquotation or
+#'   provide a means to override previous bindings.
 #'
 #' @examples
 #' # Miles-per-gallon of big cars
