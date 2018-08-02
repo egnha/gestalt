@@ -27,17 +27,19 @@ unbound names in its body) as function arguments, which are \emph{locally scoped
 foo <- posure(b = 2, n ~ {
   sample \%>>>\% log(base = b) \%>>>\% rep(n)
 })
+
+# A posure is a composite function with dependencies:
 foo
 
 set.seed(1)
-foo(2 ^ (1:10), size = 2, n = 3)
+foo(2^(1:10), size = 2, n = 3)
 #> [1] 3 4 3 4 3 4
 
 set.seed(1)
-rep(log(sample(2 ^ (1:10), size = 2), base = 2), 3)
+rep(log(sample(2^(1:10), size = 2), base = 2), 3)
 #> [1] 3 4 3 4 3 4
 
-# Because 'posure()' does the composition upfront, it is faster
+# However, a 'posure()' does the composition upfront, so it is faster
 # than the equivalent function defined using the magrittr pipe:
 
 library(magrittr)  # Provides the pipe \%>\%
@@ -47,10 +49,10 @@ foo_pipe <- function(..., b = 2, n) {
 }
 
 set.seed(1)
-foo_pipe(2 ^ (1:10), size = 2, n = 3)
+foo_pipe(2^(1:10), size = 2, n = 3)
 #> [1] 3 4 3 4 3 4
 
-# Moreover, posures are safer than functions made using the pipe,
+# Moreover, posures are safer than functions defined using the pipe,
 # because '\%>>>\%' validates constituent functions:
 \donttest{
 posure(b = 2, n ~ log(Base = b) \%>>>\% rep(n))
