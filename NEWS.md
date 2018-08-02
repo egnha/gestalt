@@ -8,31 +8,33 @@
     composite functions.
     
     In particular, this addresses a shortcoming of the use of the magrittr `%>%`
-    in functions. For instead of writing
+    in functions. Instead of writing
     ```
     function(..., b = 2, n) {
       sample(...) %>% log(base = b) %>% rep(n)
     }
     ```
     which is inefficient because the function chain is created anew with each
-    call, you can more directly write
+    call, you can more directly [curry](https://en.wikipedia.org/wiki/Currying)
+    it by writing
     ```
     posure(b = 2, n ~ {
       sample %>>>% log(base = b) %>>>% rep(n)
     })
     ```
-    Not only is the `posure()` version more succinct (you don’t need to specify
-    a placeholder ‘`...`’), it is also robuster, and faster than the version
-    with `%>%`, thanks to a non-standard scoping mechanism under the hood.
+    Not only is the `posure()` version more succinct, it is robuster and faster
+    than the version with `%>%`, thanks to the non-standard mechanism of a
+    closure that is “partially dynamically scoped.” (Whence the portmanteau
+    “posure”; see the package documentation for details.)
     
-  * `let()` enables you to create **contexts**: local environments in which
-    named expressions are _lazily_ resolved in a given order. Tidyverse
+  * `let()` enables you to create **contexts**: _composable_ local environments
+    in which named expressions are _lazily_ resolved in a given order. Tidyverse
     quasiquotation of expressions is supported, allowing you to exercise
     fine-grained control over the evaluation of subexpressions.
     
   * As a companion to `let()`, `run()` evaluates an expression relative to a
     context. Unlike `base::with()`, `run()` supports quasiquotation and provides
-    a means of overriding bindings in the given context.
+    a means of overriding bindings in a given context.
   
 ### Minor improvements
 
