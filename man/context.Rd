@@ -105,6 +105,11 @@ run(let(x = stop("!")), "S’all good, man.")
 let(x = stop("!"))    # Environment binding 'x'
 \donttest{let(x = stop("!"))$x  # Error: !}
 
+# Quasiquotation is supported
+a <- 1
+run(let(a = 1 + !!a, b = a), c(a, b))  #> [1] 2 2
+run(let(a = 2), a + !!a)               #> [1] 3
+
 }
 \seealso{
 \code{\link[=with]{with()}} is similar to \code{run()}, but doesn't comprehend
