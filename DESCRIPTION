@@ -30,7 +30,7 @@ Collate:
     'constant.R'
     'partial.R'
     'fn.R'
-    'run.R'
+    'context.R'
     'posure.R'
 RoxygenNote: 6.0.1.9000
 Roxygen: list(markdown = TRUE)

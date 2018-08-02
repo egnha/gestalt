@@ -97,10 +97,10 @@
 #' let(x = stop("!"))    # Environment binding 'x'
 #' \donttest{let(x = stop("!"))$x  # Error: !}
 #'
-#' @name contexts
+#' @name context
 NULL
 
-#' @rdname contexts
+#' @rdname context
 #' @export
 let <- local({
   assign_setter("env_top")
@@ -151,7 +151,7 @@ print.Context <- function(x, ...) {
   invisible(x)
 }
 
-#' @rdname contexts
+#' @rdname context
 #' @export
 run <- function(`_data` = parent.frame(), `_expr`, ...) {
   eval(enexpr(`_expr`), let(`_data` = `_data`, ...))
