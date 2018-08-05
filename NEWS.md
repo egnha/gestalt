@@ -25,7 +25,7 @@
     Not only is the `posure()` version more succinct, it is robuster and faster
     than the version with `%>%`, thanks to the non-standard mechanism of a
     closure that is “partially dynamically scoped.” (Whence the portmanteau
-    “posure”; see the package documentation for details.)
+    “posure,” due to @henryaj; see the package documentation for details.)
     
   * `let()` enables you to create **contexts**: _composable_ local environments
     in which named expressions are _lazily_ resolved in a given order. Tidyverse
