@@ -175,6 +175,11 @@ bind_as_promise <- function(expr, parent) {
   env
 }
 
+#' @export
+names.Context <- function(x) {
+  names(expr_promises(x))
+}
+
 #' @importFrom utils capture.output
 #' @export
 print.Context <- function(x, ...) {

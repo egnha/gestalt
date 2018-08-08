@@ -56,3 +56,11 @@ test_that("run() comprehends quasiquotation", {
   expect_equal(run(NULL, a + !!one, a = 2, one = stop("!")), 3)
   expect_equal(run(NULL, c(a, !!!c(2, 3)), a = 1), c(1, 2, 3))
 })
+
+context("Generic methods")
+
+test_that("context names are in the given order", {
+  cxt <- let(a = 1, b = a, c = a + b)
+  expect_named(cxt, c("a", "b", "c"))
+  expect_named(let(cxt, d = d), c(names(cxt), "d"))
+})
