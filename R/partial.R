@@ -155,13 +155,11 @@ partial.function <- local({
   }
 })
 
-assign_getter("expr_partial")
-assign_getter("names_fixed")
+assign_getter("expr_partial", "names_fixed")
 
 partial_ <- local({
   assign_getter("bare_args")
-  assign_setter("bare_args")
-  assign_setter("names_fixed")
+  assign_setter("bare_args", "names_fixed")
 
   body <- quote({
     environment(`__partial__`) <- `__with_fixed_args__`()

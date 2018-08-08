@@ -144,8 +144,7 @@ NULL
 #' @rdname context
 #' @export
 let <- local({
-  assign_setter("env_top")
-  assign_setter("expr_promises")
+  assign_setter("env_top", "expr_promises")
 
   function(`_data` = parent.frame(), ...) {
     if (!is.environment(`_data`))
@@ -159,8 +158,7 @@ let <- local({
   }
 })
 
-assign_getter("env_top")
-assign_getter("expr_promises")
+assign_getter("env_top", "expr_promises")
 
 as_ordered_promises <- function(env, exprs) {
   all(nzchar(names(exprs))) %because% "Expressions must be named"
