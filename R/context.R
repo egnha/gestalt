@@ -10,9 +10,9 @@
 #' `let()` and `run()` enable you to treat these procedures as reusable,
 #' _composable_ components.
 #'
-#'   - `let()` makes a **context**: it binds a sequence of _ordered_ named
-#'     expressions to a child of a given environment (by default, the current
-#'     one).
+#'   - `let()` makes a **context**: it _lazily_ binds a sequence of ordered
+#'     named expressions to a child of a given environment (by default, the
+#'     current one).
 #'
 #'     For instance, in an environment `env` where `z` is in scope,
 #'     ```
@@ -27,13 +27,13 @@
 #'         environment()
 #'       })
 #'     ```
-#'     except `let()` binds the named expressions _lazily_, as
-#'     [promises][delayedAssign()], and comprehends tidyverse
+#'     except `let()` binds the named expressions lazily (as
+#'     [promises][delayedAssign()]) and comprehends tidyverse
 #'     [quasiquotation][rlang::quasiquotation].
 #'
 #'   - `run()` performs an **action**: it evaluates an expression relative to an
 #'     environment (by default, the current one) and, optionally, a sequence of
-#'     ordered named expressions.
+#'     _lazily evaluated_ ordered named expressions.
 #'
 #'     For instance, in an environment `env` where `x` is in scope,
 #'     ```
@@ -47,7 +47,7 @@
 #'         x + y + z
 #'       })
 #'     ```
-#'     except `run()`, like `let()`, binds `y` and `z` _lazily_ and comprehends
+#'     except `run()`, like `let()`, binds `y` and `z` lazily and comprehends
 #'     quasiquotation.
 #'
 #' @param _data Context of named values, namely an environment, list or data
@@ -68,7 +68,7 @@
 #'
 #' @section Composing Contexts:
 #'   **Contexts**, as made by `let()`, have an advantage over ordinary local
-#'   assignments because contexts are both lazy and composable. Moreover, like
+#'   assignments because contexts are both lazy and composable. Like
 #'   assignments, the order of named expressions in a context is significant.
 #'
 #'   For example, you can string together contexts to make larger ones:
@@ -84,7 +84,7 @@
 #'   Earlier bindings can be overriden by later ones:
 #'   ```
 #'     bar <-
-#'       foo[1:2] %>>>%   # Collect the contexts of 'foo()'
+#'       foo[1:2] %>>>%        # Collect the contexts of 'foo()'
 #'       let(c = c - 1) %>>>%  # Override 'c'
 #'       run(a + b + c)
 #'
@@ -114,7 +114,7 @@
 #' cars <- let(mtcars, big = cyl == 8 & disp > 350)
 #'
 #' eval(quote(mpg[big]), cars)  # Quoting restricts name lookup to 'cars'
-#' run(cars, mpg[big])          # The same, but shorter and easier to read
+#' run(cars, mpg[big])          # The same, but shorter and more transparent
 #'
 #' run(cars, wt[big])
 #' mtcars$wt[mtcars$cyl == 8 & mtcars$disp > 350]
@@ -135,8 +135,8 @@
 #'
 #' # Quasiquotation is supported
 #' a <- 1
-#' run(let(a = 1 + !!a, b = a), c(a, b))  #> [1] 2 2
 #' run(let(a = 2), a + !!a)               #> [1] 3
+#' run(let(a = 1 + !!a, b = a), c(a, b))  #> [1] 2 2
 #'
 #' @name context
 NULL

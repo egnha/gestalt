@@ -40,9 +40,9 @@ Programming in R typically involves:
 \code{let()} and \code{run()} enable you to treat these procedures as reusable,
 \emph{composable} components.
 \itemize{
-\item \code{let()} makes a \strong{context}: it binds a sequence of \emph{ordered} named
-expressions to a child of a given environment (by default, the current
-one).
+\item \code{let()} makes a \strong{context}: it \emph{lazily} binds a sequence of ordered
+named expressions to a child of a given environment (by default, the
+current one).
 
 For instance, in an environment \code{env} where \code{z} is in scope,\preformatted{  let(env, x = 1, y = x + 2, z = x * y * z)
 }
@@ -55,12 +55,12 @@ is equivalent to calling\preformatted{  local({
   })
 }
 
-except \code{let()} binds the named expressions \emph{lazily}, as
-\link[=delayedAssign]{promises}, and comprehends tidyverse
+except \code{let()} binds the named expressions lazily (as
+\link[=delayedAssign]{promises}) and comprehends tidyverse
 \link[rlang:quasiquotation]{quasiquotation}.
 \item \code{run()} performs an \strong{action}: it evaluates an expression relative to an
 environment (by default, the current one) and, optionally, a sequence of
-ordered named expressions.
+\emph{lazily evaluated} ordered named expressions.
 
 For instance, in an environment \code{env} where \code{x} is in scope,\preformatted{  run(env, x + y + z, y = x + 2, z = x * y * z)
 }
@@ -72,14 +72,14 @@ is equivalent to calling\preformatted{  local({
   })
 }
 
-except \code{run()}, like \code{let()}, binds \code{y} and \code{z} \emph{lazily} and comprehends
+except \code{run()}, like \code{let()}, binds \code{y} and \code{z} lazily and comprehends
 quasiquotation.
 }
 }
 \section{Composing Contexts}{
 
 \strong{Contexts}, as made by \code{let()}, have an advantage over ordinary local
-assignments because contexts are both lazy and composable. Moreover, like
+assignments because contexts are both lazy and composable. Like
 assignments, the order of named expressions in a context is significant.
 
 For example, you can string together contexts to make larger ones:\preformatted{  foo <-
@@ -92,7 +92,7 @@ For example, you can string together contexts to make larger ones:\preformatted{
 }
 
 Earlier bindings can be overriden by later ones:\preformatted{  bar <-
-    foo[1:2] \%>>>\%   # Collect the contexts of 'foo()'
+    foo[1:2] \%>>>\%        # Collect the contexts of 'foo()'
     let(c = c - 1) \%>>>\%  # Override 'c'
     run(a + b + c)
 
@@ -121,7 +121,7 @@ run(mtcars, mpg[big_cars], big_cars = cyl == 8 & disp > 350)
 cars <- let(mtcars, big = cyl == 8 & disp > 350)
 
 eval(quote(mpg[big]), cars)  # Quoting restricts name lookup to 'cars'
-run(cars, mpg[big])          # The same, but shorter and easier to read
+run(cars, mpg[big])          # The same, but shorter and more transparent
 
 run(cars, wt[big])
 mtcars$wt[mtcars$cyl == 8 & mtcars$disp > 350]
@@ -142,8 +142,8 @@ let(x = stop("!"))    # Environment binding 'x'
 
 # Quasiquotation is supported
 a <- 1
-run(let(a = 1 + !!a, b = a), c(a, b))  #> [1] 2 2
 run(let(a = 2), a + !!a)               #> [1] 3
+run(let(a = 1 + !!a, b = a), c(a, b))  #> [1] 2 2
 
 }
 \seealso{
