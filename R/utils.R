@@ -1,6 +1,6 @@
 # Aliases
-list_tidy <- list2
-names_chr <- names2
+list_tidy <- function(...) list2(...)
+names_chr <- function(x) names2(x)
 `%named%` <- function(x, nm) `names<-`(x, nm)
 
 `%??%` <- function(x, default) {

@@ -1,5 +1,9 @@
 # gestalt
 
+## 0.1.4.9001
+
+  * Fixed potential leakage of rlang internals (thanks @lionel-)
+
 ## 0.1.4
 
 ### New features
