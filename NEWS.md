@@ -1,6 +1,11 @@
 # gestalt
 
 ## 0.1.5.9000
+
+ * The minimum required rlang version has been bumped to 0.3.1. This version
+   fixed a bug which prevented certain operator "sections" from being expressed.
+   For example, a chain like `` `/`(2) %>>>% sin`` (halve and apply sine) now
+   works as expected.
  
  * Testing on R 3.1 has been dropped. (It may still work.)
 
