@@ -3,8 +3,10 @@ closure <- function(f) {
   if (typeof(f) == "closure")
     return(f)
   nm <- primitive_name(f)
-  if (!is.null(op <- primitive_ops[[nm]]))
+  if (!is.null(op <- primitive_ops[[nm]])) {
+    if (inherits(op, "error")) stop(op)
     return(op)
+  }
   fmls <- formals(args(nm))
   new_fn(fmls, invocation(nm, fmls), .BaseNamespaceEnv)
 }
@@ -28,46 +30,31 @@ primitive_ops <- alist(
   `:`    = function(a, b) a:b,
   `&&`   = function(x, y) x && y,
   `||`   = function(x, y) x || y,
-  `(`    = function(x) x,
-  `{`    = function(...) eval.parent(`[[<-`(match.call(), 1, `{`)),
   `[`    = function(x, ...) x[...],
   `[[`   = function(x, ...) x[[...]],
   `[[<-` = function(x, i, value) `[[<-`(x, i, value = value),
-  `[<-`  = function(x, ..., value) `[<-`(x, ..., value = value),
-  `$`    = function(x, name) eval(call("$", x, substitute(name))),
-  `$<-`  = function(x, name, value) eval(call("$<-", x, substitute(name), value)),
-  `@`    = function(object, name) eval(call("@", object, substitute(name))),
-  `@<-`  = function(object, name, value) eval(call("@<-", object, substitute(name), value)),
-  `<-`   = function(x, value) eval.parent(call("<-", substitute(x), value)),
-  `<<-`  = function(x, value) eval.parent(call("<<-", substitute(x), value)),
-  `=`    = function(x, value) eval.parent(call("=", substitute(x), value)),
-  `~`    = function(y, model) {
-    if (missing(model))
-      return(eval.parent(call("~", substitute(y))))
-    eval.parent(call("~", substitute(y), substitute(model)))
-  }
+  `[<-`  = function(x, ..., value) `[<-`(x, ..., value = value)
 )
 primitive_ops <- lapply(primitive_ops, eval, envir = .BaseNamespaceEnv)
-
-constructs <- c(
-  "break",
-  "for",
-  "function",
-  "if",
-  "next",
-  "repeat",
-  "return",
-  "while"
+invalid_ops <- c(
+  "(", "{", "$", "$<-", "@", "@<-", "<-", "<<-", "=", "~",
+  "if", "for", "while", "break", "next", "repeat",
+  "function", "return"
 )
-primitive_ops[constructs] <- lapply(constructs, function(word) {
-  msg <- sprintf("`%s` cannot be expressed as a closure", word)
-  function() stop(msg, call. = FALSE)
+primitive_ops[invalid_ops] <- lapply(invalid_ops, function(nm) {
+  msg <- sprintf("Expressing `%s` as a closure is not supported", nm)
+  structure(
+    list(message = msg, call = NULL),
+    class = c("error", "condition")
+  )
 })
+primitive_ops <- list2env(primitive_ops)
 
-# Ensure that the list of primitive operators is complete
 stopifnot({
   objs <- objects("package:base", all.names = TRUE)
   prim <- sapply(objs, function(x) is.primitive(get(x)))
   no_formals <- !objs[prim] %in% union(names(.ArgsEnv), names(.GenericArgsEnv))
+
+  # Ensure that the list of primitive operators is complete
   setequal(names(primitive_ops), objs[prim][no_formals])
 })
