@@ -1,5 +1,9 @@
 # gestalt
 
+## 0.1.5.9000
+ 
+ * Testing on R 3.1 has been dropped. (It may still work.)
+
 ## 0.1.5
 
   * Fixed a segfault caused by leakage of rlang internals (thanks @lionel-).
