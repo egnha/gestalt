@@ -567,11 +567,11 @@ test_that("departial() of a partial function is the closure of the original func
   expect_identical(departial(fp), f)
   expect_identical(departial(fpp), f)
 
-  cc <- rlang::as_closure(c)
+  cc <- closure(c)
   cp <- partial(c, 0)
   cpp <- partial(cp, 1)
-  expect_identical(departial(cp), cc)
-  expect_identical(departial(cpp), cc)
+  expect_equal(departial(cp), cc)
+  expect_equal(departial(cpp), cc)
 })
 
 test_that("departial() is the identity for non-partial functions", {

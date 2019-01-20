@@ -16,13 +16,7 @@ new_fn <- function(..args, ..body, ..env = NULL, ...) {
 }
 
 fml_args <- function(f) {
-  formals(args(f) %||% as_closure(f))
-}
-
-closure <- function(f) {
-  if (typeof(f) == "closure")
-    return(f)
-  as_closure(f, parent.frame())
+  formals(closure(f))
 }
 
 eponymous <- function(nms) {

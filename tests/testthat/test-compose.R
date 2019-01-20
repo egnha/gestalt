@@ -184,7 +184,7 @@ test_that("composition has formals of innermost function (as a closure)", {
     builtin = `+`
   )
   for (inner in fs) {
-    fmls_inner <- formals(args(inner) %||% rlang::as_closure(inner))
+    fmls_inner <- formals(closure(inner))
     expect_identical(formals(compose(inner, outer)), fmls_inner)
   }
 })

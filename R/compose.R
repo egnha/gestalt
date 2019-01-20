@@ -475,7 +475,7 @@ lambda_partial <- local({
     length(call) == 1L
   }
   verify_conformance <- function(call, to) {
-    match.call(args(to) %||% as_closure(to), call) %unless%
+    match.call(args(to) %||% closure(to), call) %unless%
       sprintf("%s is an invalid call: %%s", expr_label(call))
     invisible(call)
   }

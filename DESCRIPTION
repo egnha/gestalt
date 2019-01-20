@@ -26,6 +26,7 @@ Suggests:
 Collate:
     'gestalt.R'
     'utils.R'
+    'closures.R'
     'compose.R'
     'constant.R'
     'partial.R'
