@@ -1,60 +1,79 @@
-# formals(closure(f)) and formals(args(f)) coincide, unlike rlang::as_closure()
-closure <- function(f) {
-  if (typeof(f) == "closure")
-    return(f)
-  nm <- primitive_name(f)
-  if (!is.null(op <- primitive_ops[[nm]])) {
-    if (inherits(op, "error")) stop(op)
-    return(op)
-  }
-  fmls <- formals(args(nm))
-  new_fn(fmls, invocation(nm, fmls), .BaseNamespaceEnv)
-}
-
-# Cf. rlang::prim_name()
-primitive_name <- function(prim) {
-  nm <- format(prim)
-  matches <- regmatches(nm, regexec('.Primitive\\("(.+)"\\)$', nm))
-  matches[[1]][[2]]
-}
-
-invocation <- function(nm, fmls) {
-  nms <- names(fmls)
-  args <- lapply(nms, as.name) %named% character(length(nms))
-  if (!is.na(pos <- match("...", nms)))
-    names(args)[-seq_len(pos)] <- nms[-seq_len(pos)]
-  as.call(c(as.name(nm), args))
-}
-
-primitive_ops <- alist(
-  `:`    = function(a, b) a:b,
-  `&&`   = function(x, y) x && y,
-  `||`   = function(x, y) x || y,
-  `[`    = function(x, ...) x[...],
-  `[[`   = function(x, ...) x[[...]],
-  `[[<-` = function(x, i, value) `[[<-`(x, i, value = value),
-  `[<-`  = function(x, ..., value) `[<-`(x, ..., value = value)
-)
-primitive_ops <- lapply(primitive_ops, eval, envir = .BaseNamespaceEnv)
-invalid_ops <- c(
-  "(", "{", "$", "$<-", "@", "@<-", "<-", "<<-", "=", "~",
-  "if", "for", "while", "break", "next", "repeat",
-  "function", "return"
-)
-primitive_ops[invalid_ops] <- lapply(invalid_ops, function(nm) {
-  msg <- sprintf("Expressing `%s` as a closure is not supported", nm)
-  structure(
-    list(message = msg, call = NULL),
-    class = c("error", "condition")
+#' Express a function as a closure
+#'
+#' Unlike [rlang::as_closure()], the formals of `closure()` agree with those
+#' of [args()].
+#'
+#' @param f Function.
+#'
+#' @return If `f` is a closure, it is simply returned. Otherwise, `f` is a
+#'   primitive function, and `closure()` wraps it in a closure whose environment
+#'   is `.BaseNamespaceEnv` and whose formals are those of `args()`, unless this
+#'   is `NULL`, in which case an error is raised.
+#'
+#' @details The environment `primitives` is local to `closure()` so that the
+#'   package byte-compiles.
+#'
+#' @noRd
+closure <- local({
+  # Environment of primitive functions as closures
+  primitives <- list(
+    `:`    = function(a, b) a:b,
+    `&&`   = function(x, y) x && y,
+    `||`   = function(x, y) x || y,
+    `[`    = function(x, ...) x[...],
+    `[[`   = function(x, ...) x[[...]],
+    `[[<-` = function(x, ..., value) `[[<-`(x, ..., value = value),
+    `[<-`  = function(x, ..., value) `[<-`(x, ..., value = value)
   )
-})
-primitive_ops <- list2env(primitive_ops)
+  primitives <- lapply(primitives, `environment<-`, value = .BaseNamespaceEnv)
+  primitives <- list2env(primitives)
 
-stopifnot({
-  objs <- objects("package:base", all.names = TRUE)
-  prim <- sapply(objs, function(x) is.primitive(get(x)))
-  no_formals <- !objs[prim] %in% union(names(.ArgsEnv), names(.GenericArgsEnv))
+  # No good way to define these primitives as closures; raise error if you try.
+  for (op in c(
+    "(", "{", "$", "$<-", "@", "@<-", "<-", "<<-", "=", "~",
+    "if", "for", "while", "break", "next", "repeat", "function", "return"
+  )) {
+    err <- sprintf("Expressing `%s` as a closure is not supported", op)
+    primitives[[op]] <- structure(
+      list(message = err, call = NULL),
+      class = c("NonclosurePrimitive", "error", "condition")
+    )
+  }
 
-  # Ensure that the list of primitive operators is complete
-  setequal(names(primitive_ops), objs[prim][no_formals])
+  # Ensure that the remaining primitives are those with formals
+  stopifnot({
+    objs <- objects("package:base", all.names = TRUE)
+    prim <- sapply(objs, function(x) is.primitive(get(x)))
+    no_formals <- !objs[prim] %in% union(names(.ArgsEnv), names(.GenericArgsEnv))
+    setequal(names(primitives), objs[prim][no_formals])
+  })
+
+  invocation <- function(nm, fmls) {
+    nms <- names(fmls)
+    args <- lapply(nms, as.name) %named% character(length(nms))
+    if (!is.na(pos <- match("...", nms)))
+      names(args)[-seq_len(pos)] <- nms[-seq_len(pos)]
+    as.call(c(as.name(nm), args))
+  }
+
+  # Bind primitives with formals, as closures
+  for (prim in union(names(.ArgsEnv), names(.GenericArgsEnv))) {
+    fmls <- formals(args(prim))
+    primitives[[prim]] <- new_fn(fmls, invocation(prim, fmls), .BaseNamespaceEnv)
+  }
+
+  # Cf. rlang::prim_name()
+  primitive_name <- function(prim) {
+    nm <- format(prim)
+    sub("\"\\)$", "", sub("^.Primitive\\(\"", "", nm))
+  }
+
+  function(f) {
+    if (typeof(f) == "closure")
+      return(f)
+    prim <- primitives[[primitive_name(f)]]
+    if (inherits(prim, "NonclosurePrimitive"))
+      stop(prim)
+    prim
+  }
 })
