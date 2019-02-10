@@ -1,13 +1,24 @@
 # gestalt
 
-## 0.1.5.9000
+## 0.1.6
 
- * The minimum required rlang version has been bumped to 0.3.1. This version
-   fixed a bug which prevented certain operator "sections" from being expressed.
-   For example, a chain like `` `/`(2) %>>>% sin`` (halve and apply sine) now
+This is a maintenance release to fix test failures caused by changes in the
+rlang package.
+
+ * The (minimum) required rlang version has been increased to 0.3.1. This
+   version fixed a bug which prevented certain operator "sections" from being
+   expressed. A chain like `` `/`(2) %>>>% sin`` (halve and apply sine) now
    works as expected.
+   
+ * Formals of primitive functions now agree with those of `base::args()` (#18, #24).
+   This means you can use `args()` to determine the names of arguments when
+   using `partial()`. Thus, `` partial(`/`, e2 = 3) `` is the same as
+   `` partial(`/`, , 3) `` is the same as division-by-3. Moreover, `%>>>%`
+   chains are verified against the argument names given by `args()`. Thus,
+   `` `/`(e2 = 2) %>>>% sin `` is valid, but `` `/`(y = 2) %>>>% sin `` is
+   invalid—`` `/`() `` viewed as a closure has no argument called `y`.
  
- * Testing on R 3.1 has been dropped. (It may still work.)
+ * Support for R 3.1 has been dropped.
 
 ## 0.1.5
 
