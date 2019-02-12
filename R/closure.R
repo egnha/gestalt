@@ -10,9 +10,6 @@
 #'   is `.BaseNamespaceEnv` and whose formals are those of `args()`, unless this
 #'   is `NULL`, in which case an error is raised.
 #'
-#' @details The environment `primitives` is local to `closure()` so that the
-#'   package byte-compiles.
-#'
 #' @noRd
 closure <- function(f) {
   if (typeof(f) == "closure")
@@ -23,6 +20,7 @@ closure <- function(f) {
     return(prim)
   }
   fmls <- formals(args(nm))
+  # Skip checks in new_fn()
   eval(call("function", fmls, invoke_primitive(nm, fmls)), .BaseNamespaceEnv)
 }
 
