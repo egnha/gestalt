@@ -1,5 +1,10 @@
 # gestalt
 
+## 0.1.6.9000
+
+  * In a `%>>>%` chain, a point (`.`) is now only matched as an argument value
+    when it is a symbol, not a character (`"."`) (#27).
+
 ## 0.1.6
 
 This is a maintenance release to fix test failures caused by changes in the
