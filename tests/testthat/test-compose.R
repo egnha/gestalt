@@ -426,6 +426,16 @@ test_that("arguments matched by position/name before/after dots (#6)", {
   expect_identical(f(x = 1, 2), list(x = 1, 2))
 })
 
+test_that("point is matched when a symbol not a character (#27)", {
+  # Point matched when symbol
+  f <- paste(letters, collapse = .) %>>>% NULL
+  expect_identical(f(","), paste(letters, collapse = ","))
+
+  # Point not matched when character
+  f <- paste(collapse = ".") %>>>% NULL
+  expect_identical(f(letters), paste(letters, collapse = "."))
+})
+
 context("Decomposing compositions")
 
 test_that("tree structure of composition preserved when converting to list", {
