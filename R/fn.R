@@ -59,7 +59,7 @@ make_function <- function(args, body, env) {
   if (is_closure(body)) {
     body <- call("function", formals(body), base::body(body))
   } else {
-    is_expr(body) %because% "Body must be an expression or closure"
+    is_expression(body) %because% "Body must be an expression or closure"
   }
   new_fn(args, body, env)
 }
