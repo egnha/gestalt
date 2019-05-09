@@ -14,7 +14,7 @@ fn_(..., ..env = parent.frame())
 \link[rlang:quasiquotation]{quasiquotation}.}
 
 \item{..env}{Environment in which to create the function (i.e., the
-function’s \link[base:environment]{enclosing environment}).}
+function's \link[base:environment]{enclosing environment}).}
 }
 \value{
 A function whose enclosing environment is \code{..env}.
@@ -24,28 +24,28 @@ A function whose enclosing environment is \code{..env}.
 signature. Use it in place of the usual \code{\link[=function]{function()}} invocation whenever you
 want to:
 \itemize{
-\item \strong{Be concise} — The function declarations\preformatted{  fn(x, y = 1 ~ x + y)
+\item \strong{Be concise}: The function declarations\preformatted{  fn(x, y = 1 ~ x + y)
 
   function(x, y = 1) x + y
 }
 
 are equivalent.
-\item \strong{Enforce immutability} — By enabling Tidyverse
-\link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to “burn in”
-values at the point of function creation. This guards against changes in a
-function’s enclosing environment. (See ‘Use Unquoting to Make Robust
-Functions’.)
+\item \strong{Enforce immutability}: By enabling Tidyverse
+\link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to \dQuote{burn
+in} values at the point of function creation. This guards against changes
+in a function's enclosing environment. (See \sQuote{Use Unquoting to Make
+Robust Functions}.)
 }
 
 \code{fn_()} is a variant of \code{fn()} that does \emph{not} comprehend quasiquotation. It
 is useful when you want unquoting (\code{`!!`}) or splicing (\code{`!!!`})
 operators in the function body to be literally interpreted, rather than
-immediately invoked. (See ‘Quasiquotation’ for a complementary way to
+immediately invoked. (See \sQuote{Quasiquotation} for a complementary way to
 literally interpret unquoting and splicing operators in \code{fn()}.)
 }
 \section{Function Declarations}{
  A \strong{function declaration} is an expression
-that specifies a function’s arguments and body, as a comma-separated
+that specifies a function's arguments and body, as a comma-separated
 expression of the form\preformatted{  arg1, arg2, ..., argN ~ body
 }
 
@@ -54,7 +54,7 @@ or\preformatted{  arg1, arg2, ..., argN, ~body
 
 (Note in the second form that the body is a one-sided formula. This
 distinction is relevant for argument \link[rlang:quasiquotation]{splicing}, see
-‘Quasiquotation’.)
+\sQuote{Quasiquotation}.)
 \itemize{
 \item To the left of \code{~}, you write a conventional function-argument
 declaration, just as in \code{function(<arguments>)}: each of \code{arg1}, \code{arg2},
@@ -86,7 +86,8 @@ Splicing allows you to treat a complete function declaration as a unit:\preforma
   fn(!!!soma)
 }
 \item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()}, which read
-as “quoted unquoting,” “quoted unquote-splicing”, resp. (cf. \code{fn_()}):\preformatted{  library(dplyr)
+as \dQuote{quoted unquoting,} \dQuote{quoted unquote-splicing,} resp. (cf.
+\code{fn_()}):\preformatted{  library(dplyr)
 
   my_summarise <- fn(df, ... ~ {
     group_by <- quos(...)
@@ -108,14 +109,14 @@ value of a function will \emph{not} in general be determined by the value of its
 inputs alone. This is because, by design, a function may depend on objects
 in its
 \href{http://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}, and
-these objects may mutate between function calls. Normally this isn’t a
+these objects may mutate between function calls. Normally this isn't a
 hazard.
 
 However, if you are working interactively and sourcing files into the
 global environment, or using a notebook interface like
 \href{https://jupyter.org}{Jupyter} or
 \href{http://rmarkdown.rstudio.com/r_notebooks.html}{R Notebook}, it can be
-tricky to ensure that you haven’t unwittingly mutated an object that an
+tricky to ensure that you haven't unwittingly mutated an object that an
 earlier function depends upon.
 
 You can use unquoting to guard against such mutations.
@@ -137,8 +138,8 @@ of \code{foo(1)}:\preformatted{  foo(1)  #> [1] 2
 In other words, \code{foo()} is impure because the value of \code{foo(x)} depends not
 only on the value of \code{x} but also on the \emph{externally mutable} value of \code{a}.
 
-With \code{fn()}, you can unquote \code{a} to “burn in” its value at the point of
-creation:\preformatted{  a <- 1
+With \code{fn()}, you can unquote \code{a} to \dQuote{burn in} its value at the point
+of creation:\preformatted{  a <- 1
   foo <- fn(x ~ x + !!a)
 }
 

@@ -3,9 +3,9 @@
 #' @description
 #' Programming in R typically involves:
 #'
-#'   1. Making a context—assigning values to names.
+#'   1. Making a context: assigning values to names.
 #'
-#'   2. Performing an action—evaluating an expression relative to a context.
+#'   2. Performing an action: evaluating an expression relative to a context.
 #'
 #' `let()` and `run()` enable you to treat these procedures as reusable,
 #' _composable_ components.
@@ -53,11 +53,12 @@
 #' @param _data Context of named values, namely an environment, list or data
 #'   frame; if a list or data frame, it is interpreted as an environment (like
 #'   the `envir` argument of [eval()]).
-#' @param `_expr` Expression to evaluate (“run”). Quasiquotation is supported.
+#' @param `_expr` Expression to evaluate (\dQuote{run}). Quasiquotation is
+#'   supported.
 #' @param ... Named expressions. An expression looks up values to the left of
 #'   it, and takes precedence over those in `` `_data` ``.
 #'   [Quasiquotation][rlang::quasiquotation] of names and expressions is
-#'   supported (see ‘Examples’).
+#'   supported (see \sQuote{Examples}).
 #'
 #' @return `run()` returns the evaluation of `` `_expr` `` in the combined
 #'   environment of `` `_data` `` and `...`.
@@ -91,15 +92,17 @@
 #'     bar(1)
 #'     #> [1] 7
 #'   ```
-#'   Bindings are [promises][delayedAssign()]—they are only evaluated on demand:
+#'   Bindings are [promises][delayedAssign()]; they are only evaluated on
+#'   demand:
 #'   ```
 #'     run(let(x = a_big_expense(), y = "avoid a big expense"), y)
 #'     #> [1] "avoid a big expense"
 #'   ```
 #'
 #' @section Remark:
-#'   “Contexts” as described here should not be confused with “contexts” in
-#'   [R’s internal mechanism](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Contexts).
+#'   \dQuote{Contexts} as described here should not be confused with
+#'   \dQuote{contexts} in
+#'   [R's internal mechanism](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Contexts).
 #'
 #' @seealso [with()] is like `run()`, but more limited because it doesn't
 #'   support quasiquotation or provide a means to override local bindings.
@@ -119,7 +122,7 @@
 #' run(cars, wt[big])
 #' mtcars$wt[mtcars$cyl == 8 & mtcars$disp > 350]
 #'
-#' # Precedence of names is from right to left (“bottom-up”):
+#' # Precedence of names is from right to left ("bottom-up"):
 #' a <- 1000
 #' run(`_expr` = a + b, a = 1, b = a + 2)    # 4: all references are local
 #' run(list(a = 1), a + b, b = a + 2)        # 4: 'b' references local 'a'
@@ -128,8 +131,8 @@
 #' run(list(a = 1, b = a + 2), a + b)        # 1003: 'b' references global 'a'
 #'
 #' # Bound expressions are lazily evaluated: no error unless 'x' is referenced
-#' run(`_expr` = "S’all good, man.", x = stop("!"))
-#' run(let(x = stop("!")), "S’all good, man.")
+#' run(`_expr` = "S'all good, man.", x = stop("!"))
+#' run(let(x = stop("!")), "S'all good, man.")
 #' let(x = stop("!"))    # Environment binding 'x'
 #' \donttest{let(x = stop("!"))$x  # Error: !}
 #'

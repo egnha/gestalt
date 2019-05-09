@@ -17,7 +17,7 @@
 #' ```
 #' which varies according to the values of `b` and `n`.  You can express this
 #' more succinctly with `posure()`, by dropping the placeholder argument
-#' (‘`...`’):
+#' (\sQuote{`...`}):
 #' ```
 #'   posure(b = 2, n ~ {
 #'     sample %>>>% log(base = b) %>>>% rep(n)
@@ -30,7 +30,8 @@
 #' function just _once_, rather than anew with each function call. Morever, it
 #' is robuster than the functionally equivalent construction with the
 #' [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
-#' because `posure()` validates the constituent functions (see ‘Examples’).
+#' because `posure()` validates the constituent functions (see
+#' \sQuote{Examples}).
 #'
 #' @details
 #' `posure()` [curries](https://en.wikipedia.org/wiki/Currying) composite
@@ -45,8 +46,9 @@
 #'
 #' @param ... Function declaration whose body must be a function composition
 #'   expressed using [`%>>>%`]. [Quasiquotation][rlang::quasiquotation] is
-#'   supported. The syntax is that of [fn()]—see ‘Function Declarations’—except
-#'   that declaring ‘`...`’ among `...` is ambiguous.
+#'   supported. The syntax is that of [fn()] (see \sQuote{Function
+#'   Declarations}) except that declaring \sQuote{`...`} among `...` is
+#'   ambiguous.
 #' @param ..env Environment in which to create the function. (You should rarely
 #'   need to set this.)
 #'

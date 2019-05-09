@@ -11,7 +11,7 @@
 #' Combine [`%>>>%`][compose] with `constant()` for a _lazy_, _structured_
 #' alternative to the
 #' [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
-#' operator (see ‘Examples’).
+#' operator (see \sQuote{Examples}).
 #'
 #' @param f Function, or symbol or name (string) thereof, that can be called
 #'   without arguments. (NB: `constant()` itself does not check whether `f()` is
@@ -103,7 +103,7 @@ constant <- local({
 #'   recovers the underlying (uncached) function of a constant function.
 #'
 #' @examples
-#' # Use `variable()` to recover the original (“variable”) function
+#' # Use `variable()` to recover the original (\dQuote{variable}) function
 #' val_var <- variable(const)
 #' stopifnot(identical(val_var, val))
 #' val_var()

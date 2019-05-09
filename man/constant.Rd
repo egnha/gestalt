@@ -32,7 +32,7 @@ call (i.e., \code{constant()}
 Combine \code{\link[=compose]{\%>>>\%}} with \code{constant()} for a \emph{lazy}, \emph{structured}
 alternative to the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-operator (see ‘Examples’).
+operator (see \sQuote{Examples}).
 }
 \examples{
 # Function with a constant return value
@@ -81,7 +81,7 @@ val2 <- mtcars \%>\%
 # invocation `const()`.
 stopifnot(identical(val2, const()))}
 
-# Use `variable()` to recover the original (“variable”) function
+# Use `variable()` to recover the original (\\dQuote{variable}) function
 val_var <- variable(const)
 stopifnot(identical(val_var, val))
 val_var()

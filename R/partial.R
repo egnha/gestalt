@@ -6,23 +6,23 @@
 #' given a function, it fixes the value of selected arguments to produce a
 #' function of the remaining arguments.
 #'
-#' `departial()` “inverts” the application of `partial()` by returning the
-#' original function.
+#' `departial()` \dQuote{inverts} the application of `partial()` by returning
+#' the original function.
 #'
 #' @param ..f Function.
 #' @param ... Argument values of `..f` to fix, specified by name or position.
 #'   Captured as [quosures][rlang::quotation].
 #'   [Unquoting][rlang::quasiquotation] and [splicing][rlang::quasiquotation]
-#'   are supported (see ‘Examples’).
+#'   are supported (see \sQuote{Examples}).
 #'
 #' @return `partial()` returns a function whose [formals][base::formals()] are a
 #'   literal truncation of the formals of `..f()` (as a closure) by the fixed
 #'   arguments. `partial(..f)` is identical to `..f`.
 #'
-#'   In conformance with R’s calling convention, fixed argument values are lazy
+#'   In conformance with R's calling convention, fixed argument values are lazy
 #'   [promises][base::delayedAssign()]. Moreover, when forced, they are [tidily
 #'   evaluated][rlang::eval_tidy()]. Lazy evaluation of fixed arguments can be
-#'   overridden via unquoting, see ‘Examples’.
+#'   overridden via unquoting, see \sQuote{Examples}.
 #'
 #' @details
 #'   Even while `partial()` truncates formals, it remains compatible with

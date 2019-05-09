@@ -84,7 +84,7 @@ literal_tidy <- function(...) {
 #' signature. Use it in place of the usual [function()] invocation whenever you
 #' want to:
 #'
-#' - **Be concise** — The function declarations
+#' - **Be concise**: The function declarations
 #'   ```
 #'     fn(x, y = 1 ~ x + y)
 #'
@@ -92,21 +92,21 @@ literal_tidy <- function(...) {
 #'   ```
 #'   are equivalent.
 #'
-#' - **Enforce immutability** — By enabling Tidyverse
-#'   [quasiquotation][rlang::quasiquotation], `fn()` allows you to “burn in”
-#'   values at the point of function creation. This guards against changes in a
-#'   function’s enclosing environment. (See ‘Use Unquoting to Make Robust
-#'   Functions’.)
+#' - **Enforce immutability**: By enabling Tidyverse
+#'   [quasiquotation][rlang::quasiquotation], `fn()` allows you to \dQuote{burn
+#'   in} values at the point of function creation. This guards against changes
+#'   in a function's enclosing environment. (See \sQuote{Use Unquoting to Make
+#'   Robust Functions}.)
 #'
 #' @param ... Function declaration, which supports
 #'   [quasiquotation][rlang::quasiquotation].
 #' @param ..env Environment in which to create the function (i.e., the
-#'   function’s [enclosing environment][base::environment]).
+#'   function's [enclosing environment][base::environment]).
 #'
 #' @return A function whose enclosing environment is `..env`.
 #'
 #' @section Function Declarations: A **function declaration** is an expression
-#'   that specifies a function’s arguments and body, as a comma-separated
+#'   that specifies a function's arguments and body, as a comma-separated
 #'   expression of the form
 #'   ```
 #'     arg1, arg2, ..., argN ~ body
@@ -117,7 +117,7 @@ literal_tidy <- function(...) {
 #'   ```
 #'   (Note in the second form that the body is a one-sided formula. This
 #'   distinction is relevant for argument [splicing][rlang::quasiquotation], see
-#'   ‘Quasiquotation’.)
+#'   \sQuote{Quasiquotation}.)
 #'
 #'   * To the left of `~`, you write a conventional function-argument
 #'     declaration, just as in `function(<arguments>)`: each of `arg1`, `arg2`,
@@ -157,7 +157,8 @@ literal_tidy <- function(...) {
 #'     ```
 #'
 #'   * To write literal unquoting operators, use `QUQ()`, `QUQS()`, which read
-#'     as “quoted unquoting,” “quoted unquote-splicing”, resp. (cf. `fn_()`):
+#'   as \dQuote{quoted unquoting,} \dQuote{quoted unquote-splicing,} resp. (cf.
+#'   `fn_()`):
 #'     ```
 #'       library(dplyr)
 #'
@@ -178,14 +179,14 @@ literal_tidy <- function(...) {
 #'   inputs alone. This is because, by design, a function may depend on objects
 #'   in its
 #'   [lexical scope](http://adv-r.hadley.nz/functions.html#lexical-scoping), and
-#'   these objects may mutate between function calls. Normally this isn’t a
+#'   these objects may mutate between function calls. Normally this isn't a
 #'   hazard.
 #'
 #'   However, if you are working interactively and sourcing files into the
 #'   global environment, or using a notebook interface like
 #'   [Jupyter](https://jupyter.org) or
 #'   [R Notebook](http://rmarkdown.rstudio.com/r_notebooks.html), it can be
-#'   tricky to ensure that you haven’t unwittingly mutated an object that an
+#'   tricky to ensure that you haven't unwittingly mutated an object that an
 #'   earlier function depends upon.
 #'
 #'   You can use unquoting to guard against such mutations.
@@ -209,8 +210,8 @@ literal_tidy <- function(...) {
 #'   In other words, `foo()` is impure because the value of `foo(x)` depends not
 #'   only on the value of `x` but also on the _externally mutable_ value of `a`.
 #'
-#'   With `fn()`, you can unquote `a` to “burn in” its value at the point of
-#'   creation:
+#'   With `fn()`, you can unquote `a` to \dQuote{burn in} its value at the point
+#'   of creation:
 #'   ```
 #'     a <- 1
 #'     foo <- fn(x ~ x + !!a)
@@ -274,7 +275,7 @@ literal <- function(...) {
 #'  `fn_()` is a variant of `fn()` that does _not_ comprehend quasiquotation. It
 #'  is useful when you want unquoting (`` `!!` ``) or splicing (`` `!!!` ``)
 #'  operators in the function body to be literally interpreted, rather than
-#'  immediately invoked. (See ‘Quasiquotation’ for a complementary way to
+#'  immediately invoked. (See \sQuote{Quasiquotation} for a complementary way to
 #'  literally interpret unquoting and splicing operators in `fn()`.)
 #'
 #' @examples

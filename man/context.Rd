@@ -18,9 +18,10 @@ the \code{envir} argument of \code{\link[=eval]{eval()}}).}
 \item{...}{Named expressions. An expression looks up values to the left of
 it, and takes precedence over those in \code{`_data`}.
 \link[rlang:quasiquotation]{Quasiquotation} of names and expressions is
-supported (see ‘Examples’).}
+supported (see \sQuote{Examples}).}
 
-\item{`_expr`}{Expression to evaluate (“run”). Quasiquotation is supported.}
+\item{`_expr`}{Expression to evaluate (\dQuote{run}). Quasiquotation is
+supported.}
 }
 \value{
 \code{run()} returns the evaluation of \code{`_expr`} in the combined
@@ -33,8 +34,8 @@ a child of the environment defined by \code{`_data`}.
 \description{
 Programming in R typically involves:
 \enumerate{
-\item Making a context—assigning values to names.
-\item Performing an action—evaluating an expression relative to a context.
+\item Making a context: assigning values to names.
+\item Performing an action: evaluating an expression relative to a context.
 }
 
 \code{let()} and \code{run()} enable you to treat these procedures as reusable,
@@ -100,15 +101,17 @@ Earlier bindings can be overriden by later ones:\preformatted{  bar <-
   #> [1] 7
 }
 
-Bindings are \link[=delayedAssign]{promises}—they are only evaluated on demand:\preformatted{  run(let(x = a_big_expense(), y = "avoid a big expense"), y)
+Bindings are \link[=delayedAssign]{promises}; they are only evaluated on
+demand:\preformatted{  run(let(x = a_big_expense(), y = "avoid a big expense"), y)
   #> [1] "avoid a big expense"
 }
 }
 
 \section{Remark}{
 
-“Contexts” as described here should not be confused with “contexts” in
-\href{https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Contexts}{R’s internal mechanism}.
+\dQuote{Contexts} as described here should not be confused with
+\dQuote{contexts} in
+\href{https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Contexts}{R's internal mechanism}.
 }
 
 \examples{
@@ -126,7 +129,7 @@ run(cars, mpg[big])          # The same, but shorter and more transparent
 run(cars, wt[big])
 mtcars$wt[mtcars$cyl == 8 & mtcars$disp > 350]
 
-# Precedence of names is from right to left (“bottom-up”):
+# Precedence of names is from right to left ("bottom-up"):
 a <- 1000
 run(`_expr` = a + b, a = 1, b = a + 2)    # 4: all references are local
 run(list(a = 1), a + b, b = a + 2)        # 4: 'b' references local 'a'
@@ -135,8 +138,8 @@ run(let(a = 1, b = a + 2), a + b, a = 0)  # 3: latter 'a' takes precedence
 run(list(a = 1, b = a + 2), a + b)        # 1003: 'b' references global 'a'
 
 # Bound expressions are lazily evaluated: no error unless 'x' is referenced
-run(`_expr` = "S’all good, man.", x = stop("!"))
-run(let(x = stop("!")), "S’all good, man.")
+run(`_expr` = "S'all good, man.", x = stop("!"))
+run(let(x = stop("!")), "S'all good, man.")
 let(x = stop("!"))    # Environment binding 'x'
 \donttest{let(x = stop("!"))$x  # Error: !}
 

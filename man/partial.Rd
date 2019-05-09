@@ -15,16 +15,16 @@ departial(..f)
 \item{...}{Argument values of \code{..f} to fix, specified by name or position.
 Captured as \link[rlang:quotation]{quosures}.
 \link[rlang:quasiquotation]{Unquoting} and \link[rlang:quasiquotation]{splicing}
-are supported (see ‘Examples’).}
+are supported (see \sQuote{Examples}).}
 }
 \value{
 \code{partial()} returns a function whose \link[base:formals]{formals} are a
 literal truncation of the formals of \code{..f()} (as a closure) by the fixed
 arguments. \code{partial(..f)} is identical to \code{..f}.
 
-In conformance with R’s calling convention, fixed argument values are lazy
+In conformance with R's calling convention, fixed argument values are lazy
 \link[base:delayedAssign]{promises}. Moreover, when forced, they are \link[rlang:eval_tidy]{tidily evaluated}. Lazy evaluation of fixed arguments can be
-overridden via unquoting, see ‘Examples’.
+overridden via unquoting, see \sQuote{Examples}.
 }
 \description{
 \code{partial()} enables
@@ -32,8 +32,8 @@ overridden via unquoting, see ‘Examples’.
 given a function, it fixes the value of selected arguments to produce a
 function of the remaining arguments.
 
-\code{departial()} “inverts” the application of \code{partial()} by returning the
-original function.
+\code{departial()} \dQuote{inverts} the application of \code{partial()} by returning
+the original function.
 }
 \details{
 Even while \code{partial()} truncates formals, it remains compatible with

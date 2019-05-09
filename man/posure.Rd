@@ -9,8 +9,9 @@ posure(..., ..env = parent.frame())
 \arguments{
 \item{...}{Function declaration whose body must be a function composition
 expressed using \code{\link{\%>>>\%}}. \link[rlang:quasiquotation]{Quasiquotation} is
-supported. The syntax is that of \code{\link[=fn]{fn()}}—see ‘Function Declarations’—except
-that declaring ‘\code{...}’ among \code{...} is ambiguous.}
+supported. The syntax is that of \code{\link[=fn]{fn()}} (see \sQuote{Function
+Declarations}) except that declaring \sQuote{\code{...}} among \code{...} is
+ambiguous.}
 
 \item{..env}{Environment in which to create the function. (You should rarely
 need to set this.)}
@@ -43,7 +44,7 @@ For instance, say you have a composite function such as\preformatted{  function(
 
 which varies according to the values of \code{b} and \code{n}.  You can express this
 more succinctly with \code{posure()}, by dropping the placeholder argument
-(‘\code{...}’):\preformatted{  posure(b = 2, n ~ {
+(\sQuote{\code{...}}):\preformatted{  posure(b = 2, n ~ {
     sample \%>>>\% log(base = b) \%>>>\% rep(n)
   })
 }
@@ -54,7 +55,8 @@ But the \code{posure()} version is more efficient because it creates the composi
 function just \emph{once}, rather than anew with each function call. Morever, it
 is robuster than the functionally equivalent construction with the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-because \code{posure()} validates the constituent functions (see ‘Examples’).
+because \code{posure()} validates the constituent functions (see
+\sQuote{Examples}).
 }
 \details{
 \code{posure()} \href{https://en.wikipedia.org/wiki/Currying}{curries} composite

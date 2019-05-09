@@ -60,16 +60,15 @@
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
 #'   operator:
 #'
-#'   1. **Bare names are matched to functions** — For example, in a composition
+#'   1. **Bare names are matched to functions**: For example, in a composition
 #'      like
 #'      ```
 #'        ... %>>>% foo %>>>% ...
 #'      ```
-#'      the ‘`foo`’ is matched to the function of that name.
+#'      the \sQuote{`foo`} is matched to the function of that name.
 #'
-#'   2. **Function calls are interpreted as a unary function of a point (`.`)**
-#'      — A _call_ is interpreted as a _function_ (of a point) in one of two
-#'      ways:
+#'   2. **Function calls are interpreted as a unary function of a point (`.`)**:
+#'      A _call_ is interpreted as a _function_ (of a point) in one of two ways:
 #'
 #'      * If the point matches an argument value, the call is literally
 #'        interpreted as the body of the function. For example, in the
@@ -79,8 +78,8 @@
 #'
 #'          ... %>>>% foo(x, y = .) %>>>% ...
 #'        ```
-#'        the ‘`foo(x, .)`’, resp. ‘`foo(x, y = .)`’, is interpreted as the
-#'        function `function(..., . = ..1) foo(x, .)`, resp.
+#'        the \sQuote{`foo(x, .)`}, resp. \sQuote{`foo(x, y = .)`}, is
+#'        interpreted as the function `function(..., . = ..1) foo(x, .)`, resp.
 #'        `function(..., . = ..1) foo(x, y = .)`.
 #'
 #'      * Otherwise, the call is regarded as implicitly having the point as its
@@ -91,11 +90,11 @@
 #'
 #'          ... %>>>% foo(x, y(.)) %>>>% ...
 #'        ```
-#'        the ‘`foo(x)`’, resp. ‘`foo(x, y(.))`’, is interpreted as the function
-#'        `function(..., . = ..1) foo(., x)`, resp.
+#'        the \sQuote{`foo(x)`}, resp. \sQuote{`foo(x, y(.))`}, is interpreted
+#'        as the function `function(..., . = ..1) foo(., x)`, resp.
 #'        `function(..., . = ..1) foo(., x, y(.))`.
 #'
-#'   3. **Expressions `{...}` are interpreted as a function of a point (`.`)** —
+#'   3. **Expressions `{...}` are interpreted as a function of a point (`.`)**:
 #'      For example, in a composition
 #'      ```
 #'        ... %>>>% {
@@ -103,16 +102,16 @@
 #'          bar(.)
 #'        } %>>>% ...
 #'      ```
-#'      the ‘`{foo(.); bar(.)}`’ is interpreted as the function
+#'      the \sQuote{`{foo(.); bar(.)}`} is interpreted as the function
 #'      `function(..., . = ..1) {foo(.); bar(.)}`.
 #'
-#'      Curly braces are useful when you need to circumvent `` `%>>>%` ``’s
+#'      Curly braces are useful when you need to circumvent `` `%>>>%` ``'s
 #'      usual interpretation of function calls. For example, in a composition
 #'      ```
 #'        ... %>>>% {foo(x, y(.))} %>>>% ...
 #'      ```
-#'      the ‘`{foo(x, y(.))}`’ is interpreted as the function
-#'      `function(..., . = ..1) foo(x, y(.))`—there is no point as first
+#'      the \sQuote{`{foo(x, y(.))}`} is interpreted as the function
+#'      `function(..., . = ..1) foo(x, y(.))`. There is no point as first
 #'      argument to `foo`.
 #'
 #'   \subsection{Exceptions to the Interpretation of Calls as Functions}{
@@ -124,8 +123,8 @@
 #'     literally interpreted.
 #'
 #'   - **Colon** ([`:`][base::Colon]) applies _naming_, according to the syntax
-#'     ‘`<name>: <function>`’, where ‘`<function>`’ is interpreted according
-#'     to the semantics of `` `%>>>%` ``. For example, in
+#'     \sQuote{`<name>: <function>`}, where \sQuote{`<function>`} is interpreted
+#'     according to the semantics of `` `%>>>%` ``. For example, in
 #'     ```
 #'       ... %>>>% aName: foo %>>>% ...
 #'     ```
@@ -135,7 +134,7 @@
 #'     `` `:::` ``) and **[extractors][base::Extract]** (`` `$` ``, `` `[[` ``,
 #'     `` `[` ``) are literally interpreted. This allows for list extractors to
 #'     be applied to composite functions appearing in a `` `%>>>%` `` call (see
-#'     ‘Operate on Composite Functions as List-Like Objects’). For example, the
+#'     'Operate on Composite Functions as List-Like Objects'). For example, the
 #'     compositions
 #'     ```
 #'       paste %>>>% tolower
@@ -151,7 +150,7 @@
 #'   The `` `%>>>%` `` operator supports Tidyverse
 #'   [unquoting][rlang::quasiquotation] (via `!!`). Use it to:
 #'
-#'   - **Enforce immutability** — For example, by unquoting `res` in
+#'   - **Enforce immutability**: For example, by unquoting `res` in
 #'     ```
 #'       res <- "result"
 #'       get_result <- identity %>>>% lapply(`[[`, !!res)
@@ -160,25 +159,25 @@
 #'     named `"result"`, even if the binding `res` changes its value or is
 #'     removed altogether.
 #'
-#'   - **Interpret the point (`.`) in the lexical scope** — Even though
-#'     `` `%>>>%` `` interprets ‘`.`’ as a function argument, you can still
-#'     reference an object of that name via unquoting. For example,
+#'   - **Interpret the point (`.`) in the lexical scope**: Even though
+#'     `` `%>>>%` `` interprets \sQuote{`.`} as a function argument, you can
+#'     still reference an object of that name via unquoting. For example,
 #'     ```
 #'       . <- "point"
 #'       is_point <- identity %>>>% {. == !!.}
 #'     ```
 #'     determines a function that checks for equality with the string `"point"`.
 #'
-#'   - **Name composite functions, programmatically** — For example, unquoting
+#'   - **Name composite functions, programmatically**: For example, unquoting
 #'     `nm` in
 #'     ```
 #'       nm <- "aName"
 #'       ... %>>>% !!nm: foo %>>>% ...
 #'     ```
-#'     names the ‘`foo`’-component of the resulting composite function
+#'     names the \sQuote{`foo`}-component of the resulting composite function
 #'     `"aName"`.
 #'
-#'   - **Accelerate functions by fixing constant dependencies** — For example,
+#'   - **Accelerate functions by fixing constant dependencies**: For example,
 #'     presuming the value of the call `f()` is _constant_ and that `g` is a
 #'     _pure_ function (meaning that its return value depends only on its
 #'     input), both
@@ -199,7 +198,7 @@
 #'   composite functions as _structured computations_.
 #'
 #'   \subsection{Indexing}{
-#'   For instance, the ‘`sum`’ in the following composite function
+#'   For instance, the \sQuote{`sum`} in the following composite function
 #'   ```
 #'     f <- abs %>>>% out: (log %>>>% agg: sum)
 #'   ```
@@ -221,20 +220,21 @@
 #'   Additionally, you can excise sub-composite functions with
 #'   [`[`][base::Extract], [head()], [tail()]. For example:
 #'
-#'   * Both `f[1]` and `head(f, 1)` get the ‘`abs`’ as a composite function,
-#'     namely `compose(abs)`
+#'   * Both `f[1]` and `head(f, 1)` get the \sQuote{`abs`} as a composite
+#'   function, namely `compose(abs)`
 #'
 #'   * `f[2:1]` reverses the order of the top-level functions to yield
 #'     ```
 #'       out: (log %>>>% agg: sum) %>>>% abs
 #'     ```
 #'
-#'   * `f$out[c(FALSE, TRUE)]` gets the ‘`sum`’ as a (named) composite function
+#'   * `f$out[c(FALSE, TRUE)]` gets the \sQuote{`sum`} as a (named) composite
+#'   function
 #'   }
 #'
 #'   \subsection{Subset Assignment}{
 #'   Similarily, subset assignment works as it does for lists. For instance, you
-#'   can replace the ‘`sum`’ with the identity function:
+#'   can replace the \sQuote{`sum`} with the identity function:
 #'   ```
 #'     f[[2]][[2]] <- identity
 #'
@@ -260,7 +260,7 @@
 #'   \subsection{Other List Methods}{
 #'   The generic methods [unlist()], [length()], [names()] also apply to
 #'   composite functions. In conjunction with `compose()`, you can use
-#'   `unlist()` to “flatten” compositions. For example
+#'   `unlist()` to \dQuote{flatten} compositions. For example
 #'   ```
 #'     compose(unlist(f, use.names = FALSE))
 #'   ```
@@ -271,8 +271,8 @@
 #'   }
 #'
 #' @section Composite Functions Balance Speed and Complexity:
-#'   The speed of a composite function made by `compose()` or `` `%>>>%`
-#'   ``—regardless of its nested depth—is on par with a manually constructed
+#'   The speed of a composite function made by `compose()` or `` `%>>>%` ``
+#'   (regardless of its nested depth) is on par with a manually constructed
 #'   _serial_ composition. This is because `compose()` and `` `%>>>%` `` are
 #'   **associative**, semantically and operationally. For instance, triple
 #'   compositions,
@@ -286,8 +286,8 @@
 #'     compose(compose(f, g), h)
 #'     (f %>>>% g) %>>>% h
 #'   ```
-#'   are all implemented as the _same function_—lists of functions are
-#'   automatically “flattened” when composed.
+#'   are all implemented as the _same function_. Lists of functions are
+#'   automatically \dQuote{flattened} when composed.
 #'
 #'   Nevertheless, the original nested structure of constituent functions is
 #'   faithfully recovered by [as.list()]. In particular, `as.list()` and
@@ -368,12 +368,12 @@ compose <- function(...) {
 }
 
 #' @param fst,snd Functions. These may be optionally named using a colon (`:`),
-#'   e.g., `f %>>>% nm: g` names the `g`-component `"nm"` (see ‘Exceptions to
-#'   the Interpretation of Calls as Functions’).
+#'   e.g., `f %>>>% nm: g` names the `g`-component `"nm"` (see
+#'   \sQuote{Exceptions to the Interpretation of Calls as Functions}).
 #'   [Quasiquotation][rlang::quasiquotation] and the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
-#'   semantics are supported (see ‘Semantics of the Composition Operator’,
-#'   ‘Quasiquotation’ and ‘Examples’).
+#'   semantics are supported (see \sQuote{Semantics of the Composition
+#'   Operator}, \sQuote{Quasiquotation} and \sQuote{Examples}).
 #'
 #' @rdname compose
 #' @export
