@@ -1,6 +1,6 @@
 # gestalt
 
-## 0.1.6.9000
+## 0.1.7
 
   * In a `%>>>%` chain, a point (`.`) is now only matched as an argument value
     when it is a symbol, not a character (`"."`) (#27).
