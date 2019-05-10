@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^.*\.md$
+^(?!NEWS\.md).*\.md$
 ^.*\.yml$
 ^.*\.org$
