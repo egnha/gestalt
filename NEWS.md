@@ -1,5 +1,12 @@
 # gestalt
 
+## 0.1.8
+
+  * The environment of a partial function expression in a `%>>>%` chain
+    (e.g., the base-3 logarithm in `abs %>>>% log(base = 3)`) is now properly
+    captured. Previously, it was erroneously matched to an rlang data mask, due
+    to an internal call to `rlang::eval_tidy()` using positional arguments.
+
 ## 0.1.7
 
   * In a `%>>>%` chain, a point (`.`) is now only matched as an argument value
