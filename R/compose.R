@@ -481,7 +481,7 @@ lambda_partial <- local({
   }
 
   function(call, env) {
-    caller <- match.fun(eval_tidy(call[[1L]], env))
+    caller <- match.fun(eval_tidy(call[[1L]], env = env))
     if (is_void(call))
       return(caller)
     args <- as.list(call)[-1L]
