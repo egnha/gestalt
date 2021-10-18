@@ -164,9 +164,9 @@ literal_tidy <- function(...) {
 #'       library(dplyr)
 #'
 #'       my_summarise <- fn(df, ... ~ {
-#'         group_by <- quos(...)
+#'         groups <- quos(...)
 #'         df %>%
-#'           group_by(QUQS(group_by)) %>%
+#'           group_by(QUQS(groups)) %>%
 #'           summarise(a = mean(a))
 #'       })
 #'     ```

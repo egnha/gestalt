@@ -89,12 +89,12 @@ Splicing allows you to treat a complete function declaration as a unit:\preforma
 as \dQuote{quoted unquoting,} \dQuote{quoted unquote-splicing,} resp. (cf.
 \code{fn_()}):\preformatted{  library(dplyr)
 
-  my_summarise <- fn(df, ... ~ {
-    group_by <- quos(...)
+  my_summarise <- fn(df, ... ~ \{
+    groups <- quos(...)
     df \%>\%
-      group_by(QUQS(group_by)) \%>\%
+      group_by(QUQS(groups)) \%>\%
       summarise(a = mean(a))
-  })
+  \})
 }
 
 (Source: \href{https://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
