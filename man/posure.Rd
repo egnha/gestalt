@@ -8,7 +8,7 @@ posure(..., ..env = parent.frame())
 }
 \arguments{
 \item{...}{Function declaration whose body must be a function composition
-expressed using \code{\link{\%>>>\%}}. \link[rlang:quasiquotation]{Quasiquotation} is
+expressed using \code{\link{\%>>>\%}}. \link[rlang:bang-bang]{Quasiquotation} is
 supported. The syntax is that of \code{\link[=fn]{fn()}} (see \sQuote{Function
 Declarations}) except that declaring \sQuote{\code{...}} among \code{...} is
 ambiguous.}
@@ -18,35 +18,35 @@ need to set this.)}
 }
 \value{
 Function with \link[=formals]{formals}
-\code{function (..., <composite_function_dependencies>)}, where
-\code{<composite_function_dependencies>} stands for the formals captured by the
+\verb{function (..., <composite_function_dependencies>)}, where
+\verb{<composite_function_dependencies>} stands for the formals captured by the
 dots of \code{posure()}. In particular, a call of the form\preformatted{  posure(a, b = value ~ f(a, b) \%>>>\% g(a, b))
 }
 
-produces a function with the same formals and return values as\preformatted{  function(..., a, b = value) {
+produces a function with the same formals and return values as\preformatted{  function(..., a, b = value) \{
     (f(a, b) \%>>>\% g(a, b))(...)
-  }
+  \}
 }
 }
 \description{
 \code{posure()} enables you to create \emph{efficient} variable (i.e., parameterized)
 \link[=compose]{composite functions}.
 
-For instance, say you have a composite function such as\preformatted{  function(..., b = 2, n) {
+For instance, say you have a composite function such as\preformatted{  function(..., b = 2, n) \{
     (sample \%>>>\% log(base = b) \%>>>\% rep(n))(...)
-  }
+  \}
 
   # Alternatively, expressed with the magrittr \%>\%:
-  function(..., b = 2, n) {
+  function(..., b = 2, n) \{
     sample(...) \%>\% log(base = b) \%>\% rep(n)
-  }
+  \}
 }
 
 which varies according to the values of \code{b} and \code{n}.  You can express this
 more succinctly with \code{posure()}, by dropping the placeholder argument
-(\sQuote{\code{...}}):\preformatted{  posure(b = 2, n ~ {
+(\sQuote{\code{...}}):\preformatted{  posure(b = 2, n ~ \{
     sample \%>>>\% log(base = b) \%>>>\% rep(n)
-  })
+  \})
 }
 
 This creates a function with same \link[=formals]{formals} and return values.

@@ -11,7 +11,7 @@ fn_(..., ..env = parent.frame())
 }
 \arguments{
 \item{...}{Function declaration, which supports
-\link[rlang:quasiquotation]{quasiquotation}.}
+\link[rlang:bang-bang]{quasiquotation}.}
 
 \item{..env}{Environment in which to create the function (i.e., the
 function's \link[base:environment]{enclosing environment}).}
@@ -31,7 +31,7 @@ want to:
 
 are equivalent.
 \item \strong{Enforce immutability}: By enabling Tidyverse
-\link[rlang:quasiquotation]{quasiquotation}, \code{fn()} allows you to \dQuote{burn
+\link[rlang:bang-bang]{quasiquotation}, \code{fn()} allows you to \dQuote{burn
 in} values at the point of function creation. This guards against changes
 in a function's enclosing environment. (See \sQuote{Use Unquoting to Make
 Robust Functions}.)
@@ -53,11 +53,11 @@ or\preformatted{  arg1, arg2, ..., argN, ~body
 }
 
 (Note in the second form that the body is a one-sided formula. This
-distinction is relevant for argument \link[rlang:quasiquotation]{splicing}, see
+distinction is relevant for argument \link[rlang:bang-bang]{splicing}, see
 \sQuote{Quasiquotation}.)
 \itemize{
 \item To the left of \code{~}, you write a conventional function-argument
-declaration, just as in \code{function(<arguments>)}: each of \code{arg1}, \code{arg2},
+declaration, just as in \verb{function(<arguments>)}: each of \code{arg1}, \code{arg2},
 \dots, \code{argN} is either a bare argument (e.g., \code{x} or \code{...}) or an
 argument with default value (e.g., \code{x = 1}).
 \item To the right of \code{~}, you write the function body, i.e., an expression of
@@ -68,17 +68,17 @@ the arguments.
 \section{Quasiquotation}{
 
 All parts of a function declaration support Tidyverse
-\link[rlang:quasiquotation]{quasiquotation}:
+\link[rlang:bang-bang]{quasiquotation}:
 \itemize{
-\item To unquote values (of arguments or parts of the body), use \code{!!}:\preformatted{  z <- 0
+\item To unquote values (of arguments or parts of the body), use \verb{!!}:\preformatted{  z <- 0
   fn(x, y = !!z ~ x + y)
   fn(x ~ x > !!z)
 }
-\item To unquote argument names (with default value), use \code{:=} (definition
+\item To unquote argument names (with default value), use \verb{:=} (definition
 operator):\preformatted{  arg <- "y"
   fn(x, !!arg := 0 ~ x + !!as.name(arg))
 }
-\item To splice in a (formal) list of arguments, use \code{!!!}:\preformatted{  # NB: Body is a one-sided formula
+\item To splice in a (formal) list of arguments, use \verb{!!!}:\preformatted{  # NB: Body is a one-sided formula
   fn(!!!alist(x, y = 0), ~ x + y)
 }
 

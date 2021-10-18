@@ -13,8 +13,8 @@ departial(..f)
 \item{..f}{Function.}
 
 \item{...}{Argument values of \code{..f} to fix, specified by name or position.
-Captured as \link[rlang:quotation]{quosures}.
-\link[rlang:quasiquotation]{Unquoting} and \link[rlang:quasiquotation]{splicing}
+Captured as \link[rlang:nse-defuse]{quosures}.
+\link[rlang:bang-bang]{Unquoting} and \link[rlang:bang-bang]{splicing}
 are supported (see \sQuote{Examples}).}
 }
 \value{
@@ -41,7 +41,7 @@ functions that use \code{\link[base:missing]{missing()}} to test whether a
 specified argument was supplied in a call. For example,
 \code{draw3 <- partial(sample, size = 3)} works as a function that randomly
 draws three elements, even though \code{sample()} invokes \code{missing(size)} and
-\code{draw3()} has signature \code{function (x, replace = FALSE, prob = NULL)}.
+\code{draw3()} has signature \verb{function (x, replace = FALSE, prob = NULL)}.
 
 Because partially applied functions call the original function in an ad hoc
 environment, impure functions that depend on the calling context as a

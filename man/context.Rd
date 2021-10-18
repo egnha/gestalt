@@ -17,7 +17,7 @@ the \code{envir} argument of \code{\link[=eval]{eval()}}).}
 
 \item{...}{Named expressions. An expression looks up values to the left of
 it, and takes precedence over those in \code{`_data`}.
-\link[rlang:quasiquotation]{Quasiquotation} of names and expressions is
+\link[rlang:bang-bang]{Quasiquotation} of names and expressions is
 supported (see \sQuote{Examples}).}
 
 \item{`_expr`}{Expression to evaluate (\dQuote{run}). Quasiquotation is
@@ -48,17 +48,17 @@ current one).
 For instance, in an environment \code{env} where \code{z} is in scope,\preformatted{  let(env, x = 1, y = x + 2, z = x * y * z)
 }
 
-is equivalent to calling\preformatted{  local({
+is equivalent to calling\preformatted{  local(\{
     x <- 1
     y <- x + 2
     z <- x * y * z
     environment()
-  })
+  \})
 }
 
 except \code{let()} binds the named expressions lazily (as
 \link[=delayedAssign]{promises}) and comprehends tidyverse
-\link[rlang:quasiquotation]{quasiquotation}.
+\link[rlang:bang-bang]{quasiquotation}.
 \item \code{run()} performs an \strong{action}: it evaluates an expression relative to an
 environment (by default, the current one) and, optionally, a sequence of
 \emph{lazily evaluated} ordered named expressions.
@@ -66,11 +66,11 @@ environment (by default, the current one) and, optionally, a sequence of
 For instance, in an environment \code{env} where \code{x} is in scope,\preformatted{  run(env, x + y + z, y = x + 2, z = x * y * z)
 }
 
-is equivalent to calling\preformatted{  local({
+is equivalent to calling\preformatted{  local(\{
     y <- x + 2
     z <- x * y * z
     x + y + z
-  })
+  \})
 }
 
 except \code{run()}, like \code{let()}, binds \code{y} and \code{z} lazily and comprehends

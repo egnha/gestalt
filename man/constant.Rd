@@ -81,7 +81,7 @@ val2 <- mtcars \%>\%
 # invocation `const()`.
 stopifnot(identical(val2, const()))}
 
-# Use `variable()` to recover the original (\\dQuote{variable}) function
+# Use `variable()` to recover the original (\dQuote{variable}) function
 val_var <- variable(const)
 stopifnot(identical(val_var, val))
 val_var()

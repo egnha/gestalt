@@ -12,13 +12,13 @@ fst \%>>>\% snd
 \arguments{
 \item{...}{Functions or lists thereof to compose, in order of application.
 Lists of functions are automatically spliced in.
-\link[rlang:quasiquotation]{Unquoting} of names, via \code{!!} on the left-hand side
-of \code{:=}, and \link[rlang:quasiquotation]{splicing}, via \code{!!!}, are supported.}
+\link[rlang:bang-bang]{Unquoting} of names, via \verb{!!} on the left-hand side
+of \verb{:=}, and \link[rlang:bang-bang]{splicing}, via \verb{!!!}, are supported.}
 
 \item{fst, snd}{Functions. These may be optionally named using a colon (\code{:}),
 e.g., \code{f \%>>>\% nm: g} names the \code{g}-component \code{"nm"} (see
 \sQuote{Exceptions to the Interpretation of Calls as Functions}).
-\link[rlang:quasiquotation]{Quasiquotation} and the
+\link[rlang:bang-bang]{Quasiquotation} and the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 semantics are supported (see \sQuote{Semantics of the Composition
 Operator}, \sQuote{Quasiquotation} and \sQuote{Examples}).}
@@ -39,22 +39,22 @@ It has the \link[base:formals]{formals} of the first function applied (namely
 \code{f}). Thus\preformatted{  compose(paste, toupper)
 }
 
-is equivalent to the function\preformatted{  function(..., sep = " ", collapse = NULL) {
+is equivalent to the function\preformatted{  function(..., sep = " ", collapse = NULL) \{
     toupper(paste(..., sep = sep, collapse = collapse))
-  }
+  \}
 }
 \item Use \code{`\%>>>\%`}:\preformatted{  f \%>>>\% g \%>>>\% h \%>>>\% ...
 }
 
 It comprehends both the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-operator and \link[rlang:quasiquotation]{quasiquotation}. Thus, assuming \code{sep}
+operator and \link[rlang:bang-bang]{quasiquotation}. Thus, assuming \code{sep}
 has the value \code{""},\preformatted{  sample \%>>>\% paste(collapse = !!sep)
 }
 
-is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) {
+is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) \{
     paste(sample(x, size, replace, prob), collapse = "")
-  }
+  \}
 }
 }
 
@@ -101,17 +101,17 @@ as the function \code{function(..., . = ..1) foo(., x)}, resp.
 \code{function(..., . = ..1) foo(., x, y(.))}.
 }
 \item \strong{Expressions \code{{...}} are interpreted as a function of a point (\code{.})}:
-For example, in a composition\preformatted{  ... \%>>>\% {
+For example, in a composition\preformatted{  ... \%>>>\% \{
     foo(.)
     bar(.)
-  } \%>>>\% ...
+  \} \%>>>\% ...
 }
 
 the \sQuote{\code{{foo(.); bar(.)}}} is interpreted as the function
 \code{function(..., . = ..1) {foo(.); bar(.)}}.
 
 Curly braces are useful when you need to circumvent \code{`\%>>>\%`}'s
-usual interpretation of function calls. For example, in a composition\preformatted{  ... \%>>>\% {foo(x, y(.))} \%>>>\% ...
+usual interpretation of function calls. For example, in a composition\preformatted{  ... \%>>>\% \{foo(x, y(.))\} \%>>>\% ...
 }
 
 the \sQuote{\code{{foo(x, y(.))}}} is interpreted as the function
@@ -152,7 +152,7 @@ are equivalent functions.
 \section{Quasiquotation}{
 
 The \code{`\%>>>\%`} operator supports Tidyverse
-\link[rlang:quasiquotation]{unquoting} (via \code{!!}). Use it to:
+\link[rlang:bang-bang]{unquoting} (via \verb{!!}). Use it to:
 \itemize{
 \item \strong{Enforce immutability}: For example, by unquoting \code{res} in\preformatted{  res <- "result"
   get_result <- identity \%>>>\% lapply(`[[`, !!res)
@@ -164,7 +164,7 @@ removed altogether.
 \item \strong{Interpret the point (\code{.}) in the lexical scope}: Even though
 \code{`\%>>>\%`} interprets \sQuote{\code{.}} as a function argument, you can
 still reference an object of that name via unquoting. For example,\preformatted{  . <- "point"
-  is_point <- identity \%>>>\% {. == !!.}
+  is_point <- identity \%>>>\% \{. == !!.\}
 }
 
 determines a function that checks for equality with the string \code{"point"}.
