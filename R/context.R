@@ -134,7 +134,7 @@
 #' run(`_expr` = "S'all good, man.", x = stop("!"))
 #' run(let(x = stop("!")), "S'all good, man.")
 #' let(x = stop("!"))    # Environment binding 'x'
-#' \donttest{let(x = stop("!"))$x  # Error: !}
+#' try(let(x = stop("!"))$x)  # Error: !
 #'
 #' # Quasiquotation is supported
 #' a <- 1

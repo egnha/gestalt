@@ -141,7 +141,7 @@ run(list(a = 1, b = a + 2), a + b)        # 1003: 'b' references global 'a'
 run(`_expr` = "S'all good, man.", x = stop("!"))
 run(let(x = stop("!")), "S'all good, man.")
 let(x = stop("!"))    # Environment binding 'x'
-\donttest{let(x = stop("!"))$x  # Error: !}
+try(let(x = stop("!"))$x)  # Error: !
 
 # Quasiquotation is supported
 a <- 1

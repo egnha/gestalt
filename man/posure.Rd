@@ -100,12 +100,11 @@ foo_pipe(2^(1:10), size = 2, n = 3)
 
 # Moreover, posures are safer than functions defined using the pipe,
 # because '\%>>>\%' validates constituent functions:
-\donttest{
-posure(b = 2, n ~ log(Base = b) \%>>>\% rep(n))
+try(posure(b = 2, n ~ log(Base = b) \%>>>\% rep(n)))
 # Error: unused argument (Base = b)
 
-posure(b = 2 ~ my_sample \%>>>\% log(base = b))
-# Error: object 'my_sample' not found}
+try(posure(b = 2 ~ my_sample \%>>>\% log(base = b)))
+# Error: object 'my_sample' not found
 
 }
 \seealso{

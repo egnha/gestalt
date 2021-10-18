@@ -176,19 +176,17 @@ f <- function(x, y) x + y
 g <- function(y, x, ...) x - y
 frankenstein <- fn(!!!formals(f), ~ !!body(g))
 stopifnot(identical(frankenstein, function(x, y) x - y))
-\donttest{
+
 # mixing unquoting and literal unquoting is possible
-library(dplyr)
-
+# (Assume dplyr is available, which provides group_by() and `\%>\%`.)
 summariser <- quote(mean)
-
 my_summarise <- fn(df, ... ~ {
-  group_by <- quos(...)
+  groups <- quos(...)
   df \%>\%
-    group_by(QUQS(group_by)) \%>\%
-    summarise(a = `!!`(summariser)(a))
+    group_by(QUQS(groups)) \%>\%          # literal unquote-splice
+    summarise(a = `!!`(summariser)(a))  # substitute `mean`
 })
-my_summarise}
+my_summarise
 
 # Use fn_() with fn() as a concise way to force ("pin down") bindings
 # For example, the 'x' is immutable in the function produced by call_upon():
@@ -203,9 +201,8 @@ enforce <- fn_(condition ~
   })
 )
 no_nan <- enforce(!is.nan(x))
-\donttest{
 log_strict <- fn(x ~ no_nan(log(x)))
-log_strict(2)   # [1] 0.6931472
-log_strict(-1)  # Error: !is.nan(x) is not TRUE}
+log_strict(2)        # [1] 0.6931472
+try(log_strict(-1))  # Error: !is.nan(x) is not TRUE
 
 }
