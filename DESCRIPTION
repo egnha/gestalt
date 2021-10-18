@@ -17,8 +17,7 @@ Imports:
     utils
 Suggests:
     magrittr (>= 1.5),
-    dplyr (>= 0.7.5),
-    testthat (>= 2.0.0),
+    testthat (>= 3.0.0),
     knitr,
     rmarkdown
 Collate:
@@ -31,7 +30,7 @@ Collate:
     'fn.R'
     'context.R'
     'posure.R'
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Encoding: UTF-8
