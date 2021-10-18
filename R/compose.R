@@ -118,11 +118,11 @@
 #'   As a matter of convenience, some exceptions are made to the above
 #'   interpretation of calls as functions:
 #'
-#'   - **Parenthesis** ([`(`][base::Paren]) applies grouping. (In R, `` `(` ``
-#'     is indeed a function.) In particular, expressions within parentheses are
-#'     literally interpreted.
+#'   - **Parenthesis** (`(`) applies grouping. (In R, `` `(` `` is indeed a
+#'     function.) In particular, expressions within parentheses are literally
+#'     interpreted.
 #'
-#'   - **Colon** ([`:`][base::Colon]) applies _naming_, according to the syntax
+#'   - **Colon** (`:`) applies _naming_, according to the syntax
 #'     \sQuote{`<name>: <function>`}, where \sQuote{`<function>`} is interpreted
 #'     according to the semantics of `` `%>>>%` ``. For example, in
 #'     ```
@@ -130,7 +130,7 @@
 #'     ```
 #'     the function `foo` is named `"aName"`.
 #'
-#'   - **[fn()]**, **[namespace operators][base::ns-dblcolon]** (`` `::`  ``,
+#'   - **[fn()]**, namespace operators (`` `::`  ``,
 #'     `` `:::` ``) and **[extractors][base::Extract]** (`` `$` ``, `` `[[` ``,
 #'     `` `[` ``) are literally interpreted. This allows for list extractors to
 #'     be applied to composite functions appearing in a `` `%>>>%` `` call (see

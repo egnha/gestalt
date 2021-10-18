@@ -123,16 +123,16 @@ argument to \code{foo}.
 As a matter of convenience, some exceptions are made to the above
 interpretation of calls as functions:
 \itemize{
-\item \strong{Parenthesis} (\code{\link[base:Paren]{(}}) applies grouping. (In R, \code{`(`}
-is indeed a function.) In particular, expressions within parentheses are
-literally interpreted.
-\item \strong{Colon} (\code{\link[base:Colon]{:}}) applies \emph{naming}, according to the syntax
-\sQuote{\code{<name>: <function>}}, where \sQuote{\code{<function>}} is interpreted
+\item \strong{Parenthesis} (\code{(}) applies grouping. (In R, \code{`(`} is indeed a
+function.) In particular, expressions within parentheses are literally
+interpreted.
+\item \strong{Colon} (\code{:}) applies \emph{naming}, according to the syntax
+\sQuote{\verb{<name>: <function>}}, where \sQuote{\verb{<function>}} is interpreted
 according to the semantics of \code{`\%>>>\%`}. For example, in\preformatted{  ... \%>>>\% aName: foo \%>>>\% ...
 }
 
 the function \code{foo} is named \code{"aName"}.
-\item \strong{\code{\link[=fn]{fn()}}}, \strong{\link[base:ns-dblcolon]{namespace operators}} (\code{`::` },
+\item \strong{\code{\link[=fn]{fn()}}}, namespace operators (\code{`::` },
 \code{`:::`}) and \strong{\link[base:Extract]{extractors}} (\code{`$`}, \code{`[[`},
 \code{`[`}) are literally interpreted. This allows for list extractors to
 be applied to composite functions appearing in a \code{`\%>>>\%`} call (see
