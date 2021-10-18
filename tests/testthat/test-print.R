@@ -1,5 +1,9 @@
 context("Printing")
 
+# Suppress ANSI escape codes in printed output
+local_test_context(.env = parent.frame())
+local_reproducible_output(crayon = FALSE, .env = parent.frame())
+
 test_that("partially applied function shows function with arguments fixed", {
   replace <- TRUE
   draw <- function(x, size = length(x), replace = FALSE, prob = NULL) {
