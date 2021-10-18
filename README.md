@@ -12,10 +12,10 @@ The **gestalt** package provides a function composition operator,
 `%>>>%`, which improves the clarity, modularity, and versatility of your
 functions by enabling you to:
 
-  - [Express complex functions as chains](#overview) of smaller, more
+-   [Express complex functions as chains](#overview) of smaller, more
     readily intelligible functions
 
-  - Directly manipulate a composite function as a list-like object, so
+-   Directly manipulate a composite function as a list-like object, so
     that you can
     [inspect](#inspect-or-modify-using-higher-order-functions),
     [modify](#inspect-or-modify-using-higher-order-functions), or
@@ -54,11 +54,11 @@ gestalt leverages the ubiquity of the
 [magrittr](https://magrittr.tidyverse.org) `%>%` operator, by adopting
 its semantics and augmenting it to enable you to:
 
-  - **Clarify intent** by annotating constituent functions with
+-   **Clarify intent** by annotating constituent functions with
     descriptive names, which also serve as [subsetting
     references](#repurpose-using-subset-assignment)
 
-  - **Express nested sub-compositions**, while nonetheless preserving
+-   **Express nested sub-compositions**, while nonetheless preserving
     the runtime characteristics of a flattened composition, so you can
     focus on expressing structure that is most natural for your function
 
@@ -118,7 +118,7 @@ scramble <- sample %>>>% toupper %>>>% paste(collapse = "")
 
 set.seed(1)
 scramble(letters, 5)
-#> [1] "GJNUE"
+#> [1] "YDGAB"
 ```
 
 Here you see the final result of the composition. But because `scramble`
@@ -136,9 +136,9 @@ to add printing at each step:
 ``` r
 set.seed(1)
 stepwise(scramble)(letters, 5)
-#> [1] "g" "j" "n" "u" "e"
-#> [1] "G" "J" "N" "U" "E"
-#> [1] "GJNUE"
+#> [1] "y" "d" "g" "a" "b"
+#> [1] "Y" "D" "G" "A" "B"
+#> [1] "YDGAB"
 ```
 
 ## The [value of values](https://youtu.be/-6BsiVyC1kM) as functions
@@ -176,7 +176,7 @@ You gain power by treating (piped) values as (composite) functions:
 1.  **Values as functions are lazy**. You can separate the value’s
     declaration from its point of use—the value is only computed on
     demand:
-    
+
     ``` r
     R2()
     #>         4         6         8 
@@ -185,13 +185,13 @@ You gain power by treating (piped) values as (composite) functions:
 
 2.  **Values as functions are cheap**. You can cache the value of `R2`
     by declaring it as a constant:
-    
+
     ``` r
     R2 <- constant(R2)
     R2()
     #>         4         6         8 
     #> 0.5086326 0.4645102 0.4229655
-    
+
     # On a 2016 vintage laptop
     microbenchmark::microbenchmark(R2(), times = 1e6)  
     #> Unit: nanoseconds
@@ -202,33 +202,33 @@ You gain power by treating (piped) values as (composite) functions:
 3.  **Values as functions encode their computation**. Since a composite
     function qua computation is a list-like object, you can compute on
     it to extract **latent information**.
-    
+
     For instance, you can get the normal Q–Q plot of the fitted model
     for 6-cylinder cars from the head of `R2`:
-    
+
     ``` r
     head(R2, 3)() %>% .[["6"]] %>% plot(2)
     ```
-    
+
     <img src="inst/images/plot.svg"/>
 
 ## Complements
 
 In conjunction with `%>>>%`, gestalt also provides:
 
-  - `fn`, a more concise and flexible variation of `function`, which
+-   `fn`, a more concise and flexible variation of `function`, which
     supports tidyverse
     [quasiquotation](https://rlang.r-lib.org/reference/quasiquotation.html).
 
     ``` r
     size <- 5L
-    
+
     fn(x, ... ~ sample(x, !!size, ...))
     #> function (x, ...) 
     #> sample(x, 5L, ...)
     ```
 
-  - `partial`, to make new functions from old by fixing a number of
+-   `partial`, to make new functions from old by fixing a number of
     arguments, i.e., [partial
     application](https://en.wikipedia.org/wiki/Partial_application).
     Like `fn`, it also supports
@@ -243,12 +243,12 @@ In conjunction with `%>>>%`, gestalt also provides:
     #> }
     #> 
     #> Recover the inner function with 'departial()'.
-    
+
     set.seed(2)
     draw(letters)
-    #> [1] "e" "s" "o" "e" "y"
+    #> [1] "u" "o" "f" "f" "h"
     ```
-    
+
     Additionally, `partial` is:
 
     -   **Hygenic**: The fixed argument values are [tidily
@@ -256,11 +256,11 @@ In conjunction with `%>>>%`, gestalt also provides:
         promises; in particular, the usual lazy behavior of function
         arguments, which can be overridden via unquoting, is respected
         even for fixed arguments.
-    
-      - **Flat**: Fixing arguments in stages is *operationally*
+
+    -   **Flat**: Fixing arguments in stages is *operationally*
         equivalent to fixing them all at once—you get the same function
         either way:
-        
+
         ``` r
         partial(partial(sample, replace = TRUE), size = 5L)
         #> <Partially Applied Function>
@@ -272,8 +272,8 @@ In conjunction with `%>>>%`, gestalt also provides:
         #> Recover the inner function with 'departial()'.
         ```
 
-See the package documentation for more details (`help(package =
-gestalt)`).
+See the package documentation for more details
+(`help(package = gestalt)`).
 
 ## Installation
 
@@ -292,16 +292,16 @@ devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
 
 ## Acknowledgments
 
-  - The core semantics of `%>>>%` conform to those of the
+-   The core semantics of `%>>>%` conform to those of the
     [magrittr](https://magrittr.tidyverse.org) `%>%` operator developed
     by [Stefan Milton Bache](https://github.com/smbache).
 
-  - The engine for quasiquotation and expression capture is powered by
+-   The engine for quasiquotation and expression capture is powered by
     the [rlang](https://rlang.r-lib.org) package by [Lionel
     Henry](https://github.com/lionel-) and [Hadley
     Wickham](https://github.com/hadley).
 
-  - The “triple arrow” notation for the composition operator is taken
+-   The “triple arrow” notation for the composition operator is taken
     from the Haskell
     [Control.Arrow](https://hackage.haskell.org/package/base/docs/Control-Arrow.html)
     library by Ross Paterson.
