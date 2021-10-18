@@ -1,6 +1,4 @@
-context("Quasiquotation")
-
-context("fn()")
+context("Quasiquotation (fn)")
 
 test_that("default values can be unquoted", {
   zero <- 0
