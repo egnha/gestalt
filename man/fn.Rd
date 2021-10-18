@@ -97,7 +97,7 @@ as \dQuote{quoted unquoting,} \dQuote{quoted unquote-splicing,} resp. (cf.
   })
 }
 
-(Source: \href{http://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
+(Source: \href{https://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
 }
 }
 
@@ -108,14 +108,14 @@ Functions in R are generally
 value of a function will \emph{not} in general be determined by the value of its
 inputs alone. This is because, by design, a function may depend on objects
 in its
-\href{http://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}, and
+\href{https://adv-r.hadley.nz/functions.html#lexical-scoping}{lexical scope}, and
 these objects may mutate between function calls. Normally this isn't a
 hazard.
 
 However, if you are working interactively and sourcing files into the
 global environment, or using a notebook interface like
 \href{https://jupyter.org}{Jupyter} or
-\href{http://rmarkdown.rstudio.com/r_notebooks.html}{R Notebook}, it can be
+\href{https://bookdown.org/yihui/rmarkdown/notebook.html}{R Notebook}, it can be
 tricky to ensure that you haven't unwittingly mutated an object that an
 earlier function depends upon.
 

@@ -171,7 +171,7 @@ literal_tidy <- function(...) {
 #'       })
 #'     ```
 #'     (Source: [Programming with
-#'     dplyr](http://dplyr.tidyverse.org/articles/programming.html))
+#'     dplyr](https://dplyr.tidyverse.org/articles/programming.html))
 #'
 #' @section Use Unquoting to Make Robust Functions:
 #'   Functions in R are generally
@@ -179,14 +179,14 @@ literal_tidy <- function(...) {
 #'   value of a function will _not_ in general be determined by the value of its
 #'   inputs alone. This is because, by design, a function may depend on objects
 #'   in its
-#'   [lexical scope](http://adv-r.hadley.nz/functions.html#lexical-scoping), and
+#'   [lexical scope](https://adv-r.hadley.nz/functions.html#lexical-scoping), and
 #'   these objects may mutate between function calls. Normally this isn't a
 #'   hazard.
 #'
 #'   However, if you are working interactively and sourcing files into the
 #'   global environment, or using a notebook interface like
 #'   [Jupyter](https://jupyter.org) or
-#'   [R Notebook](http://rmarkdown.rstudio.com/r_notebooks.html), it can be
+#'   [R Notebook](https://bookdown.org/yihui/rmarkdown/notebook.html), it can be
 #'   tricky to ensure that you haven't unwittingly mutated an object that an
 #'   earlier function depends upon.
 #'

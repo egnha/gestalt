@@ -4,7 +4,7 @@
 [![Travis-CI Build
 Status](https://travis-ci.org/egnha/gestalt.svg?branch=master)](https://travis-ci.org/egnha/gestalt)
 [![codecov](https://codecov.io/gh/egnha/gestalt/branch/master/graph/badge.svg)](https://codecov.io/gh/egnha/gestalt)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/gestalt)](https://cran.r-project.org/package=gestalt)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/gestalt)](https://cran.r-project.org/package=gestalt)
 
 # gestalt
 
@@ -62,8 +62,8 @@ its semantics and augmenting it to enable you to:
     the runtime characteristics of a flattened composition, so you can
     focus on expressing structure that is most natural for your function
 
-  - **Unquote sub-expressions** with the tidyverse
-    [`!!`](http://rlang.r-lib.org/reference/quasiquotation.html)
+-   **Unquote sub-expressions** with the tidyverse
+    [`!!`](https://rlang.r-lib.org/reference/quasiquotation.html)
     operator, to enforce immutability or spare a runtime computation
 
 ## Ceci n’est pas une `%>%`
@@ -218,8 +218,8 @@ In conjunction with `%>>>%`, gestalt also provides:
 
   - `fn`, a more concise and flexible variation of `function`, which
     supports tidyverse
-    [quasiquotation](http://rlang.r-lib.org/reference/quasiquotation.html).
-    
+    [quasiquotation](https://rlang.r-lib.org/reference/quasiquotation.html).
+
     ``` r
     size <- 5L
     
@@ -232,8 +232,8 @@ In conjunction with `%>>>%`, gestalt also provides:
     arguments, i.e., [partial
     application](https://en.wikipedia.org/wiki/Partial_application).
     Like `fn`, it also supports
-    [quasiquotation](http://rlang.r-lib.org/reference/quasiquotation.html).
-    
+    [quasiquotation](https://rlang.r-lib.org/reference/quasiquotation.html).
+
     ``` r
     (draw <- partial(sample, size = !!size, replace = TRUE))
     #> <Partially Applied Function>
@@ -250,9 +250,9 @@ In conjunction with `%>>>%`, gestalt also provides:
     ```
     
     Additionally, `partial` is:
-    
-      - **Hygenic**: The fixed argument values are [tidily
-        evaluated](http://rlang.r-lib.org/reference/eval_tidy.html)
+
+    -   **Hygenic**: The fixed argument values are [tidily
+        evaluated](https://rlang.r-lib.org/reference/eval_tidy.html)
         promises; in particular, the usual lazy behavior of function
         arguments, which can be overridden via unquoting, is respected
         even for fixed arguments.
