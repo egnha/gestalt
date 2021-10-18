@@ -1,5 +1,11 @@
 # gestalt
 
+## 0.1.9
+
+This maintenance release fixes test failures caused by changes in version 1.0.0
+of the rlang package (namely, `rlang::is_expression()`). There are no
+user-facing changes.
+
 ## 0.1.8
 
   * The environment of a partial function expression in a `%>>>%` chain
