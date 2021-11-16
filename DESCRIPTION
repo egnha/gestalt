@@ -12,8 +12,10 @@ Description: Provides a suite of function-building tools centered around a
 License: MIT + file LICENSE
 URL: https://github.com/egnha/gestalt
 BugReports: https://github.com/egnha/gestalt/issues
+Depends:
+    R (>= 3.3.0)
 Imports:
-    rlang (>= 0.3.1),
+    rlang (>= 0.99.0.9000),
     utils
 Suggests:
     magrittr (>= 1.5),
