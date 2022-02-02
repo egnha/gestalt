@@ -11,7 +11,7 @@ fn_(..., ..env = parent.frame())
 }
 \arguments{
 \item{...}{Function declaration, which supports
-\link[rlang:bang-bang]{quasiquotation}.}
+\link[rlang:topic-inject]{quasiquotation}.}
 
 \item{..env}{Environment in which to create the function (i.e., the
 function's \link[base:environment]{enclosing environment}).}
@@ -31,7 +31,7 @@ want to:
 
 are equivalent.
 \item \strong{Enforce immutability}: By enabling Tidyverse
-\link[rlang:bang-bang]{quasiquotation}, \code{fn()} allows you to \dQuote{burn
+\link[rlang:topic-inject]{quasiquotation}, \code{fn()} allows you to \dQuote{burn
 in} values at the point of function creation. This guards against changes
 in a function's enclosing environment. (See \sQuote{Use Unquoting to Make
 Robust Functions}.)
@@ -53,7 +53,7 @@ or\preformatted{  arg1, arg2, ..., argN, ~body
 }
 
 (Note in the second form that the body is a one-sided formula. This
-distinction is relevant for argument \link[rlang:bang-bang]{splicing}, see
+distinction is relevant for argument \link[rlang:topic-inject]{splicing}, see
 \sQuote{Quasiquotation}.)
 \itemize{
 \item To the left of \code{~}, you write a conventional function-argument
@@ -68,7 +68,7 @@ the arguments.
 \section{Quasiquotation}{
 
 All parts of a function declaration support Tidyverse
-\link[rlang:bang-bang]{quasiquotation}:
+\link[rlang:topic-inject]{quasiquotation}:
 \itemize{
 \item To unquote values (of arguments or parts of the body), use \verb{!!}:\preformatted{  z <- 0
   fn(x, y = !!z ~ x + y)

@@ -13,8 +13,8 @@ departial(..f)
 \item{..f}{Function.}
 
 \item{...}{Argument values of \code{..f} to fix, specified by name or position.
-Captured as \link[rlang:nse-defuse]{quosures}.
-\link[rlang:bang-bang]{Unquoting} and \link[rlang:bang-bang]{splicing}
+Captured as \link[rlang:topic-defuse]{quosures}.
+\link[rlang:topic-inject]{Unquoting} and \link[rlang:topic-inject]{splicing}
 are supported (see \sQuote{Examples}).}
 }
 \value{

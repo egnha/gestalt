@@ -8,7 +8,7 @@ posure(..., ..env = parent.frame())
 }
 \arguments{
 \item{...}{Function declaration whose body must be a function composition
-expressed using \code{\link{\%>>>\%}}. \link[rlang:bang-bang]{Quasiquotation} is
+expressed using \code{\link{\%>>>\%}}. \link[rlang:topic-inject]{Quasiquotation} is
 supported. The syntax is that of \code{\link[=fn]{fn()}} (see \sQuote{Function
 Declarations}) except that declaring \sQuote{\code{...}} among \code{...} is
 ambiguous.}

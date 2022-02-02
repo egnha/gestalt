@@ -62,9 +62,8 @@ its semantics and augmenting it to enable you to:
     the runtime characteristics of a flattened composition, so you can
     focus on expressing structure that is most natural for your function
 
--   **Unquote sub-expressions** with the tidyverse
-    [`!!`](https://rlang.r-lib.org/reference/quasiquotation.html)
-    operator, to enforce immutability or spare a runtime computation
+-   **Unquote sub-expressions** with the tidyverse `!!` operator, to enforce
+    immutability or spare a runtime computation
 
 ## Ceci n’est pas une `%>%`
 
@@ -217,8 +216,7 @@ You gain power by treating (piped) values as (composite) functions:
 In conjunction with `%>>>%`, gestalt also provides:
 
 -   `fn`, a more concise and flexible variation of `function`, which
-    supports tidyverse
-    [quasiquotation](https://rlang.r-lib.org/reference/quasiquotation.html).
+    supports tidyverse quasiquotation.
 
     ``` r
     size <- 5L
@@ -231,8 +229,7 @@ In conjunction with `%>>>%`, gestalt also provides:
 -   `partial`, to make new functions from old by fixing a number of
     arguments, i.e., [partial
     application](https://en.wikipedia.org/wiki/Partial_application).
-    Like `fn`, it also supports
-    [quasiquotation](https://rlang.r-lib.org/reference/quasiquotation.html).
+    Like `fn`, it also supports quasiquotation.
 
     ``` r
     (draw <- partial(sample, size = !!size, replace = TRUE))

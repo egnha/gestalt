@@ -12,13 +12,13 @@ fst \%>>>\% snd
 \arguments{
 \item{...}{Functions or lists thereof to compose, in order of application.
 Lists of functions are automatically spliced in.
-\link[rlang:bang-bang]{Unquoting} of names, via \verb{!!} on the left-hand side
-of \verb{:=}, and \link[rlang:bang-bang]{splicing}, via \verb{!!!}, are supported.}
+\link[rlang:topic-inject]{Unquoting} of names, via \verb{!!} on the left-hand side
+of \verb{:=}, and \link[rlang:topic-inject]{splicing}, via \verb{!!!}, are supported.}
 
 \item{fst, snd}{Functions. These may be optionally named using a colon (\code{:}),
 e.g., \code{f \%>>>\% nm: g} names the \code{g}-component \code{"nm"} (see
 \sQuote{Exceptions to the Interpretation of Calls as Functions}).
-\link[rlang:bang-bang]{Quasiquotation} and the
+\link[rlang:topic-inject]{Quasiquotation} and the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 semantics are supported (see \sQuote{Semantics of the Composition
 Operator}, \sQuote{Quasiquotation} and \sQuote{Examples}).}
@@ -48,7 +48,7 @@ is equivalent to the function\preformatted{  function(..., sep = " ", collapse =
 
 It comprehends both the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-operator and \link[rlang:bang-bang]{quasiquotation}. Thus, assuming \code{sep}
+operator and \link[rlang:topic-inject]{quasiquotation}. Thus, assuming \code{sep}
 has the value \code{""},\preformatted{  sample \%>>>\% paste(collapse = !!sep)
 }
 
@@ -152,7 +152,7 @@ are equivalent functions.
 \section{Quasiquotation}{
 
 The \code{`\%>>>\%`} operator supports Tidyverse
-\link[rlang:bang-bang]{unquoting} (via \verb{!!}). Use it to:
+\link[rlang:topic-inject]{unquoting} (via \verb{!!}). Use it to:
 \itemize{
 \item \strong{Enforce immutability}: For example, by unquoting \code{res} in\preformatted{  res <- "result"
   get_result <- identity \%>>>\% lapply(`[[`, !!res)

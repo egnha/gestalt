@@ -17,7 +17,7 @@ the \code{envir} argument of \code{\link[=eval]{eval()}}).}
 
 \item{...}{Named expressions. An expression looks up values to the left of
 it, and takes precedence over those in \code{`_data`}.
-\link[rlang:bang-bang]{Quasiquotation} of names and expressions is
+\link[rlang:topic-inject]{Quasiquotation} of names and expressions is
 supported (see \sQuote{Examples}).}
 
 \item{`_expr`}{Expression to evaluate (\dQuote{run}). Quasiquotation is
@@ -58,7 +58,7 @@ is equivalent to calling\preformatted{  local(\{
 
 except \code{let()} binds the named expressions lazily (as
 \link[=delayedAssign]{promises}) and comprehends tidyverse
-\link[rlang:bang-bang]{quasiquotation}.
+\link[rlang:topic-inject]{quasiquotation}.
 \item \code{run()} performs an \strong{action}: it evaluates an expression relative to an
 environment (by default, the current one) and, optionally, a sequence of
 \emph{lazily evaluated} ordered named expressions.
