@@ -2,9 +2,9 @@
 
 ## 0.1.9
 
-This maintenance release fixes test failures caused by changes in version 1.0.0
-of the rlang package (namely, `rlang::is_expression()`). There are no
-user-facing changes.
+Gestalt now depends on a stable release of rlang, version 1.0.0 and above.
+(A minor internal fix was made to address a change in the behavior of
+`rlang::is_expression()`.) There are no user-facing changes.
 
 ## 0.1.8
 

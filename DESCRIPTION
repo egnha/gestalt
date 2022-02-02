@@ -15,7 +15,7 @@ BugReports: https://github.com/egnha/gestalt/issues
 Depends:
     R (>= 3.3.0)
 Imports:
-    rlang (>= 0.99.0.9000),
+    rlang (>= 1.0.0),
     utils
 Suggests:
     magrittr (>= 1.5),
