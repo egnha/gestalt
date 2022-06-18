@@ -7,17 +7,19 @@
 #'   ```
 #'     compose(f, g, h, ...)
 #'   ```
-#'   This makes the function that applies `f`, _first_, then `g`, then `h`, etc.
+#'   This makes the function that applies `f`, then `g`, then `h`, etc.
 #'   It has the [formals][base::formals()] of the first function applied (namely
-#'   `f`). Thus
+#'   `f`). For example, if
 #'   ```
-#'     compose(paste, toupper)
+#'     fun <- compose(paste, toupper)
 #'   ```
-#'   is equivalent to the function
+#'   then the function `fun()` has the same signature as `paste()`, and the call
 #'   ```
-#'     function(..., sep = " ", collapse = NULL) {
-#'       toupper(paste(..., sep = sep, collapse = collapse))
-#'     }
+#'     fun(letters, collapse = ",")
+#'   ````
+#'   is equivalent to the composite call
+#'   ```
+#'     toupper(paste(letters, collapse = ","))
 #'   ```
 #'
 #' * Use `` `%>>>%` ``:
@@ -26,16 +28,19 @@
 #'   ```
 #'   It comprehends both the semantics of the
 #'   [\pkg{magrittr}](https://cran.r-project.org/package=magrittr) `` `%>%` ``
-#'   operator and [quasiquotation][rlang::quasiquotation]. Thus, assuming `sep`
-#'   has the value `""`,
+#'   operator and [quasiquotation][rlang::quasiquotation]. For example, if
 #'   ```
-#'     sample %>>>% paste(collapse = !!sep)
+#'     sep <- ""
+#'     fun <- sample %>>>% paste(collapse = !!sep)
 #'   ```
-#'   is equivalent to the function
+#'   then the function `fun()` has the same signature as `sample()`, and the
+#'   call
 #'   ```
-#'     function(x, size, replace = FALSE, prob = NULL) {
-#'       paste(sample(x, size, replace, prob), collapse = "")
-#'     }
+#'     fun(x, size, replace, prob)
+#'   ```
+#'   is equivalent to the composite call
+#'   ```
+#'     paste(sample(x, size, replace, prob), collapse = "")
 #'   ```
 #'
 #' Use [as.list()] to recover the list of composite functions. For example, both

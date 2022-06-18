@@ -36,18 +36,21 @@ To compose functions,
 \if{html}{\out{<div class="sourceCode">}}\preformatted{  compose(f, g, h, ...)
 }\if{html}{\out{</div>}}
 
-This makes the function that applies \code{f}, \emph{first}, then \code{g}, then \code{h}, etc.
+This makes the function that applies \code{f}, then \code{g}, then \code{h}, etc.
 It has the \link[base:formals]{formals} of the first function applied (namely
-\code{f}). Thus
+\code{f}). For example, if
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{  compose(paste, toupper)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  fun <- compose(paste, toupper)
 }\if{html}{\out{</div>}}
 
-is equivalent to the function
+then the function \code{fun()} has the same signature as \code{paste()}, and the call
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{  function(..., sep = " ", collapse = NULL) \{
-    toupper(paste(..., sep = sep, collapse = collapse))
-  \}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  fun(letters, collapse = ",")
+}\if{html}{\out{</div>}}
+
+is equivalent to the composite call
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  toupper(paste(letters, collapse = ","))
 }\if{html}{\out{</div>}}
 \item Use \code{`\%>>>\%`}:
 
@@ -56,17 +59,21 @@ is equivalent to the function
 
 It comprehends both the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
-operator and \link[rlang:topic-inject]{quasiquotation}. Thus, assuming \code{sep}
-has the value \code{""},
+operator and \link[rlang:topic-inject]{quasiquotation}. For example, if
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{  sample \%>>>\% paste(collapse = !!sep)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  sep <- ""
+  fun <- sample \%>>>\% paste(collapse = !!sep)
 }\if{html}{\out{</div>}}
 
-is equivalent to the function
+then the function \code{fun()} has the same signature as \code{sample()}, and the
+call
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{  function(x, size, replace = FALSE, prob = NULL) \{
-    paste(sample(x, size, replace, prob), collapse = "")
-  \}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  fun(x, size, replace, prob)
+}\if{html}{\out{</div>}}
+
+is equivalent to the composite call
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  paste(sample(x, size, replace, prob), collapse = "")
 }\if{html}{\out{</div>}}
 }
 
