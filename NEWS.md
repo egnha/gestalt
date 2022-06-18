@@ -1,5 +1,17 @@
 # gestalt
 
+## 0.1.9.9000
+
+  * Default argument values of a composite function are now evaluated in the
+    evaluation environment of the initial function. Essentially, a call like 
+    `compose(f, g)(x, y, ...)` is now equivalent to a call like
+    `(function(...) g(f(...)))(x, y, ...)`. (Previously, the initial
+    function was called with a complete set of formal arguments, which in cases
+    where formal arguments are mutated and coupled (e.g., `base::objects()`),
+    could lead the initial function to wrongly determine the "missingness" of
+    an argument or wrongly evaluate an argument's default value.) As before, the
+    signature of `compose(f, ...)` inherits the signature of `f`.
+
 ## 0.1.9
 
 Gestalt now depends on a stable release of rlang, version 1.0.0 and above.

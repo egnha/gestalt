@@ -362,7 +362,7 @@ compose <- function(...) {
   fs <- fn_tree(...)
   if (is_empty(fs))
     return(NULL)
-  cmp <- fuse(fs)
+  cmp <- compose_(fs)
   class(cmp) <- c("CompositeFunction", "function")
   cmp
 }
@@ -462,7 +462,7 @@ lambda_named <- function(expr, env) {
 is_lambda <- check_head("{")
 
 lambda <- local({
-  args <- pairlist(... = quote(expr = ), . = quote(..1))
+  args <- as.pairlist(alist(... = ,  . = ..1))
 
   function(body, env) {
     new_fn(args, body, env)
@@ -511,34 +511,37 @@ fn_interp.function <- function(x) x
 #' @export
 fn_interp.NULL <- function(x) NULL
 
-fuse <- function(fs) {
+compose_ <- function(fs) {
   pipeline <- unlist(fs, use.names = FALSE)
-  mouth <- pipeline[[1L]]
-  fmls <- fml_args(mouth)
-  pipe <- reduce_calls(length(pipeline), fmls)
-  env <- envir(mouth) %encloses% (pipeline %named% pipe$nms)
+  fst <- pipeline[[1L]]
+  pipe <- reduce_calls(length(pipeline))
+  env <- envir(fst) %encloses% (pipeline %named% pipe$nms)
+  assign("__cmp__", eval(pipe$expr, env), env)
   makeActiveBinding("__fn_tree__", get_tree(fs, env), env)
-  new_fn(fmls, pipe$expr, env)
+  new_fn(fml_args(fst), eval_cmp_call, env)
 }
 
-reduce_calls <- function(n, fmls) {
-  nms <- as_protected_name(seq_len(n))
-  args <- as_called(fmls)
-  expr <- as.call(c(as.name(nms[[1L]]), args))
-  for (nm in nms[-1L])
-    expr <- call(nm, expr)
-  list(expr = expr, nms = nms)
-}
+eval_cmp_call <- quote(eval.parent(`[[<-`(sys.call(), 1L, `__cmp__`)))
 
-as_called <- function(fmls) {
-  nms <- names(fmls)
-  i <- which(nms == "...")
-  if (is_empty(i))
-    return(lapply(nms, as.name))
-  sig <- eponymous(nms)
-  names(sig)[seq_len(i)] <- ""
-  sig
-}
+as_protected_name <- function(i) sprintf("__%d__", i)
+
+reduce_calls <- local({
+  reduce_calls_ <- function(n) {
+    nms <- as_protected_name(seq_len(n))
+    expr <- as.call(c(as.name(nms[[1L]]), quote(...)))
+    for (nm in nms[-1L])
+      expr <- call(nm, expr)
+    list(nms = nms, expr = call("function", as.pairlist(alist(... = )), expr))
+  }
+
+  # A typical composition consists of fewer than 32 functions, presumably.
+  chain <- lapply(seq_len(32L), reduce_calls_)
+
+  # Frequently called for small integers; pre-compute those values.
+  function(n) {
+    if (n <= length(chain)) .subset2(chain, n) else reduce_calls_(n)
+  }
+})
 
 get_tree <- function(fs, env) {
   force(env)
@@ -556,8 +559,6 @@ fn_names <- function(fs) {
     as_protected_name(i)
   })
 }
-
-as_protected_name <- function(i) sprintf("__%d__", i)
 
 #' @export
 `$.CompositeFunction` <- function(x, i) {

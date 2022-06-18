@@ -126,8 +126,8 @@ test_that("compositions are called as flattened pipeline", {
   # Body reveals flattened pipeline
   expect_length(unlist(as.list(baz)), 6)
   expect_identical(
-    body(baz),
-    quote(`__6__`(`__5__`(`__4__`(`__3__`(`__2__`(`__1__`(..., . = .)))))))
+    body(environment(baz)$`__cmp__`),
+    quote(`__6__`(`__5__`(`__4__`(`__3__`(`__2__`(`__1__`(...)))))))
   )
 })
 
@@ -917,4 +917,43 @@ test_that("unlist() flattens the list of composite functions", {
            recursive = FALSE, use.names = FALSE),
     list(abs, log, list(sum = sum, identity))
   )
+})
+
+test_that("composition call is passed on to the initial function", {
+  f <- function(x, y = "y", ..., n) as.list(sys.call(n))[-1]
+
+  # Ensure that the length of the composition is immaterial.
+  for (g in list(NULL, identity, identity, identity)) {
+    f <- compose(f, g)
+    args <- alist(y = 1, 2, n = -length(f), 3)
+    expect_equal(f(y = 1, 2, n = -length(f), 3), args)
+    expect_equal(do.call(f, args), args)
+  }
+})
+
+test_that("argument defaults are evaluated in the conventional environment", {
+  default <- "ignore this"
+  f <- local({
+    default <- "default"
+    function(x = default, y = derived_from(x)) {
+      x <- toupper(x)
+      c(x, y)
+    }
+  })
+  derived_from <- function(x) paste("derived from", x)
+  cmp <- compose(f, identity)
+  expect_equal(cmp(), c("DEFAULT", "derived from DEFAULT"))
+  expect_equal(cmp("given"), c("GIVEN", "derived from GIVEN"))
+  expect_equal(cmp(y = "given"), c("DEFAULT", "given"))
+  expect_equal(cmp("given", "given"), c("GIVEN", "given"))
+})
+
+test_that("missing arguments remain missing under function composition", {
+  is_missing <- compose(function(x = NULL) missing(x), identity)
+  expect_true(is_missing())
+  expect_false(is_missing(NULL))
+
+  is_missing <- compose(function(x) missing(x), identity)
+  expect_true(is_missing())
+  expect_false(is_missing(NULL))
 })
