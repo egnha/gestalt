@@ -45,16 +45,20 @@ Programming in R typically involves:
 named expressions to a child of a given environment (by default, the
 current one).
 
-For instance, in an environment \code{env} where \code{z} is in scope,\preformatted{  let(env, x = 1, y = x + 2, z = x * y * z)
-}
+For instance, in an environment \code{env} where \code{z} is in scope,
 
-is equivalent to calling\preformatted{  local(\{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  let(env, x = 1, y = x + 2, z = x * y * z)
+}\if{html}{\out{</div>}}
+
+is equivalent to calling
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  local(\{
     x <- 1
     y <- x + 2
     z <- x * y * z
     environment()
   \})
-}
+}\if{html}{\out{</div>}}
 
 except \code{let()} binds the named expressions lazily (as
 \link[=delayedAssign]{promises}) and comprehends tidyverse
@@ -63,15 +67,19 @@ except \code{let()} binds the named expressions lazily (as
 environment (by default, the current one) and, optionally, a sequence of
 \emph{lazily evaluated} ordered named expressions.
 
-For instance, in an environment \code{env} where \code{x} is in scope,\preformatted{  run(env, x + y + z, y = x + 2, z = x * y * z)
-}
+For instance, in an environment \code{env} where \code{x} is in scope,
 
-is equivalent to calling\preformatted{  local(\{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  run(env, x + y + z, y = x + 2, z = x * y * z)
+}\if{html}{\out{</div>}}
+
+is equivalent to calling
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  local(\{
     y <- x + 2
     z <- x * y * z
     x + y + z
   \})
-}
+}\if{html}{\out{</div>}}
 
 except \code{run()}, like \code{let()}, binds \code{y} and \code{z} lazily and comprehends
 quasiquotation.
@@ -83,28 +91,34 @@ quasiquotation.
 assignments because contexts are both lazy and composable. Like
 assignments, the order of named expressions in a context is significant.
 
-For example, you can string together contexts to make larger ones:\preformatted{  foo <-
+For example, you can string together contexts to make larger ones:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  foo <-
     let(a = ., b = a + 2) \%>>>\%
     let(c = a + b) \%>>>\%
     run(a + b + c)
 
   foo(1)
   #> [1] 8
-}
+}\if{html}{\out{</div>}}
 
-Earlier bindings can be overriden by later ones:\preformatted{  bar <-
+Earlier bindings can be overriden by later ones:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  bar <-
     foo[1:2] \%>>>\%        # Collect the contexts of 'foo()'
     let(c = c - 1) \%>>>\%  # Override 'c'
     run(a + b + c)
 
   bar(1)
   #> [1] 7
-}
+}\if{html}{\out{</div>}}
 
 Bindings are \link[=delayedAssign]{promises}; they are only evaluated on
-demand:\preformatted{  run(let(x = a_big_expense(), y = "avoid a big expense"), y)
+demand:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  run(let(x = a_big_expense(), y = "avoid a big expense"), y)
   #> [1] "avoid a big expense"
-}
+}\if{html}{\out{</div>}}
 }
 
 \section{Remark}{

@@ -24,10 +24,12 @@ A function whose enclosing environment is \code{..env}.
 signature. Use it in place of the usual \code{\link[=function]{function()}} invocation whenever you
 want to:
 \itemize{
-\item \strong{Be concise}: The function declarations\preformatted{  fn(x, y = 1 ~ x + y)
+\item \strong{Be concise}: The function declarations
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  fn(x, y = 1 ~ x + y)
 
   function(x, y = 1) x + y
-}
+}\if{html}{\out{</div>}}
 
 are equivalent.
 \item \strong{Enforce immutability}: By enabling Tidyverse
@@ -46,11 +48,15 @@ literally interpret unquoting and splicing operators in \code{fn()}.)
 \section{Function Declarations}{
  A \strong{function declaration} is an expression
 that specifies a function's arguments and body, as a comma-separated
-expression of the form\preformatted{  arg1, arg2, ..., argN ~ body
-}
+expression of the form
 
-or\preformatted{  arg1, arg2, ..., argN, ~body
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  arg1, arg2, ..., argN ~ body
+}\if{html}{\out{</div>}}
+
+or
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  arg1, arg2, ..., argN, ~body
+}\if{html}{\out{</div>}}
 
 (Note in the second form that the body is a one-sided formula. This
 distinction is relevant for argument \link[rlang:topic-inject]{splicing}, see
@@ -70,24 +76,34 @@ the arguments.
 All parts of a function declaration support Tidyverse
 \link[rlang:topic-inject]{quasiquotation}:
 \itemize{
-\item To unquote values (of arguments or parts of the body), use \verb{!!}:\preformatted{  z <- 0
+\item To unquote values (of arguments or parts of the body), use \verb{!!}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  z <- 0
   fn(x, y = !!z ~ x + y)
   fn(x ~ x > !!z)
-}
+}\if{html}{\out{</div>}}
 \item To unquote argument names (with default value), use \verb{:=} (definition
-operator):\preformatted{  arg <- "y"
-  fn(x, !!arg := 0 ~ x + !!as.name(arg))
-}
-\item To splice in a (formal) list of arguments, use \verb{!!!}:\preformatted{  # NB: Body is a one-sided formula
-  fn(!!!alist(x, y = 0), ~ x + y)
-}
+operator):
 
-Splicing allows you to treat a complete function declaration as a unit:\preformatted{  soma <- alist(x, y = 0, ~ x + y)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  arg <- "y"
+  fn(x, !!arg := 0 ~ x + !!as.name(arg))
+}\if{html}{\out{</div>}}
+\item To splice in a (formal) list of arguments, use \verb{!!!}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  # NB: Body is a one-sided formula
+  fn(!!!alist(x, y = 0), ~ x + y)
+}\if{html}{\out{</div>}}
+
+Splicing allows you to treat a complete function declaration as a unit:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  soma <- alist(x, y = 0, ~ x + y)
   fn(!!!soma)
-}
+}\if{html}{\out{</div>}}
 \item To write literal unquoting operators, use \code{QUQ()}, \code{QUQS()}, which read
 as \dQuote{quoted unquoting,} \dQuote{quoted unquote-splicing,} resp. (cf.
-\code{fn_()}):\preformatted{  library(dplyr)
+\code{fn_()}):
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  library(dplyr)
 
   my_summarise <- fn(df, ... ~ \{
     groups <- quos(...)
@@ -95,7 +111,7 @@ as \dQuote{quoted unquoting,} \dQuote{quoted unquote-splicing,} resp. (cf.
       group_by(QUQS(groups)) \%>\%
       summarise(a = mean(a))
   \})
-}
+}\if{html}{\out{</div>}}
 
 (Source: \href{https://dplyr.tidyverse.org/articles/programming.html}{Programming with dplyr})
 }
@@ -122,34 +138,42 @@ earlier function depends upon.
 You can use unquoting to guard against such mutations.
 
 \subsection{Example}{
-Consider the following function:\preformatted{  a <- 1
+Consider the following function:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  a <- 1
   foo <- function(x) x + a
-}
+}\if{html}{\out{</div>}}
 
 What is the value of \code{foo(1)}? It is not necessarily \code{2}, because the value
 of \code{a} may have changed between the \emph{creation} of \code{foo()} and the \emph{calling}
-of \code{foo(1)}:\preformatted{  foo(1)  #> [1] 2
+of \code{foo(1)}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  foo(1)  #> [1] 2
 
   a <- 0
 
   foo(1)  #> [1] 1
-}
+}\if{html}{\out{</div>}}
 
 In other words, \code{foo()} is impure because the value of \code{foo(x)} depends not
 only on the value of \code{x} but also on the \emph{externally mutable} value of \code{a}.
 
 With \code{fn()}, you can unquote \code{a} to \dQuote{burn in} its value at the point
-of creation:\preformatted{  a <- 1
+of creation:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  a <- 1
   foo <- fn(x ~ x + !!a)
-}
+}\if{html}{\out{</div>}}
 
 Now \code{foo()} is a pure function, unaffected by changes to \code{a} in the lexical
-scope:\preformatted{  foo(1)  #> [1] 2
+scope:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  foo(1)  #> [1] 2
 
   a <- 0
 
   foo(1)  #> [1] 2
-}
+}\if{html}{\out{</div>}}
 
 }
 }

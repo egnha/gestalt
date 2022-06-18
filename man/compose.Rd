@@ -31,37 +31,51 @@ closure).
 \description{
 To compose functions,
 \itemize{
-\item Use \code{compose()}:\preformatted{  compose(f, g, h, ...)
-}
+\item Use \code{compose()}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  compose(f, g, h, ...)
+}\if{html}{\out{</div>}}
 
 This makes the function that applies \code{f}, \emph{first}, then \code{g}, then \code{h}, etc.
 It has the \link[base:formals]{formals} of the first function applied (namely
-\code{f}). Thus\preformatted{  compose(paste, toupper)
-}
+\code{f}). Thus
 
-is equivalent to the function\preformatted{  function(..., sep = " ", collapse = NULL) \{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  compose(paste, toupper)
+}\if{html}{\out{</div>}}
+
+is equivalent to the function
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  function(..., sep = " ", collapse = NULL) \{
     toupper(paste(..., sep = sep, collapse = collapse))
   \}
-}
-\item Use \code{`\%>>>\%`}:\preformatted{  f \%>>>\% g \%>>>\% h \%>>>\% ...
-}
+}\if{html}{\out{</div>}}
+\item Use \code{`\%>>>\%`}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  f \%>>>\% g \%>>>\% h \%>>>\% ...
+}\if{html}{\out{</div>}}
 
 It comprehends both the semantics of the
 \href{https://cran.r-project.org/package=magrittr}{\pkg{magrittr}} \code{`\%>\%`}
 operator and \link[rlang:topic-inject]{quasiquotation}. Thus, assuming \code{sep}
-has the value \code{""},\preformatted{  sample \%>>>\% paste(collapse = !!sep)
-}
+has the value \code{""},
 
-is equivalent to the function\preformatted{  function(x, size, replace = FALSE, prob = NULL) \{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  sample \%>>>\% paste(collapse = !!sep)
+}\if{html}{\out{</div>}}
+
+is equivalent to the function
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  function(x, size, replace = FALSE, prob = NULL) \{
     paste(sample(x, size, replace, prob), collapse = "")
   \}
-}
+}\if{html}{\out{</div>}}
 }
 
-Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions. For example, both\preformatted{  as.list(compose(paste, capitalize = toupper))
+Use \code{\link[=as.list]{as.list()}} to recover the list of composite functions. For example, both
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  as.list(compose(paste, capitalize = toupper))
 
   as.list(paste \%>>>\% capitalize: toupper)
-}
+}\if{html}{\out{</div>}}
 
 return the (named) list of functions \code{list(paste, capitalize = toupper)}.
 }
@@ -72,8 +86,10 @@ The \code{`\%>>>\%`} operator adopts the semantics of the
 operator:
 \enumerate{
 \item \strong{Bare names are matched to functions}: For example, in a composition
-like\preformatted{  ... \%>>>\% foo \%>>>\% ...
-}
+like
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% foo \%>>>\% ...
+}\if{html}{\out{</div>}}
 
 the \sQuote{\code{foo}} is matched to the function of that name.
 \item \strong{Function calls are interpreted as a unary function of a point (\code{.})}:
@@ -81,38 +97,46 @@ A \emph{call} is interpreted as a \emph{function} (of a point) in one of two way
 \itemize{
 \item If the point matches an argument value, the call is literally
 interpreted as the body of the function. For example, in the
-compositions\preformatted{  ... \%>>>\% foo(x, .) \%>>>\% ...
+compositions
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% foo(x, .) \%>>>\% ...
 
   ... \%>>>\% foo(x, y = .) \%>>>\% ...
-}
+}\if{html}{\out{</div>}}
 
 the \sQuote{\code{foo(x, .)}}, resp. \sQuote{\code{foo(x, y = .)}}, is
 interpreted as the function \code{function(..., . = ..1) foo(x, .)}, resp.
 \code{function(..., . = ..1) foo(x, y = .)}.
 \item Otherwise, the call is regarded as implicitly having the point as its
 first argument before being interpreted as the body of the function.
-For example, in the compositions\preformatted{  ... \%>>>\% foo(x) \%>>>\% ...
+For example, in the compositions
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% foo(x) \%>>>\% ...
 
   ... \%>>>\% foo(x, y(.)) \%>>>\% ...
-}
+}\if{html}{\out{</div>}}
 
 the \sQuote{\code{foo(x)}}, resp. \sQuote{\code{foo(x, y(.))}}, is interpreted
 as the function \code{function(..., . = ..1) foo(., x)}, resp.
 \code{function(..., . = ..1) foo(., x, y(.))}.
 }
 \item \strong{Expressions \code{{...}} are interpreted as a function of a point (\code{.})}:
-For example, in a composition\preformatted{  ... \%>>>\% \{
+For example, in a composition
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% \{
     foo(.)
     bar(.)
   \} \%>>>\% ...
-}
+}\if{html}{\out{</div>}}
 
 the \sQuote{\code{{foo(.); bar(.)}}} is interpreted as the function
 \code{function(..., . = ..1) {foo(.); bar(.)}}.
 
 Curly braces are useful when you need to circumvent \code{`\%>>>\%`}'s
-usual interpretation of function calls. For example, in a composition\preformatted{  ... \%>>>\% \{foo(x, y(.))\} \%>>>\% ...
-}
+usual interpretation of function calls. For example, in a composition
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% \{foo(x, y(.))\} \%>>>\% ...
+}\if{html}{\out{</div>}}
 
 the \sQuote{\code{{foo(x, y(.))}}} is interpreted as the function
 \code{function(..., . = ..1) foo(x, y(.))}. There is no point as first
@@ -128,8 +152,10 @@ function.) In particular, expressions within parentheses are literally
 interpreted.
 \item \strong{Colon} (\code{:}) applies \emph{naming}, according to the syntax
 \sQuote{\verb{<name>: <function>}}, where \sQuote{\verb{<function>}} is interpreted
-according to the semantics of \code{`\%>>>\%`}. For example, in\preformatted{  ... \%>>>\% aName: foo \%>>>\% ...
-}
+according to the semantics of \code{`\%>>>\%`}. For example, in
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% aName: foo \%>>>\% ...
+}\if{html}{\out{</div>}}
 
 the function \code{foo} is named \code{"aName"}.
 \item \strong{\code{\link[=fn]{fn()}}}, namespace operators (\code{`::` },
@@ -137,12 +163,14 @@ the function \code{foo} is named \code{"aName"}.
 \code{`[`}) are literally interpreted. This allows for list extractors to
 be applied to composite functions appearing in a \code{`\%>>>\%`} call (see
 'Operate on Composite Functions as List-Like Objects'). For example, the
-compositions\preformatted{  paste \%>>>\% tolower
+compositions
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  paste \%>>>\% tolower
 
   paste \%>>>\% base::tolower
 
   (paste \%>>>\% toupper)[[1]] \%>>>\% tolower
-}
+}\if{html}{\out{</div>}}
 
 are equivalent functions.
 }
@@ -154,34 +182,42 @@ are equivalent functions.
 The \code{`\%>>>\%`} operator supports Tidyverse
 \link[rlang:topic-inject]{unquoting} (via \verb{!!}). Use it to:
 \itemize{
-\item \strong{Enforce immutability}: For example, by unquoting \code{res} in\preformatted{  res <- "result"
+\item \strong{Enforce immutability}: For example, by unquoting \code{res} in
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  res <- "result"
   get_result <- identity \%>>>\% lapply(`[[`, !!res)
-}
+}\if{html}{\out{</div>}}
 
 you ensure that the function \code{get_result()} always extracts the component
 named \code{"result"}, even if the binding \code{res} changes its value or is
 removed altogether.
 \item \strong{Interpret the point (\code{.}) in the lexical scope}: Even though
 \code{`\%>>>\%`} interprets \sQuote{\code{.}} as a function argument, you can
-still reference an object of that name via unquoting. For example,\preformatted{  . <- "point"
+still reference an object of that name via unquoting. For example,
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  . <- "point"
   is_point <- identity \%>>>\% \{. == !!.\}
-}
+}\if{html}{\out{</div>}}
 
 determines a function that checks for equality with the string \code{"point"}.
 \item \strong{Name composite functions, programmatically}: For example, unquoting
-\code{nm} in\preformatted{  nm <- "aName"
+\code{nm} in
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  nm <- "aName"
   ... \%>>>\% !!nm: foo \%>>>\% ...
-}
+}\if{html}{\out{</div>}}
 
 names the \sQuote{\code{foo}}-component of the resulting composite function
 \code{"aName"}.
 \item \strong{Accelerate functions by fixing constant dependencies}: For example,
 presuming the value of the call \code{f()} is \emph{constant} and that \code{g} is a
 \emph{pure} function (meaning that its return value depends only on its
-input), both\preformatted{  ... \%>>>\% g(f()) \%>>>\% ...
+input), both
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  ... \%>>>\% g(f()) \%>>>\% ...
 
   ... \%>>>\% g(!!f()) \%>>>\% ...
-}
+}\if{html}{\out{</div>}}
 
 would be functions yielding the same values. But the first would compute
 \code{f()} anew with each call, whereas the second would simply depend on a
@@ -198,10 +234,14 @@ were this list, getting a function in return. This enables you to leverage
 composite functions as \emph{structured computations}.
 
 \subsection{Indexing}{
-For instance, the \sQuote{\code{sum}} in the following composite function\preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)
-}
+For instance, the \sQuote{\code{sum}} in the following composite function
 
-can be \link[base:Extract]{extracted} in the usual ways:\preformatted{  f[[2]][[2]]
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  f <- abs \%>>>\% out: (log \%>>>\% agg: sum)
+}\if{html}{\out{</div>}}
+
+can be \link[base:Extract]{extracted} in the usual ways:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  f[[2]][[2]]
   f[[c(2, 2)]]
 
   f$out$agg
@@ -210,7 +250,7 @@ can be \link[base:Extract]{extracted} in the usual ways:\preformatted{  f[[2]][[
 
   f$out[[2]]
   f[[list("out", 2)]]
-}
+}\if{html}{\out{</div>}}
 
 The last form of indexing with a mixed list is handy when you need to
 create an index programmatically.
@@ -220,8 +260,10 @@ Additionally, you can excise sub-composite functions with
 \itemize{
 \item Both \code{f[1]} and \code{head(f, 1)} get the \sQuote{\code{abs}} as a composite
 function, namely \code{compose(abs)}
-\item \code{f[2:1]} reverses the order of the top-level functions to yield\preformatted{  out: (log \%>>>\% agg: sum) \%>>>\% abs
-}
+\item \code{f[2:1]} reverses the order of the top-level functions to yield
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  out: (log \%>>>\% agg: sum) \%>>>\% abs
+}\if{html}{\out{</div>}}
 \item \code{f$out[c(FALSE, TRUE)]} gets the \sQuote{\code{sum}} as a (named) composite
 function
 }
@@ -229,22 +271,26 @@ function
 
 \subsection{Subset Assignment}{
 Similarily, subset assignment works as it does for lists. For instance, you
-can replace the \sQuote{\code{sum}} with the identity function:\preformatted{  f[[2]][[2]] <- identity
+can replace the \sQuote{\code{sum}} with the identity function:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  f[[2]][[2]] <- identity
 
   f$out$agg <- identity
   f[["out"]][["agg"]] <- identity
 
   f$out[[2]] <- identity
   f[[list("out", 2)]] <- identity
-}
+}\if{html}{\out{</div>}}
 
 Multiple constituent functions can be reassigned using
-\code{\link[base:Extract]{[<-}}. For example\preformatted{  f[2] <- list(log)
+\code{\link[base:Extract]{[<-}}. For example
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  f[2] <- list(log)
 
   f["out"] <- list(log)
 
   f[c(FALSE, TRUE)] <- list(log)
-}
+}\if{html}{\out{</div>}}
 
 all replace the second constituent function with \code{log}, so that \code{f} becomes
 \code{abs \%>>>\% log}.
@@ -253,11 +299,15 @@ all replace the second constituent function with \code{log}, so that \code{f} be
 \subsection{Other List Methods}{
 The generic methods \code{\link[=unlist]{unlist()}}, \code{\link[=length]{length()}}, \code{\link[=names]{names()}} also apply to
 composite functions. In conjunction with \code{compose()}, you can use
-\code{unlist()} to \dQuote{flatten} compositions. For example\preformatted{  compose(unlist(f, use.names = FALSE))
-}
+\code{unlist()} to \dQuote{flatten} compositions. For example
 
-gives a function that is identical to\preformatted{  abs \%>>>\% log \%>>>\% sum
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  compose(unlist(f, use.names = FALSE))
+}\if{html}{\out{</div>}}
+
+gives a function that is identical to
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  abs \%>>>\% log \%>>>\% sum
+}\if{html}{\out{</div>}}
 
 }
 }
@@ -268,7 +318,9 @@ The speed of a composite function made by \code{compose()} or \code{`\%>>>\%`}
 (regardless of its nested depth) is on par with a manually constructed
 \emph{serial} composition. This is because \code{compose()} and \code{`\%>>>\%`} are
 \strong{associative}, semantically and operationally. For instance, triple
-compositions,\preformatted{  compose(f, g, h)
+compositions,
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  compose(f, g, h)
   f \%>>>\% g \%>>>\% h
 
   compose(f, compose(g, h))
@@ -276,7 +328,7 @@ compositions,\preformatted{  compose(f, g, h)
 
   compose(compose(f, g), h)
   (f \%>>>\% g) \%>>>\% h
-}
+}\if{html}{\out{</div>}}
 
 are all implemented as the \emph{same function}. Lists of functions are
 automatically \dQuote{flattened} when composed.

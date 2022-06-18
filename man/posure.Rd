@@ -20,19 +20,25 @@ need to set this.)}
 Function with \link[=formals]{formals}
 \verb{function (..., <composite_function_dependencies>)}, where
 \verb{<composite_function_dependencies>} stands for the formals captured by the
-dots of \code{posure()}. In particular, a call of the form\preformatted{  posure(a, b = value ~ f(a, b) \%>>>\% g(a, b))
-}
+dots of \code{posure()}. In particular, a call of the form
 
-produces a function with the same formals and return values as\preformatted{  function(..., a, b = value) \{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  posure(a, b = value ~ f(a, b) \%>>>\% g(a, b))
+}\if{html}{\out{</div>}}
+
+produces a function with the same formals and return values as
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  function(..., a, b = value) \{
     (f(a, b) \%>>>\% g(a, b))(...)
   \}
-}
+}\if{html}{\out{</div>}}
 }
 \description{
 \code{posure()} enables you to create \emph{efficient} variable (i.e., parameterized)
 \link[=compose]{composite functions}.
 
-For instance, say you have a composite function such as\preformatted{  function(..., b = 2, n) \{
+For instance, say you have a composite function such as
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  function(..., b = 2, n) \{
     (sample \%>>>\% log(base = b) \%>>>\% rep(n))(...)
   \}
 
@@ -40,14 +46,16 @@ For instance, say you have a composite function such as\preformatted{  function(
   function(..., b = 2, n) \{
     sample(...) \%>\% log(base = b) \%>\% rep(n)
   \}
-}
+}\if{html}{\out{</div>}}
 
 which varies according to the values of \code{b} and \code{n}.  You can express this
 more succinctly with \code{posure()}, by dropping the placeholder argument
-(\sQuote{\code{...}}):\preformatted{  posure(b = 2, n ~ \{
+(\sQuote{\code{...}}):
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  posure(b = 2, n ~ \{
     sample \%>>>\% log(base = b) \%>>>\% rep(n)
   \})
-}
+}\if{html}{\out{</div>}}
 
 This creates a function with same \link[=formals]{formals} and return values.
 
