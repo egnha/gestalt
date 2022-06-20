@@ -79,7 +79,6 @@ assign_getter <- local({
       attr(x, property, exact = TRUE)
     }
     assign(nm, getter, envir = env)
-    invisible(getter)
   }
 
   function(..., env = parent.frame()) {
@@ -96,7 +95,6 @@ assign_setter <- local({
       invisible(x)
     }
     assign(paste0(nm, "<-"), setter, envir = env)
-    invisible(setter)
   }
 
   function(..., env = parent.frame()) {
