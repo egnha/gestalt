@@ -526,7 +526,7 @@ compose_ <- function(fs) {
   new_fn(fml_args(fst), eval_cmp_call, env)
 }
 
-eval_cmp_call <- quote(eval.parent(`[[<-`(sys.call(), 1L, `__cmp__`)))
+eval_cmp_call <- quote(eval(`[[<-`(sys.call(), 1L, `__cmp__`), parent.frame()))
 
 as_protected_name <- function(i) sprintf("__%d__", i)
 
