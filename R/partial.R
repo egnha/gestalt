@@ -6,23 +6,31 @@
 #' given a function, it fixes the value of selected arguments to produce a
 #' function of the remaining arguments.
 #'
-#' `departial()` \dQuote{inverts} the application of `partial()` by returning
-#' the original function.
+#' `departial()` undoes the application of `partial()` by returning the original
+#' function.
 #'
 #' @param ..f Function.
 #' @param ... Argument values of `..f` to fix, specified by name or position.
 #'   Captured as [quosures][rlang::quotation].
 #'   [Unquoting][rlang::quasiquotation] and [splicing][rlang::quasiquotation]
-#'   are supported (see \sQuote{Examples}).
+#'   are supported (see \sQuote{Examples}). Argument values may match the `...`
+#'   argument of `..f` (if present), but then only when specified by name.
 #'
 #' @return `partial()` returns a function whose [formals][base::formals()] are a
-#'   literal truncation of the formals of `..f()` (as a closure) by the fixed
-#'   arguments. `partial(..f)` is identical to `..f`.
+#'   truncation of the formals of `..f` (as a closure) by the fixed arguments.
+#'   The original default values do not appear in the formals of a partialized
+#'   function, but are nonetheless applied when the function is called.
+#'
+#'   The function `partial(..f)` is identical to `..f`.
 #'
 #'   In conformance with R's calling convention, fixed argument values are lazy
 #'   [promises][base::delayedAssign()]. Moreover, when forced, they are [tidily
 #'   evaluated][rlang::eval_tidy()]. Lazy evaluation of fixed arguments can be
 #'   overridden via unquoting, see \sQuote{Examples}.
+#'
+#'   When `..f` is a partially applied function, `departial(..f)` is the
+#'   (closure of) the underlying function. For ordinary (non-partially applied)
+#'   functions, `departial(..f)` is identical to `..f`.
 #'
 #' @details
 #'   Even while `partial()` truncates formals, it remains compatible with
@@ -30,7 +38,7 @@
 #'   specified argument was supplied in a call. For example,
 #'   `draw3 <- partial(sample, size = 3)` works as a function that randomly
 #'   draws three elements, even though `sample()` invokes `missing(size)` and
-#'   `draw3()` has signature `function (x, replace = FALSE, prob = NULL)`.
+#'   `draw3()` has the form `function(x, replace, prob) ...`.
 #'
 #'   Because partially applied functions call the original function in an ad hoc
 #'   environment, impure functions that depend on the calling context as a
@@ -38,7 +46,24 @@
 #'   `partial()`. For example, `partial(ls, all.names = TRUE)()` is not
 #'   equivalent to `ls(all.names = TRUE)`, because `ls()` inspects the calling
 #'   environment to produce its value, whereas `partial(ls, all.names = TRUE)()`
-#'   calls `ls(all.names = TRUE)` from an (ephemeral) execution environment.
+#'   calls `ls(all.names = TRUE)` from an (ephemeral) evaluation environment.
+#'
+#'   The formal arguments of `partial(..f, ...)` do not retain the original
+#'   default values, because doing so would be generally ill-defined. For
+#'   example, consider a function `function(x, y = x, ...) ...`. The default
+#'   value of `y` is interpreted in the evaluation environment, and therefore
+#'   matches the argument `x`. However, if `x` were dropped from the formals but
+#'   the default value of `y` were retained, then the default value of `y` in
+#'   the resulting function of the form `function(y = x, ...) ...` would have an
+#'   incompatible interpretation: it would be looked up in the function
+#'   environment, i.e., the parent of the evaluation environment.
+#'
+#'   Nevertheless, any default values of `..f` not overridden by `partial()`
+#'   remain in force. For example, consider [`sample()`][base::sample()]. It has
+#'   a default argument value `replace = FALSE`. The function
+#'   `p <- partial(sample, size = 3)` has the form
+#'   `function(x, replace, prob) ...`. Yet when `p()` is called without a value
+#'   for `replace`, its original default value is used, namely `FALSE`.
 #'
 #' @examples
 #' # Arguments can be fixed by name
@@ -74,29 +99,22 @@
 #' rnd_eager2 <- partial(runif, !!!args_eager)
 #' replicate(4, rnd_eager2(), simplify = FALSE)
 #'
+#' # Use rlang::exprs() to selectively evaluate arguments to fix
 #' args_mixed <- rlang::exprs(n = rpois(1, 5), max = !!sample(10, 1))
 #' rnd_mixed2 <- partial(runif, !!!args_mixed)
 #' replicate(4, rnd_mixed2(), simplify = FALSE)
 #'
-#' # partial() truncates formals by the fixed arguments
+#' # partial() truncates formals by the fixed arguments, omits default values
 #' foo <- function(x, y = x, ..., z = "z") NULL
 #' stopifnot(
-#'   identical(
-#'     formals(partial(foo)),
-#'     formals(foo)
-#'   ),
-#'   identical(
-#'     formals(partial(foo, x = 1)),
-#'     formals(function(y = x, ..., z = "z") {})
-#'   ),
-#'   identical(
-#'     formals(partial(foo, x = 1, y = 2)),
-#'     formals(function(..., z = "z") {})
-#'   ),
-#'   identical(
-#'     formals(partial(foo, x = 1, y = 2, z = 3)),
-#'     formals(function(...) {})
-#'   )
+#'   identical(formals(partial(foo)),
+#'             formals(foo)),
+#'   identical(formals(partial(foo, x = 1)),
+#'             formals(function(y, ..., z) NULL)),
+#'   identical(formals(partial(foo, x = 1, y = 2)),
+#'             formals(function(..., z) NULL)),
+#'   identical(formals(partial(foo, x = 1, y = 2, z = 3)),
+#'             formals(function(...) NULL))
 #' )
 #'
 #' @export
@@ -104,19 +122,36 @@ partial <- function(..f, ...) {
   UseMethod("partial")
 }
 
+assign_getter("expr_partial", "names_fixed_args")
+assign_setter("expr_partial")
+
 #' @export
-partial.default <- function(..f, ...) {
-  not_fn_coercible(..f)
+partial.PartialFunction <- function(..f, ...) {
+  if (missing(...))
+    return(..f)
+  p <- partial_(departial.PartialFunction(..f), !!!fixed_args(..f), ...)
+  expr_partial(p) <- expr_partial(..f)
+  class(p) <- class(..f)
+  p
+}
+
+fixed_args <- function(f) {
+  env_get_list(
+    environment(get("__partial__", environment(f))),
+    names_fixed_args(f)
+  )
 }
 
 #' @export
 partial.CompositeFunction <- function(..f, ...) {
-  fst <- pipeline_head(..f)
-  ..f[[fst$idx]] <- partial.function(fst$fn, ...)
+  if (missing(...))
+    return(..f)
+  fst <- pipeline_head2(..f)
+  ..f[[fst$idx]] <- partial(fst$fn, ...)
   ..f
 }
 
-pipeline_head <- local({
+pipeline_head2 <- local({
   index_head <- function(x) {
     depth <- 0L
     while (is.list(x)) {
@@ -135,126 +170,74 @@ pipeline_head <- local({
 
 #' @export
 partial.function <- local({
-  assign_setter("expr_partial")
-
-  expr_fn <- function(..f, f) {
-    expr <- substitute(..f, parent.frame())
-    if (is.name(expr))
+  expr_fn <- function(..f, clo) {
+    if (is.name(expr <- substitute(..f, parent.frame())))
       return(expr)
-    call("(", call("function", formals(f), quote(...)))
+    call("(", call("function", formals(clo), quote(...)))
   }
 
   function(..f, ...) {
     if (missing(...))
       return(..f)
-    f <- closure(..f)
-    p <- partial_(f, ...)
-    expr_partial(p) <- expr_partial(..f) %||% expr_fn(..f, f)
+    clo <- closure(..f)
+    p <- partial_(clo, ...)
+    expr_partial(p) <- expr_partial(..f) %||% expr_fn(..f, clo)
     class(p) <- "PartialFunction" %subclass% class(..f)
     p
   }
 })
 
-assign_getter("expr_partial", "names_fixed")
-
 partial_ <- local({
-  assign_getter("bare_args")
-  assign_setter("bare_args", "names_fixed")
+  BODY <- quote(eval(`[[<-`(match.call(), 1L, `__partial__`), parent.frame()))
+  DOTS <- as.pairlist(alist(... = ))
 
-  body <- quote({
-    environment(`__partial__`) <- `__with_fixed_args__`()
-    eval(`[[<-`(sys.call(), 1L, `__partial__`), parent.frame())
-  })
-
-  args <- function(f, nms) {
-    bare_args(f) %||% eponymous(nms)
-  }
-  call_bare <- function(...) {
-    as.call(c(quote(`__bare__`), ...))
+  body_partial <- function(nms) {
+    fix <- lapply(nms, function(n) call("__eval__", as.name(n))) %named% nms
+    as.call(c(quote(`__fn__`), fix, quote(...)))
   }
 
-  no_name_reuse <- function(f, fix) {
-    all(names(fix)[nzchar(names(fix))] %notin% names(names_fixed(f)))
+  match_args <- function(f, ...) {
+    qs <- quos(...)
+    ordered <- as.call(c(quote(c), seq_along(qs) %named% names(qs)))
+    matched <- eval(match.call(f, ordered), baseenv())
+    qs <- qs %named% names_chr(matched)[order(matched)]
+    qs[vapply(qs, non_void_expr, TRUE)]
   }
 
-  function(f, ...) {
-    fix <- quos_match(f, ...)
-    f_bare <- departial.function(f)
-    nms_bare <- names(formals(f_bare))
-    if (has_dots(nms_bare)) {
-      no_name_reuse(f, fix) %because% "Can't reset previously fixed argument(s)"
-      nms_bare <- nms_bare[nms_bare != "..."]
-      nms_priv <- privatize(names(fix), names_fixed(f))
-      args_bare <- c(args(f, nms_bare), tidy_dots(nms_priv, nms_bare))
-      body_bare <- call_bare(args_bare, quote(...))
-    } else {
-      nms_priv <- privatize(names(fix))
-      args_bare <- args(f, nms_bare)
-      body_bare <- call_bare(args_bare)
-    }
-    nms_fix <- c(nms_priv, names_fixed(f))
-    fmls <- formals(f)[names(formals(f)) %notin% names(fix)]
-    parent <- envir(f) %encloses% (fix %named% nms_priv)
-    env_bare <- parent %encloses% list(`__bare__` = f_bare)
-    env <- parent %encloses% list(
-      `__with_fixed_args__` = promise_tidy(nms_fix, nms_bare, env_bare),
-      `__partial__`         = new_fn(fmls, body_bare, env_bare)
-    )
-    p <- new_fn(fmls, body, env)
-    names_fixed(p) <- nms_fix
-    bare_args(p)   <- args_bare
-    p
-  }
-})
-
-quos_match <- local({
   non_void_expr <- function(q) {
     !identical(quo_get_expr(q), quote(expr = ))
   }
 
-  function(..f, ...) {
-    qs <- quos(...)
-    ordered <- as.call(c(quote(c), seq_along(qs) %named% names(qs)))
-    matched <- eval(match.call(..f, ordered), baseenv())
-    qs <- qs %named% names_chr(matched)[order(matched)]
-    qs[vapply(qs, non_void_expr, TRUE)]
+  validate <- function(args, nms = names(args)) {
+    all(nzchar(nms)) %because%
+      "only named arguments can be fixed"
+    (anyDuplicated(nms) == 0L) %because%
+      "can't set the value of a named '...' argument more than once"
+    args
+  }
+
+  truncate_formals <- function(f, drop, fmls = formals(f)) {
+    fmls <- as.list(fmls[names(fmls) %notin% drop])
+    fmls[] <- list(quote(expr = ))
+    as.pairlist(fmls)
+  }
+
+  assign_setter("names_fixed_args")
+
+  function(clo, ...) {
+    fix <- validate(match_args(clo, ...))
+    p <- new_fn(truncate_formals(clo, drop = names(fix)), BODY, baseenv(),
+                `__partial__` = new_fn(DOTS, body_partial(names(fix))))
+    environment(environment(p)$`__partial__`) <- emptyenv() %encloses%
+      c(`__fn__` = clo, `__eval__` = eval_tidy, fix)
+    names_fixed_args(p) <- names(fix)
+    p
   }
 })
 
-privatize <- local({
-  privatize_ <- function(xs, nms = xs) {
-    sprintf("..%s..", xs) %named% nms
-  }
-  n_dots <- function(x) {
-    if (is.null(x))
-      return(0L)
-    sum(!nzchar(names(x)))
-  }
-
-  function(nms, nms_prev) {
-    if (missing(nms_prev))
-      return(privatize_(nms))
-    nms_fill <- nms
-    is_blank <- !nzchar(nms_fill)
-    if ((n_blank <- sum(is_blank)) != 0L)
-      nms_fill[is_blank] <- as.character(n_dots(nms_prev) + seq_len(n_blank))
-    privatize_(nms_fill, nms)
-  }
-})
-
-tidy_dots <- function(nms, nms_nondots) {
-  dots <- nms[names(nms) %notin% nms_nondots]
-  lapply(dots, eneval_tidy)
-}
-
-promise_tidy <- function(nms, nms_nondots, env) {
-  nondots <- nms[names(nms) %in% nms_nondots]
-  promises <- lapply(nondots, eneval_tidy)
-  new_fn(promises, quote(environment()), env, eval_tidy = eval_tidy)
-}
-
-eneval_tidy <- function(nm) {
-  call("eval_tidy", as.name(nm))
+#' @export
+partial.default <- function(..f, ...) {
+  not_fn_coercible(..f)
 }
 
 #' @rdname partial
@@ -264,86 +247,43 @@ departial <- function(..f) {
 }
 
 #' @export
+departial.PartialFunction <- function(..f) {
+  get("__fn__", environment(get("__partial__", environment(..f))))
+}
+
+#' @export
+departial.CompositeFunction <- function(..f) {
+  fst <- pipeline_head2(..f)
+  ..f[[fst$idx]] <- departial(fst$fn)
+  ..f
+}
+
+#' @export
+departial.function <- function(..f) {
+  ..f
+}
+
+#' @export
 departial.default <- function(..f) {
   not_fn_coercible(..f)
 }
 
 #' @export
-departial.CompositeFunction <- function(..f) {
-  fst <- pipeline_head(..f)
-  ..f[[fst$idx]] <- departial.function(fst$fn)
-  ..f
-}
-
-#' @export
-departial.function <- local({
-  get_bare    <- getter("__bare__")
-  get_partial <- getter("__partial__")
-
-  function(..f) {
-    get_bare(get_partial(..f)) %||% ..f
-  }
-})
-
-#' @export
 print.PartialFunction <- function(x, ...) {
-  cat("<Partially Applied Function>\n\n")
-  expr_print(expr_partial_closure(x))
-  cat("\nRecover the inner function with 'departial()'.\n")
+  cat("<Partially Applied Function>\n")
+  cat("\n* FUNCTION:\n")
+  expr_print(signature(x))
+  cat("\nCalling 'FUNCTION(...)' is equivalent to calling\n")
+  fun <- expr_partial(x)
+  expr_print(as.call(c(fun, fixed_args(x), quote(...))))
+  if (is.name(fun)) {
+    cat("\nThe function '", fun, "()' has the form\n", sep = "")
+    expr_print(signature(departial(x)))
+  }
+  cat("\nRecover the called function with 'departial()'.")
   invisible(x)
 }
 
-expr_partial_closure <- local({
-  get_partial_closure <- getter("__partial__")
-
-  function(x) {
-    make_expr <- get_partial_closure(x)
-    environment(make_expr) <-
-      environment(x) %encloses% list(`__bare__` = call_with_fixed_args(x))
-    make_expr()
-  }
-})
-
-call_with_fixed_args <- function(x) {
-  formals_fixed <- function(env) {
-    fmls <- formals(x)
-    fmls <- lapply(fmls, function(arg) expr_uq(subst_called_args(arg), env))
-    as.pairlist(fmls)
-  }
-  body_fixed <- function(call) {
-    call <- subst_called_args(call)
-    args <- lapply(call[-1L], subst_formal_args)
-    as.call(c(expr_partial(x), args))
-  }
-  subst_called_args <- local({
-    nms_fix <- names_fixed(x)
-    nms_fix <- nms_fix[names(nms_fix) %in% names(formals(departial(x)))]
-    exprs_fix <- lapply(nms_fix, function(nm) uq(as.name(nm)))
-
-    function(expr) {
-      do.call("substitute", list(expr, exprs_fix))
-    }
-  })
-
-  function(...) {
-    fmls_fixed <- formals_fixed(parent.frame())
-    body_fixed <- body_fixed(sys.call())
-    call_fixed <- call("function", fmls_fixed, call("{", body_fixed))
-    expr_uq(call_fixed, parent.frame())
-  }
+signature <- function(f) {
+  call("function", formals(f), quote(...))
 }
-
-subst_formal_args <- local({
-  unquote <- list(eval_tidy = function(arg) uq(substitute(arg)))
-  is_tidy_call <- check_head("eval_tidy")
-
-  function(arg) {
-    if (is.call(arg) && is_tidy_call(arg)) eval(arg, unquote) else arg
-  }
-})
-
-expr_uq <- function(x, env) {
-  eval(as.call(c(quote(rlang::expr), list(x))), env)
-}
-
-uq <- function(x) bquote(!!.(x))

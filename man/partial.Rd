@@ -15,16 +15,24 @@ departial(..f)
 \item{...}{Argument values of \code{..f} to fix, specified by name or position.
 Captured as \link[rlang:topic-defuse]{quosures}.
 \link[rlang:topic-inject]{Unquoting} and \link[rlang:topic-inject]{splicing}
-are supported (see \sQuote{Examples}).}
+are supported (see \sQuote{Examples}). Argument values may match the \code{...}
+argument of \code{..f} (if present), but then only when specified by name.}
 }
 \value{
 \code{partial()} returns a function whose \link[base:formals]{formals} are a
-literal truncation of the formals of \code{..f()} (as a closure) by the fixed
-arguments. \code{partial(..f)} is identical to \code{..f}.
+truncation of the formals of \code{..f} (as a closure) by the fixed arguments.
+The original default values do not appear in the formals of a partialized
+function, but are nonetheless applied when the function is called.
+
+The function \code{partial(..f)} is identical to \code{..f}.
 
 In conformance with R's calling convention, fixed argument values are lazy
 \link[base:delayedAssign]{promises}. Moreover, when forced, they are \link[rlang:eval_tidy]{tidily evaluated}. Lazy evaluation of fixed arguments can be
 overridden via unquoting, see \sQuote{Examples}.
+
+When \code{..f} is a partially applied function, \code{departial(..f)} is the
+(closure of) the underlying function. For ordinary (non-partially applied)
+functions, \code{departial(..f)} is identical to \code{..f}.
 }
 \description{
 \code{partial()} enables
@@ -32,8 +40,8 @@ overridden via unquoting, see \sQuote{Examples}.
 given a function, it fixes the value of selected arguments to produce a
 function of the remaining arguments.
 
-\code{departial()} \dQuote{inverts} the application of \code{partial()} by returning
-the original function.
+\code{departial()} undoes the application of \code{partial()} by returning the original
+function.
 }
 \details{
 Even while \code{partial()} truncates formals, it remains compatible with
@@ -41,7 +49,7 @@ functions that use \code{\link[base:missing]{missing()}} to test whether a
 specified argument was supplied in a call. For example,
 \code{draw3 <- partial(sample, size = 3)} works as a function that randomly
 draws three elements, even though \code{sample()} invokes \code{missing(size)} and
-\code{draw3()} has signature \verb{function (x, replace = FALSE, prob = NULL)}.
+\code{draw3()} has the form \code{function(x, replace, prob) ...}.
 
 Because partially applied functions call the original function in an ad hoc
 environment, impure functions that depend on the calling context as a
@@ -49,7 +57,24 @@ environment, impure functions that depend on the calling context as a
 \code{partial()}. For example, \code{partial(ls, all.names = TRUE)()} is not
 equivalent to \code{ls(all.names = TRUE)}, because \code{ls()} inspects the calling
 environment to produce its value, whereas \code{partial(ls, all.names = TRUE)()}
-calls \code{ls(all.names = TRUE)} from an (ephemeral) execution environment.
+calls \code{ls(all.names = TRUE)} from an (ephemeral) evaluation environment.
+
+The formal arguments of \code{partial(..f, ...)} do not retain the original
+default values, because doing so would be generally ill-defined. For
+example, consider a function \code{function(x, y = x, ...) ...}. The default
+value of \code{y} is interpreted in the evaluation environment, and therefore
+matches the argument \code{x}. However, if \code{x} were dropped from the formals but
+the default value of \code{y} were retained, then the default value of \code{y} in
+the resulting function of the form \code{function(y = x, ...) ...} would have an
+incompatible interpretation: it would be looked up in the function
+environment, i.e., the parent of the evaluation environment.
+
+Nevertheless, any default values of \code{..f} not overridden by \code{partial()}
+remain in force. For example, consider \code{\link[base:sample]{sample()}}. It has
+a default argument value \code{replace = FALSE}. The function
+\code{p <- partial(sample, size = 3)} has the form
+\code{function(x, replace, prob) ...}. Yet when \code{p()} is called without a value
+for \code{replace}, its original default value is used, namely \code{FALSE}.
 }
 \examples{
 # Arguments can be fixed by name
@@ -85,29 +110,22 @@ args_eager <- list(n = rpois(1, 5), max = sample(10, 1))
 rnd_eager2 <- partial(runif, !!!args_eager)
 replicate(4, rnd_eager2(), simplify = FALSE)
 
+# Use rlang::exprs() to selectively evaluate arguments to fix
 args_mixed <- rlang::exprs(n = rpois(1, 5), max = !!sample(10, 1))
 rnd_mixed2 <- partial(runif, !!!args_mixed)
 replicate(4, rnd_mixed2(), simplify = FALSE)
 
-# partial() truncates formals by the fixed arguments
+# partial() truncates formals by the fixed arguments, omits default values
 foo <- function(x, y = x, ..., z = "z") NULL
 stopifnot(
-  identical(
-    formals(partial(foo)),
-    formals(foo)
-  ),
-  identical(
-    formals(partial(foo, x = 1)),
-    formals(function(y = x, ..., z = "z") {})
-  ),
-  identical(
-    formals(partial(foo, x = 1, y = 2)),
-    formals(function(..., z = "z") {})
-  ),
-  identical(
-    formals(partial(foo, x = 1, y = 2, z = 3)),
-    formals(function(...) {})
-  )
+  identical(formals(partial(foo)),
+            formals(foo)),
+  identical(formals(partial(foo, x = 1)),
+            formals(function(y, ..., z) NULL)),
+  identical(formals(partial(foo, x = 1, y = 2)),
+            formals(function(..., z) NULL)),
+  identical(formals(partial(foo, x = 1, y = 2, z = 3)),
+            formals(function(...) NULL))
 )
 
 }

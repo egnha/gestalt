@@ -63,32 +63,6 @@ test_that("named dots-arguments can be fixed", {
   )
 })
 
-test_that("unnamed dots-arguments can be fixed", {
-  f <- function(x, ...) c(x, ...)
-
-  expect_all_equal(
-    c(1, 2),
-    partial(f, 1, 2)(),
-    partial(f, 2, x = 1)(),
-    partial(f, x = 1, 2)()
-  )
-
-  expect_all_equal(
-    c(1, 2, 3),
-    partial(f, 1, 2, 3)(),
-    partial(f, x = 1, 2, 3)(),
-    partial(f, 2, x = 1, 3)(),
-    partial(f, 2, 3, x = 1)(),
-    partial(partial(f, 1), 2, 3)(),
-    partial(partial(f, x = 1), 2, 3)(),
-    partial(partial(f, 1, 2), 3)(),
-    partial(partial(f, x = 1, 2), 3)(),
-    partial(partial(f, 2, x = 1), 3)(),
-    partial(partial(partial(f, 1), 2), 3)(),
-    partial(partial(partial(f, x = 1), 2), 3)()
-  )
-})
-
 test_that("arguments can be matched by position", {
   f <- function(x, y, ...) c(x, y, ...)
   expect_all_equal(
@@ -96,11 +70,7 @@ test_that("arguments can be matched by position", {
     partial(f)(1, 2, 3),
     partial(f, 1)(2, 3),
     partial(f, , 2)(1, 3),
-    partial(f, , , 3)(1, 2),
-    partial(f, 1, 2)(3),
-    partial(f, 1, , 3)(2),
-    partial(f, , 2, 3)(1),
-    partial(f, 1, 2, 3)()
+    partial(f, 1, 2)(3)
   )
 })
 
@@ -114,22 +84,11 @@ test_that("dots persist", {
     partial(f, 1, 2),
     partial(f, 1, z = 3),
     partial(f, y = 2, z = 3),
-    partial(f, 1, 2, 3),
     partial(f, 1, 2, a = 3),
-    partial(f, 1, 2, 3, 4),
-    partial(f, 1, 2, 3, a = 4),
-    partial(f, 1, 2, a = 3, 4),
     partial(partial(f, 1), 2),
-    partial(partial(f, 1), 2, 3),
     partial(partial(f, 1), 2, a = 3),
-    partial(partial(f, 1, 2), 3),
     partial(partial(f, 1, 2), a = 3),
-    partial(partial(partial(f, 1), 2), 3),
     partial(partial(partial(f, 1), 2), a = 3),
-    partial(f, 1, 2, 3, z = 5),
-    partial(f, 1, 2, 3, 4, z = 5),
-    partial(f, 1, 2, 3, a = 4, z = 5),
-    partial(f, 1, 2, a = 3, 4, z = 5),
     partial(f, 1, 2, a = 3, b = 4, z = 5)
   )
   for (f in fs)
@@ -159,32 +118,6 @@ test_that("partial() is operationally idempotent", {
   )
   expect_equal(partial(partial(f, 1), 2)(), partial(f, 1, 2)())
   expect_equal(partial(partial(f, 1), 2)(), c(1, 2, 3))
-
-  expect_equal(
-    departial(partial(partial(partial(f, 1), 2), 2.5)),
-    departial(partial(f, 1, 2, 2.5))
-  )
-  expect_equal(
-    partial(partial(partial(f, 1), 2), 2.5)(),
-    partial(f, 1, 2, 2.5)()
-  )
-  expect_equal(
-    partial(partial(partial(f, 1), 2), 2.5)(),
-    c(1, 2, 2.5, 3)
-  )
-
-  expect_equal(
-    departial(partial(partial(partial(partial(f, 1), 2), 3), z = 4)),
-    departial(partial(f, 1, 2, 3, z = 4))
-  )
-  expect_equal(
-    partial(partial(partial(partial(f, 1), 2), 3), z = 4)(),
-    partial(f, 1, 2, 3, z = 4)()
-  )
-  expect_equal(
-    partial(partial(partial(partial(f, 1), 2), 3), z = 4)(),
-    c(1, 2, 3, 4)
-  )
 })
 
 test_that("arguments values are matched according to R's calling convention", {
@@ -205,23 +138,6 @@ test_that("arguments values are matched according to R's calling convention", {
     partial(f, 1, yyy = 2)(),
     partial(f, 1, y = 2)(),
     partial(f, 1, 2)()
-  )
-
-  expect_all_equal(
-    c(1, 2, 3, 0),
-    partial(f, x = 1, yyy = 2, 3)(),
-    partial(f, x = 1, y = 2, 3)(),
-    partial(f, 1, 2, 3)(),
-    partial(f, x = 1, 2, 3)(),
-    partial(f, 2, x = 1, 3)(),
-    partial(f, yyy = 2, 1, 3)(),
-    partial(f, y = 2, 1, 3)(),
-    partial(f, 1, yyy = 2, 3)(),
-    partial(f, 1, y = 2, 3)(),
-    partial(f, 3, x = 1, yyy = 2)(),
-    partial(f, 3, x = 1, y = 2)(),
-    partial(f, 3, yyy = 2, x = 1)(),
-    partial(f, 3, y = 2, x = 1)()
   )
 
   # 'z' not matched to 'zzz', since 'zzz' follows '...'
@@ -281,23 +197,6 @@ test_that("arguments values are matched across function calls", {
     partial_f(1, yyy = 2)(),
     partial_f(1, y = 2)(),
     partial_f(1, 2)()
-  )
-
-  expect_all_equal(
-    c(1, 2, 3, 0),
-    partial_f(x = 1, yyy = 2, 3)(),
-    partial_f(x = 1, y = 2, 3)(),
-    partial_f(1, 2, 3)(),
-    partial_f(x = 1, 2, 3)(),
-    partial_f(2, x = 1, 3)(),
-    partial_f(yyy = 2, 1, 3)(),
-    partial_f(y = 2, 1, 3)(),
-    partial_f(1, yyy = 2, 3)(),
-    partial_f(1, y = 2, 3)(),
-    partial_f(3, x = 1, yyy = 2)(),
-    partial_f(3, x = 1, y = 2)(),
-    partial_f(3, yyy = 2, x = 1)(),
-    partial_f(3, y = 2, x = 1)()
   )
 
   # 'z' not matched to 'zzz', since 'zzz' follows '...'
@@ -379,6 +278,17 @@ test_that("argument values are tidily evaluated", {
   expect_identical(fpp(), c("x", "y"))
 })
 
+test_that("argument defaults are evaluated in the evaluation environment", {
+  f <- function(x, y = x) {
+    x <- x + 1
+    c(x, y)
+  }
+  expect_equal(partial(f, 1)(), c(2, 2))
+  expect_equal(partial(f, 1)(1), c(2, 1))
+  expect_equal(partial(f, y = 2)(0), c(1, 2))
+  expect_equal(partial(f, , 2)(0), c(1, 2))
+})
+
 test_that("argument values can be spliced and matched (#38)", {
   f <- function(x, y) c(x, y)
   out <- c(0, 1)
@@ -432,11 +342,28 @@ test_that("error is signaled when value to fix doesn't match an argument", {
 test_that("error is signaled when trying to fix a previously fixed argument", {
   f <- function(x, y, ...) NULL
   expect_errors_with_message(
-    "Can't reset previously fixed argument\\(s\\)",
+    "can't set the value of a named '...' argument more than once",
+    partial(partial(f, 1, a = 2), a = 2)
+  )
+  expect_errors_with_message(
+    "formal argument \"x\" matched by multiple actual arguments",
     partial(partial(f, x = 1), x = 1),
-    partial(partial(f, 1), x = 1),
-    partial(partial(f, 1, a = 2), a = 2),
+    partial(partial(f, 1), x = 1)
+  )
+  expect_errors_with_message(
+    "formal argument \"y\" matched by multiple actual arguments",
     partial(partial(f, x = 1, y = 2), y = 2)
+  )
+})
+
+test_that("error is signaled when trying to fix a value that matches '...'", {
+  f <- function(x, ...) NULL
+  expect_errors_with_message(
+    "only named arguments can be fixed",
+    partial(f, 1, 2),
+    partial(f, x = 1, 2),
+    partial(f, 2, x = 1),
+    partial(f, , 2)
   )
 })
 
@@ -444,7 +371,7 @@ test_that("error is signaled when trying to call a fixed argument", {
   expect_error(partial(identity, x = 0)(x = 1), "unused argument \\(x = 1\\)")
 })
 
-test_that("formals are literally truncated", {
+test_that("formals are truncated and omit default values", {
   f <- function(x, y = x, ..., z = 0) NULL
   expect_equal(
     formals(partial(f)),
@@ -452,27 +379,27 @@ test_that("formals are literally truncated", {
   )
   expect_equal(
     formals(partial(f, x = 1)),
-    formals(function(y = x, ..., z = 0) {})
+    formals(function(y, ..., z) {})
   )
   expect_equal(
     formals(partial(f, x = one)),
-    formals(function(y = x, ..., z = 0) {})
+    formals(function(y, ..., z) {})
   )
   expect_equal(
     formals(partial(f, y = 2)),
-    formals(function(x, ..., z = 0) {})
+    formals(function(x, ..., z) {})
   )
   expect_equal(
     formals(partial(f, z = 3)),
-    formals(function(x, y = x, ...) {})
+    formals(function(x, y, ...) {})
   )
   expect_equal(
     formals(partial(f, x = 1, y = 2)),
-    formals(function(..., z = 0) {})
+    formals(function(..., z) {})
   )
   expect_equal(
     formals(partial(f, x = 1, z = 3)),
-    formals(function(y = x, ...) {})
+    formals(function(y, ...) {})
   )
   expect_equal(
     formals(partial(f, y = 2, z = 3)),
@@ -480,14 +407,6 @@ test_that("formals are literally truncated", {
   )
   expect_equal(
     formals(partial(f, x = 1, y = 2, z = 3)),
-    formals(function(...) {})
-  )
-  expect_equal(
-    formals(partial(f, x = 1, y = 2, z = 3, 4)),
-    formals(function(...) {})
-  )
-  expect_equal(
-    formals(partial(partial(f, x = 1, y = 2, z = 3), 4)),
     formals(function(...) {})
   )
 })
@@ -510,9 +429,7 @@ test_that("function is not mutated, i.e., partial() has no side effects", {
     partial(f, 0),
     partial(f, y = 0),
     partial(f, y = 0, 0),
-    partial(f, a = 0),
-    partial(f, 0, 0),
-    partial(f, 0, 0, y = 0)
+    partial(f, a = 0)
   )
   expect_no_mutation_when_partializing <- function(...) {
     exprs_fun <- eval(substitute(alist(...)))
@@ -568,8 +485,8 @@ test_that("departial() of a partial function is the closure of the original func
   expect_identical(departial(fpp), f)
 
   cc <- closure(c)
-  cp <- partial(c, 0)
-  cpp <- partial(cp, 1)
+  cp <- partial(c, a = 0)
+  cpp <- partial(cp, b = 1)
   expect_equal(departial(cp), cc)
   expect_equal(departial(cpp), cc)
 })

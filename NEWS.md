@@ -2,6 +2,20 @@
 
 ## 0.1.9.9000
 
+### Breaking changes
+
+  * Two changes to `partial(..f, ...)` make it more comprehensible:
+    
+    - Formal arguments of `partial(..f, ...)` longer retain the original
+      default values, because doing so would in general be ill-defined.
+      Nevertheless, any default values of `..f` not overridden by `partial()`
+      remain in force when the function `partial(..f, ...)` is called.
+      
+    - Argument values that match the `...` argument of `..f` (if present) may
+      still be fixed, but only when specified by name.
+
+### Bug fixes
+
   * Default argument values of a composite function are now evaluated in the
     evaluation environment of the initial function. Essentially, a call like 
     `compose(f, g)(x, y, ...)` is now equivalent to a call like
