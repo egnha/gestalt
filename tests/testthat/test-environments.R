@@ -1,5 +1,3 @@
-context("Function environment")
-
 test_that("fn(), fn_() create functions in the calling environment, by default", {
   env <- environment()
 

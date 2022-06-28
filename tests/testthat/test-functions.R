@@ -1,5 +1,3 @@
-context("Creating functions (fn, fn_)")
-
 test_that("can make unary functions without default values", {
   expect_equal(fn(x ~ x + 1), function(x) x + 1)
   expect_equal(fn_(x ~ x + 1), function(x) x + 1)

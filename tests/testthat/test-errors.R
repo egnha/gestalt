@@ -1,5 +1,3 @@
-context("Error handling (fn, fn_)")
-
 test_that("error signaled if fn(), fn_() are called without arguments", {
   expect_error(fn(), "Function must be declared")
   expect_error(fn_(), "Function must be declared")

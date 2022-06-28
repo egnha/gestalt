@@ -1,5 +1,3 @@
-context("Dynamic scoping of lexical variables")
-
 test_that("dots precede lexical variables in formals", {
   f <- posure(a, b = value ~ identity %>>>% NULL)
   expect_identical(formals(f), formals(function(..., a, b = value) NULL))

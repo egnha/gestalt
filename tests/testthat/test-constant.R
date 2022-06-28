@@ -1,5 +1,3 @@
-context("Constant functions")
-
 val <- local({
   computing_value <- FALSE
 

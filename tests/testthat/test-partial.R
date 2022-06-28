@@ -5,8 +5,6 @@ fn_kinds <- list(
   partial = partial(function(x, y) c(x, y), x = 0)
 )
 
-context("Partial function application")
-
 test_that("function returned unchanged when no argument values to fix", {
   for (f in fn_kinds)
     expect_identical(partial(f), f)
@@ -474,8 +472,6 @@ test_that("partializing a composition partializes the first function applied", {
     expect_true(inherits(fst, "PartialFunction"))
   }
 })
-
-context("Inverting partial function application")
 
 test_that("departial() of a partial function is the closure of the original function", {
   f <- function(x, y) c(x, y)

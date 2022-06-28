@@ -1,5 +1,3 @@
-context("Running actions in ordered contexts")
-
 test_that("context can inherit from a list or data frame", {
   cxt <- let(list(a = 1), b = a + 1)
   expect_equal(run(cxt, c(a, b)), c(1, 2))
@@ -56,8 +54,6 @@ test_that("run() comprehends quasiquotation", {
   expect_equal(run(NULL, a + !!one, a = 2, one = stop("!")), 3)
   expect_equal(run(NULL, c(a, !!!c(2, 3)), a = 1), c(1, 2, 3))
 })
-
-context("Generic methods")
 
 test_that("context names are in the given order", {
   cxt <- let(a = 1, b = a, c = a + b)

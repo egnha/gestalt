@@ -1,5 +1,3 @@
-context("Printing")
-
 # Suppress ANSI escape codes in printed output
 local_test_context(.env = parent.frame())
 local_reproducible_output(crayon = FALSE, .env = parent.frame())

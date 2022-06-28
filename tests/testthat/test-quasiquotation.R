@@ -1,5 +1,3 @@
-context("Quasiquotation (fn)")
-
 test_that("default values can be unquoted", {
   zero <- 0
   expect_equal(fn(x = !!zero ~ NULL), function(x = 0) NULL)

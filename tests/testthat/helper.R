@@ -21,3 +21,8 @@ expect_equal_ <- function(object, expected, ...) {
   force(expected)
   expect_equal(object, expected, ...)
 }
+
+# testthat::expect_equivalent() was deprecated in the 3rd edition.
+expect_equivalent <- function(...) {
+  expect_equal(ignore_attr = TRUE, ...)
+}

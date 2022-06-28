@@ -1,5 +1,3 @@
-context("Closures")
-
 test_that("closure() is the identity on closures", {
   clsr <- function() NULL
   expect_identical(closure(clsr), clsr)

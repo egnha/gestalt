@@ -27,8 +27,6 @@ cmps <- list(
   fs[[1]] %>>>% !!(fs[[2]] %>>>% fs[[3]])
 )
 
-context("Composing functions")
-
 test_that("empty or NULL composition yields NULL", {
   expect_null(compose())
   expect_null(compose(NULL))
@@ -436,8 +434,6 @@ test_that("point is matched when a symbol not a character (#27)", {
   expect_identical(f(letters), paste(letters, collapse = "."))
 })
 
-context("Decomposing compositions")
-
 test_that("tree structure of composition preserved when converting to list", {
   f <- identity %>>>%
     mix: (sample %>>>% glue: paste) %>>>%
@@ -471,8 +467,6 @@ test_that("compose() inverts as.list()", {
   for (val in vals)
     expect_equal(cmp1(val), cmp2(val))
 })
-
-context("Generic methods")
 
 sq <- function(x) x^2
 foo <- sq %>>>% inc:{. + 1} %>>>% log:log
