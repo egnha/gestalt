@@ -65,10 +65,7 @@ halt <- function(msg, ...) {
 getter <- function(nm) {
   force(nm)
   function(x) {
-    env <- environment(x) %||% emptyenv()
-    if (exists(nm, envir = env))
-      return(get(nm, envir = env))
-    NULL
+    get0(nm, envir = environment(x) %||% emptyenv())
   }
 }
 
