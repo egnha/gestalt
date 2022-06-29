@@ -136,10 +136,12 @@ partial.PartialFunction <- function(..f, ...) {
 }
 
 fixed_args <- function(f) {
-  env_get_list(
-    environment(get("__partial__", environment(f))),
-    names_fixed_args(f)
-  )
+  env_get_list(env_partial(f), names_fixed_args(f))
+}
+
+env_partial <- function(f) {
+  # '__partial__' won't necessarily be bound to the environment of 'f' itself
+  environment(get("__partial__", environment(f)))
 }
 
 #' @export
@@ -248,7 +250,7 @@ departial <- function(..f) {
 
 #' @export
 departial.PartialFunction <- function(..f) {
-  get("__fn__", environment(get("__partial__", environment(..f))))
+  get("__fn__", env_partial(..f))
 }
 
 #' @export
