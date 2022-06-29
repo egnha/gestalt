@@ -62,8 +62,8 @@ its semantics and augmenting it to enable you to:
     the runtime characteristics of a flattened composition, so you can
     focus on expressing structure that is most natural for your function
 
--   **Unquote sub-expressions** with the tidyverse `!!` operator, to enforce
-    immutability or spare a runtime computation
+-   **Unquote sub-expressions** with the tidyverse `!!` operator, to
+    enforce immutability or spare a runtime computation
 
 ## Ceci n’est pas une `%>%`
 
@@ -191,7 +191,7 @@ You gain power by treating (piped) values as (composite) functions:
     #>         4         6         8 
     #> 0.5086326 0.4645102 0.4229655
 
-    # On a 2016 vintage laptop
+    # On a 2015 vintage laptop
     microbenchmark::microbenchmark(R2(), times = 1e6)  
     #> Unit: nanoseconds
     #>  expr min  lq     mean median  uq      max neval
@@ -235,11 +235,16 @@ In conjunction with `%>>>%`, gestalt also provides:
     (draw <- partial(sample, size = !!size, replace = TRUE))
     #> <Partially Applied Function>
     #> 
-    #> function(x, prob = NULL) {
-    #>   sample(x = x, size = ^5L, replace = ^TRUE, prob = prob)
-    #> }
+    #> * FUNCTION:
+    #> function(x, prob) ...
     #> 
-    #> Recover the inner function with 'departial()'.
+    #> Calling 'FUNCTION(...)' is equivalent to calling
+    #> sample(size = ^5L, replace = ^TRUE, ...)
+    #> 
+    #> The function 'sample()' has the form
+    #> function(x, size, replace = FALSE, prob = NULL) ...
+    #> 
+    #> Recover the called function with 'departial()'.
 
     set.seed(2)
     draw(letters)
@@ -262,11 +267,16 @@ In conjunction with `%>>>%`, gestalt also provides:
         partial(partial(sample, replace = TRUE), size = 5L)
         #> <Partially Applied Function>
         #> 
-        #> function(x, prob = NULL) {
-        #>   sample(x = x, size = ^5L, replace = ^TRUE, prob = prob)
-        #> }
+        #> * FUNCTION:
+        #> function(x, prob) ...
         #> 
-        #> Recover the inner function with 'departial()'.
+        #> Calling 'FUNCTION(...)' is equivalent to calling
+        #> sample(replace = ^TRUE, size = ^5L, ...)
+        #> 
+        #> The function 'sample()' has the form
+        #> function(x, size, replace = FALSE, prob = NULL) ...
+        #> 
+        #> Recover the called function with 'departial()'.
         ```
 
 See the package documentation for more details
@@ -305,4 +315,4 @@ devtools::install_github("egnha/gestalt", build_vignettes = TRUE)
 
 ## License
 
-MIT Copyright © 2018 [Eugene Ha](https://github.com/egnha)
+MIT Copyright © 2018–2022 [Eugene Ha](https://github.com/egnha)
