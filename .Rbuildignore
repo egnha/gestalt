@@ -4,3 +4,4 @@
 ^(?!NEWS\.md).*\.md$
 ^.*\.yml$
 ^.*\.org$
+^\.github$
