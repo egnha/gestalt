@@ -4,27 +4,27 @@
 
 ### Breaking changes
 
-  * Two changes to `partial(..f, ...)` make it more comprehensible:
-    
-    - Formal arguments of `partial(..f, ...)` longer retain the original
-      default values, because doing so would in general be ill-defined.
-      Nevertheless, any default values of `..f` not overridden by `partial()`
-      remain in force when the function `partial(..f, ...)` is called.
+  * Formal arguments of `partial(..f, ...)` no longer record the original
+    default values of `..f` (since a default-value expression may reference an
+    argument that is fixed, and therefore dropped, by `partial()`).
+    Nevertheless, any default values of `..f` not overridden by `partial()`
+    remain in force when the function `partial(..f, ...)` is called.
       
-    - Argument values that match the `...` argument of `..f` (if present) may
-      still be fixed, but only when specified by name.
+  * `partial(..f, ...)` can still fix arguments that match the `...` argument of
+    `..f` (if present), but only when such arguments are specified by name.
 
-### Bug fixes
+### Bug fix
 
   * Default argument values of a composite function are now evaluated in the
     evaluation environment of the initial function. Essentially, a call like 
     `compose(f, g)(x, y, ...)` is now equivalent to a call like
     `(function(...) g(f(...)))(x, y, ...)`. (Previously, the initial
     function was called with a complete set of formal arguments, which in cases
-    where formal arguments are mutated and coupled (e.g., `base::objects()`),
-    could lead the initial function to wrongly determine the "missingness" of
-    an argument or wrongly evaluate an argument's default value.) As before, the
-    signature of `compose(f, ...)` inherits the signature of `f`.
+    where formal arguments are mutated and mutually referenced (e.g., in the
+    formals of `base::objects()`), could lead the initial function to wrongly
+    determine the "missingness" of an argument or wrongly evaluate an argument's
+    default value.) As before, the signature of `compose(f, ...)` inherits the
+    signature of `f`.
 
 ## 0.1.9
 
