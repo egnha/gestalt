@@ -49,7 +49,7 @@ functions that use \code{\link[base:missing]{missing()}} to test whether a
 specified argument was supplied in a call. For example,
 \code{draw3 <- partial(sample, size = 3)} works as a function that randomly
 draws three elements, even though \code{sample()} invokes \code{missing(size)} and
-\code{draw3()} has the form \code{function(x, replace, prob) ...}.
+\code{draw3()} has the form \code{function(x, replace, prob) {...}}.
 
 Because partially applied functions call the original function in an ad hoc
 environment, impure functions that depend on the calling context as a
@@ -59,22 +59,14 @@ equivalent to \code{ls(all.names = TRUE)}, because \code{ls()} inspects the call
 environment to produce its value, whereas \code{partial(ls, all.names = TRUE)()}
 calls \code{ls(all.names = TRUE)} from an (ephemeral) evaluation environment.
 
-The formal arguments of \code{partial(..f, ...)} do not retain the original
-default values, because doing so would be generally ill-defined. For
-example, consider a function \code{function(x, y = x, ...) ...}. The default
-value of \code{y} is interpreted in the evaluation environment, and therefore
-matches the argument \code{x}. However, if \code{x} were dropped from the formals but
-the default value of \code{y} were retained, then the default value of \code{y} in
-the resulting function of the form \code{function(y = x, ...) ...} would have an
-incompatible interpretation: it would be looked up in the function
-environment, i.e., the parent of the evaluation environment.
-
-Nevertheless, any default values of \code{..f} not overridden by \code{partial()}
-remain in force. For example, consider \code{\link[base:sample]{sample()}}. It has
-a default argument value \code{replace = FALSE}. The function
-\code{p <- partial(sample, size = 3)} has the form
-\code{function(x, replace, prob) ...}. Yet when \code{p()} is called without a value
-for \code{replace}, its original default value is used, namely \code{FALSE}.
+NB while default argument values of \code{..f} do \emph{not} appear in the function
+signature of \code{partial(..f, ...)}, any default values of \code{..f} not
+overridden by \code{partial()} remain in force. For example, consider
+\code{\link[base:sample]{sample()}}. It has a default argument value
+\code{replace = FALSE}. The function \code{p <- partial(sample, size = 3)} has the
+form \code{function(x, replace, prob) {...}}. Nevertheless, when \code{p()} is called
+without a value for \code{replace}, its original default value is used, namely
+\code{FALSE}.
 }
 \examples{
 # Arguments can be fixed by name
@@ -127,5 +119,10 @@ stopifnot(
   identical(formals(partial(foo, x = 1, y = 2, z = 3)),
             formals(function(...) NULL))
 )
+
+# Nevertheless, partial() remembers default argument values when called
+f <- function(x, y = x) c(x, y)
+p <- partial(f, x = 1)
+stopifnot(identical(p(), c(1, 1)))
 
 }

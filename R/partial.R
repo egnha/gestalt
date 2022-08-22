@@ -38,7 +38,7 @@
 #'   specified argument was supplied in a call. For example,
 #'   `draw3 <- partial(sample, size = 3)` works as a function that randomly
 #'   draws three elements, even though `sample()` invokes `missing(size)` and
-#'   `draw3()` has the form `function(x, replace, prob) ...`.
+#'   `draw3()` has the form `function(x, replace, prob) {...}`.
 #'
 #'   Because partially applied functions call the original function in an ad hoc
 #'   environment, impure functions that depend on the calling context as a
@@ -48,22 +48,14 @@
 #'   environment to produce its value, whereas `partial(ls, all.names = TRUE)()`
 #'   calls `ls(all.names = TRUE)` from an (ephemeral) evaluation environment.
 #'
-#'   The formal arguments of `partial(..f, ...)` do not retain the original
-#'   default values, because doing so would be generally ill-defined. For
-#'   example, consider a function `function(x, y = x, ...) ...`. The default
-#'   value of `y` is interpreted in the evaluation environment, and therefore
-#'   matches the argument `x`. However, if `x` were dropped from the formals but
-#'   the default value of `y` were retained, then the default value of `y` in
-#'   the resulting function of the form `function(y = x, ...) ...` would have an
-#'   incompatible interpretation: it would be looked up in the function
-#'   environment, i.e., the parent of the evaluation environment.
-#'
-#'   Nevertheless, any default values of `..f` not overridden by `partial()`
-#'   remain in force. For example, consider [`sample()`][base::sample()]. It has
-#'   a default argument value `replace = FALSE`. The function
-#'   `p <- partial(sample, size = 3)` has the form
-#'   `function(x, replace, prob) ...`. Yet when `p()` is called without a value
-#'   for `replace`, its original default value is used, namely `FALSE`.
+#'   NB while default argument values of `..f` do *not* appear in the function
+#'   signature of `partial(..f, ...)`, any default values of `..f` not
+#'   overridden by `partial()` remain in force. For example, consider
+#'   [`sample()`][base::sample()]. It has a default argument value
+#'   `replace = FALSE`. The function `p <- partial(sample, size = 3)` has the
+#'   form `function(x, replace, prob) {...}`. Nevertheless, when `p()` is called
+#'   without a value for `replace`, its original default value is used, namely
+#'   `FALSE`.
 #'
 #' @examples
 #' # Arguments can be fixed by name
@@ -116,6 +108,11 @@
 #'   identical(formals(partial(foo, x = 1, y = 2, z = 3)),
 #'             formals(function(...) NULL))
 #' )
+#'
+#' # Nevertheless, partial() remembers default argument values when called
+#' f <- function(x, y = x) c(x, y)
+#' p <- partial(f, x = 1)
+#' stopifnot(identical(p(), c(1, 1)))
 #'
 #' @export
 partial <- function(..f, ...) {
