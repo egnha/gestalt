@@ -14,12 +14,13 @@
 #'   Captured as [quosures][rlang::quotation].
 #'   [Unquoting][rlang::quasiquotation] and [splicing][rlang::quasiquotation]
 #'   are supported (see \sQuote{Examples}). Argument values may match the `...`
-#'   argument of `..f` (if present), but then only when specified by name.
+#'   argument of `..f` (if present), but only when specified by name.
 #'
 #' @return `partial()` returns a function whose [formals][base::formals()] are a
 #'   truncation of the formals of `..f` (as a closure) by the fixed arguments.
-#'   The original default values do not appear in the formals of a partialized
-#'   function, but are nonetheless applied when the function is called.
+#'   NB the original default values do not appear in the formals of a
+#'   partialized function, but are nonetheless applied when the function is
+#'   called.
 #'
 #'   The function `partial(..f)` is identical to `..f`.
 #'
@@ -47,15 +48,6 @@
 #'   equivalent to `ls(all.names = TRUE)`, because `ls()` inspects the calling
 #'   environment to produce its value, whereas `partial(ls, all.names = TRUE)()`
 #'   calls `ls(all.names = TRUE)` from an (ephemeral) evaluation environment.
-#'
-#'   NB while default argument values of `..f` do *not* appear in the function
-#'   signature of `partial(..f, ...)`, any default values of `..f` not
-#'   overridden by `partial()` remain in force. For example, consider
-#'   [`sample()`][base::sample()]. It has a default argument value
-#'   `replace = FALSE`. The function `p <- partial(sample, size = 3)` has the
-#'   form `function(x, replace, prob) {...}`. Nevertheless, when `p()` is called
-#'   without a value for `replace`, its original default value is used, namely
-#'   `FALSE`.
 #'
 #' @examples
 #' # Arguments can be fixed by name

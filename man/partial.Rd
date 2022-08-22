@@ -16,13 +16,14 @@ departial(..f)
 Captured as \link[rlang:topic-defuse]{quosures}.
 \link[rlang:topic-inject]{Unquoting} and \link[rlang:topic-inject]{splicing}
 are supported (see \sQuote{Examples}). Argument values may match the \code{...}
-argument of \code{..f} (if present), but then only when specified by name.}
+argument of \code{..f} (if present), but only when specified by name.}
 }
 \value{
 \code{partial()} returns a function whose \link[base:formals]{formals} are a
 truncation of the formals of \code{..f} (as a closure) by the fixed arguments.
-The original default values do not appear in the formals of a partialized
-function, but are nonetheless applied when the function is called.
+NB the original default values do not appear in the formals of a
+partialized function, but are nonetheless applied when the function is
+called.
 
 The function \code{partial(..f)} is identical to \code{..f}.
 
@@ -58,15 +59,6 @@ environment, impure functions that depend on the calling context as a
 equivalent to \code{ls(all.names = TRUE)}, because \code{ls()} inspects the calling
 environment to produce its value, whereas \code{partial(ls, all.names = TRUE)()}
 calls \code{ls(all.names = TRUE)} from an (ephemeral) evaluation environment.
-
-NB while default argument values of \code{..f} do \emph{not} appear in the function
-signature of \code{partial(..f, ...)}, any default values of \code{..f} not
-overridden by \code{partial()} remain in force. For example, consider
-\code{\link[base:sample]{sample()}}. It has a default argument value
-\code{replace = FALSE}. The function \code{p <- partial(sample, size = 3)} has the
-form \code{function(x, replace, prob) {...}}. Nevertheless, when \code{p()} is called
-without a value for \code{replace}, its original default value is used, namely
-\code{FALSE}.
 }
 \examples{
 # Arguments can be fixed by name
