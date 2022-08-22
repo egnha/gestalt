@@ -1,6 +1,6 @@
 # gestalt
 
-## 0.1.9.9000
+## 0.2.0
 
 ### Breaking changes
 
@@ -20,7 +20,7 @@
     `compose(f, g)(x, y, ...)` is now equivalent to a call like
     `(function(...) g(f(...)))(x, y, ...)`. (Previously, the initial
     function was called with a complete set of formal arguments, which in cases
-    where formal arguments are mutated and mutually referenced (e.g., in the
+    where formal arguments are mutated or mutually referenced (e.g., in the
     formals of `base::objects()`), could lead the initial function to wrongly
     determine the "missingness" of an argument or wrongly evaluate an argument's
     default value.) As before, the signature of `compose(f, ...)` inherits the
